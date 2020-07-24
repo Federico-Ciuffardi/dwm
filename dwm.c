@@ -3118,6 +3118,7 @@ void
 zoom(const Arg *arg)
 {
 	Client *c = selmon->sel;
+	Client *o = c;
 
 	if (!selmon->lt[selmon->sellt]->arrange
 	|| (selmon->sel && selmon->sel->isfloating))
@@ -3126,6 +3127,7 @@ zoom(const Arg *arg)
 		if (!c || !(c = nexttiled(c->next)))
 			return;
 	pop(c);
+	focus(o);
 }
 
 int
