@@ -52,7 +52,7 @@ static const Rule rules[] = {
 	 */
 	/* class                      | instance | title         |tags| issticky |isfloating | isterminal | noswallow | monitor */
 	{ "Gimp"                      , NULL     , NULL          , 0  ,        0 , 1          , 0          , 0         , -1 },
-	{ "whatsapp-nativefier-d52542", NULL     , NULL          , 0  ,        0 , 1          , 0          , 0         , -1 },
+	{ "whatsapp-nativefier-d52542", NULL     , NULL          , 0  ,        1 , 1          , 0          , 0         , -1 },
 	{ "firefox"                   , "Toolkit", NULL          , 0  ,        1 , 1          , 0          , 0         , -1 },
 	{ "st"                        , NULL     , NULL          , 0  ,        0 , 0          , 1          , 1         , -1 },
  	{ NULL                        , NULL     , "Event Tester", 0  ,        0 , 0          , 0          , 1         , -1 }, 
@@ -92,10 +92,9 @@ static Key keys[] = {
 
 	{ MODKEY,                       XK_space,  zoom,           {0} },
 	{ MODKEY,                       XK_q,      killclient,     {0} },
-	{ MODKEY,	                      XK_grave,  focusmon,       {.i = +1 } },
+	{ MODKEY,                       XK_grave,  focusmon,       {.i = +1 } },
 	{ MODKEY|ShiftMask,             XK_grave,  tagmon,         {.i = +1 } },
 	{ MODKEY,                       XK_f,      togglefloating, {0} },
-	//{ MODKEY,                       XK_s,      tag,            {.ui = ~0 } },
 	{ MODKEY,                       XK_s,      togglesticky,   {0} },
 	{ MODKEY|ShiftMask,             XK_h,      incnmaster,     {.i = +1 } },
 	{ MODKEY|ShiftMask,             XK_l,      incnmaster,     {.i = -1 } },
