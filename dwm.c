@@ -108,6 +108,7 @@ struct Client {
 	char name[256];
 	float mina, maxa;
 	int x, y, w, h;
+	int floatx, floaty, floatw, floath;
 	int oldx, oldy, oldw, oldh;
 	int basew, baseh, incw, inch, maxw, maxh, minw, minh;
 	int bw, oldbw;
@@ -172,6 +173,7 @@ typedef struct {
 	unsigned int tags;
 	unsigned int issticky;
 	int isfloating;
+	int floatx, floaty, floatw, floath;
 	int isterminal;
 	int noswallow;
 	int monitor;
@@ -406,6 +408,7 @@ applyrules(Client *c)
 	/* rule matching */
 	c->isfloating = 0;
 	c->tags = 0;
+	c->floatx = c->floaty = c->floatw = c->floath = -1;
 	XGetClassHint(dpy, c->win, &ch);
 	class    = ch.res_class ? ch.res_class : broken;
 	instance = ch.res_name  ? ch.res_name  : broken;
@@ -420,6 +423,10 @@ applyrules(Client *c)
 			c->isfloating = r->isfloating;
 			c->noswallow  = r->noswallow;
 			c->issticky   = r->issticky;
+			c->floatx = r->floatx;
+			c->floaty = r->floaty;
+			c->floatw = r->floatw;
+			c->floath = r->floath;
 			c->tags |= r->tags;
 			for (m = mons; m && m->num != r->monitor; m = m->next);
 			if (m)
@@ -1501,6 +1508,22 @@ manage(Window w, XWindowAttributes *wa)
 	configure(c); /* propagates border_width, if size doesn't change */
 	updatewindowtype(c);
 	updatesizehints(c);
+	if (c->floatw > 0) /* set the position/size of the floating window according to the rules */
+		c->w = (c->mon->mw * c->floatw) / 100.0;
+	if (c->floath > 0)
+		c->h = (c->mon->mh * c->floath) / 100.0;
+	if (c->floatx >= 0)
+		c->x = c->mon->mx + (c->mon->mw * c->floatx) / 100.0;
+	else if(c->floatx =! -2)
+		c->x = c->mon->mx + (c->mon->mw - WIDTH(c)) / 2;
+	else
+		c->x -= 2*c->bw; /* adjustment for firefox picture in picture out of bound otherwise */
+	if (c->floaty >= 0)
+		c->y = c->mon->my + (c->mon->mh * c->floaty) / 100.0;
+	else if(c->floaty =! -2)
+		c->y = c->mon->my + (c->mon->mh - HEIGHT(c)) / 2;
+	else
+		c->y -= 2*c->bw; /* adjustment for firefox picture in picture out of bound otherwise */
 	updatewmhints(c);
 	XSelectInput(dpy, w, EnterWindowMask|FocusChangeMask|PropertyChangeMask|StructureNotifyMask);
 	grabbuttons(c, 0);
