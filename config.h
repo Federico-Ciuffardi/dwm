@@ -6,6 +6,8 @@
 #define Button7 7
 #define Button8 8
 #define Button9 9
+#define CENTER -1,-1,-1,-1
+#define HINTS -2,-2,-2,-2
 
 #define SHCMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
 
@@ -50,12 +52,12 @@ static const Rule rules[] = {
 	 *	WM_CLASS(STRING) = instance, class
 	 *	WM_NAME(STRING) = title
 	 */
-	/* class                      | instance | title         |tags| issticky |isfloating | isterminal | noswallow | monitor */
-	{ "Gimp"                      , NULL     , NULL          , 0  ,        0 , 1          , 0          , 0         , -1 },
-	{ "whatsapp-nativefier-d52542", NULL     , NULL          , 0  ,        1 , 1          , 0          , 0         , -1 },
-	{ "firefox"                   , "Toolkit", NULL          , 0  ,        1 , 1          , 0          , 0         , -1 },
-	{ "st"                        , NULL     , NULL          , 0  ,        0 , 0          , 1          , 1         , -1 },
- 	{ NULL                        , NULL     , "Event Tester", 0  ,        0 , 0          , 0          , 1         , -1 }, 
+	/* class                      | instance | title         |tags| issticky |isfloating | float x,y,w,h % | isterminal | noswallow | monitor */
+	{ "Gimp"                      , NULL     , NULL          , 0  ,        0 , 1          , CENTER         , 0          , 0         , -1 },
+	{ "whatsapp-nativefier-d52542", NULL     , NULL          , 0  ,        1 , 1          , 10,10,80,80    , 0          , 0         , -1 },
+	{ "firefox"                   , "Toolkit", NULL          , 0  ,        1 , 1          , HINTS          , 0          , 0         , -1 },
+	{ "st"                        , NULL     , NULL          , 0  ,        0 , 0          , CENTER         , 1          , 1         , -1 },
+	{ NULL                        , NULL     , "Event Tester", 0  ,        0 , 0          , CENTER         , 0          , 1         , -1 },
 };
 
 /* layout(s) */
