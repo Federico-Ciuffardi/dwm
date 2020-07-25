@@ -15,6 +15,8 @@
 static const char *const autostart[] = {
 	"/bin/sh", "-c", "(sleep 30 && whatsapp-nativefier-dark) &", NULL,
 	"/bin/sh", "-c", "(sleep 30 && thunderbird) &", NULL,
+	"/bin/sh", "-c", "volumeicon &", NULL,
+	"/bin/sh", "-c", "$DWM_BIN/date_to_statusbar &", NULL,
 	NULL /* terminate */
 };
 
@@ -41,7 +43,7 @@ static const char dmenufont[]       = "monospace:size=10";
 static const char *colors[][3]      = {
 	/*               fg         bg         border   */
 	[SchemeNorm] = { "#ffffff", "#1d2021", "#111111" },
-	[SchemeSel]  = { "#d0d0d0", "#2e3132", "#D3D3D3"  },
+	[SchemeSel]  = { "#ffffff", "#1d2021", "#D3D3D3"  },
 };
 
 /* tagging */
