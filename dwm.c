@@ -215,6 +215,7 @@ static void focusmon(const Arg *arg);
 static void focusstack(const Arg *arg);
 static int getdwmblockspid();
 static void focuswin(const Arg* arg);
+static void killwin(const Arg* arg);
 static Atom getatomprop(Client *c, Atom prop);
 static int getrootptr(int *x, int *y);
 static long getstate(Window w);
@@ -1004,7 +1005,7 @@ drawbar(Monitor *m)
 
 	if ((w = m->ww - sw - stw - x) > bh) {
 		if (m->sel) {
-			drw_setscheme(drw, scheme[m == selmon ? SchemeSel : SchemeNorm]);
+			drw_setscheme(drw, scheme[SchemeNorm]);
 			drw_text(drw, x, 0, w, bh, lrpad / 2, m->sel->name, 0);
 			if (m->sel->isfloating)
 				drw_rect(drw, x + boxs, boxs, boxw, boxw, m->sel->isfixed, 0);
@@ -1066,11 +1067,12 @@ drawtab(Monitor *m) {
 	  }
 	}
 
-	if(0 <= itag  && itag < LENGTH(tags)){
+	/*if(0 <= itag  && itag < LENGTH(tags)){
 	  snprintf(view_info, sizeof view_info, "[%s]", tags[itag]);
 	} else {
 	  strncpy(view_info, "[...]", sizeof view_info);
-	}
+	}*/
+	view_info[0]='\0';
 	view_info[sizeof(view_info) - 1 ] = 0;
 	view_info_w = TEXTW(view_info);
 	tot_width = view_info_w;
@@ -1078,8 +1080,8 @@ drawtab(Monitor *m) {
 	/* Calculates number of labels and their width */
 	m->ntabs = 0;
 	for(c = m->clients; c; c = c->next){
-	  if(!ISVISIBLE(c)) continue;
-	  m->tab_widths[m->ntabs] = TEXTW(c->name);
+	  if(!ISVISIBLE(c) || c->isfloating) continue;
+	  m->tab_widths[m->ntabs] = TEXTW(c->name)+TEXTW(" ")/2;
 	  tot_width += m->tab_widths[m->ntabs];
 	  ++m->ntabs;
 	  if(m->ntabs >= MAXTABS) break;
@@ -1100,12 +1102,14 @@ drawtab(Monitor *m) {
 	}
 	i = 0;
 	for(c = m->clients; c; c = c->next){
-	  if(!ISVISIBLE(c)) continue;
+	  if(!ISVISIBLE(c) || c->isfloating) continue;
 	  if(i >= m->ntabs) break;
 	  if(m->tab_widths[i] >  maxsize) m->tab_widths[i] = maxsize;
 	  w = m->tab_widths[i];
 	  drw_setscheme(drw, scheme[(c == m->sel) ? SchemeSel : SchemeNorm]);
-	  drw_text(drw, x, 0, w, th, 0, c->name, 0);
+	  char* tab_name[sizeof(c->name) + 3];
+	  sprintf(tab_name, " > %s", c->name);
+	  drw_text(drw, x, 0, w, th, 0, tab_name, 0);
 	  x += w;
 	  ++i;
 	}
@@ -1238,14 +1242,36 @@ void
 focuswin(const Arg* arg){
   int iwin = arg->i;
   Client* c = NULL;
-  for(c = selmon->clients; c && (iwin || !ISVISIBLE(c)) ; c = c->next){
-    if(ISVISIBLE(c)) --iwin;
+  for(c = selmon->clients; c && (iwin || !ISVISIBLE(c) || c->isfloating) ; c = c->next){
+    if(ISVISIBLE(c) && !c->isfloating) --iwin;
   };
   if(c) {
     focus(c);
     restack(selmon);
   }
 }
+
+void
+killwin(const Arg* arg){
+  int iwin = arg->i;
+  Client* c = NULL;
+  for(c = selmon->clients; c && (iwin || !ISVISIBLE(c) || c->isfloating) ; c = c->next){
+    if(ISVISIBLE(c) && !c->isfloating) --iwin;
+  };
+  if(c) {
+		if (!sendevent(c->win, wmatom[WMDelete], NoEventMask, wmatom[WMDelete], CurrentTime, 0 , 0, 0)) {
+			XGrabServer(dpy);
+			XSetErrorHandler(xerrordummy);
+			XSetCloseDownMode(dpy, DestroyAll);
+			XKillClient(dpy, c->win);
+			XSync(dpy, False);
+			XSetErrorHandler(xerror);
+			XUngrabServer(dpy);
+		}
+    restack(selmon);
+  }
+}
+
 
 Atom
 getatomprop(Client *c, Atom prop)
@@ -1485,13 +1511,13 @@ manage(Window w, XWindowAttributes *wa)
 		c->h = (c->mon->mh * c->floath) / 100.0;
 	if (c->floatx >= 0)
 		c->x = c->mon->mx + (c->mon->mw * c->floatx) / 100.0;
-	else if(c->floatx =! -2)
+	else if(c->floatx != -2)
 		c->x = c->mon->mx + (c->mon->mw - WIDTH(c)) / 2;
 	else
 		c->x -= 2*c->bw; /* adjustment for firefox picture in picture out of bound otherwise */
 	if (c->floaty >= 0)
 		c->y = c->mon->my + (c->mon->mh * c->floaty) / 100.0;
-	else if(c->floaty =! -2)
+	else if(c->floaty != -2)
 		c->y = c->mon->my + (c->mon->mh - HEIGHT(c)) / 2;
 	else
 		c->y -= 2*c->bw; /* adjustment for firefox picture in picture out of bound otherwise */
@@ -1551,14 +1577,8 @@ maprequest(XEvent *e)
 void
 monocle(Monitor *m)
 {
-	unsigned int n = 0;
 	Client *c;
 
-	for (c = m->clients; c; c = c->next)
-		if (ISVISIBLE(c))
-			n++;
-	if (n > 0) /* override layout symbol */
-		snprintf(m->ltsymbol, sizeof m->ltsymbol, "[%d]", n);
 	for (c = nexttiled(m->clients); c; c = nexttiled(c->next))
 		resize(c, m->wx, m->wy, m->ww - 2 * c->bw, m->wh - 2 * c->bw, 0);
 }
