@@ -20,8 +20,6 @@ static const char *const autostart[] = {
 	NULL /* terminate */
 };
 
-
-
 /* appearance */
 static const unsigned int borderpx  = 1;        /* border pixel of windows */
 static const unsigned int snap      = 32;       /* snap pixel */
@@ -42,8 +40,8 @@ static const char *fonts[]          = { "monospace:size=10" };
 static const char dmenufont[]       = "monospace:size=10";
 static const char *colors[][3]      = {
 	/*               fg         bg         border   */
-	[SchemeNorm] = { "#ffffff", "#1d2021", "#111111" },
-	[SchemeSel]  = { "#ffffff", "#1d2021", "#D3D3D3"  },
+	[SchemeNorm] = { "#ffffff", "#1d2021", "#222222" },
+	[SchemeSel]  = { "#ffffff", "#0058a0", "#D3D3D3"  },
 };
 
 /* tagging */
@@ -69,9 +67,9 @@ static const int resizehints = 0;    /* 1 means respect size hints in tiled resi
 
 static const Layout layouts[] = {
 	/* symbol     arrange function */
-	{ "Tall",     tile },    /* first entry is default */
-	{ "Floating", NULL },    /* no layout function means floating behavior */
-	{ "Monocle",  monocle },
+	{ "[Tall]",     tile },    /* first entry is default */
+	{ "[Floating]", NULL },    /* no layout function means floating behavior */
+	{ "[Tabbed]",  monocle },
 };
 
 /* key definitions */
@@ -162,5 +160,8 @@ static Button buttons[] = {
 	{ ClkTagBar,            0,              Button3,        toggleview,     {0} },
 	{ ClkTagBar,            MODKEY,         Button1,        tag,            {0} },
 	{ ClkTagBar,            MODKEY,         Button3,        toggletag,      {0} },
+	{ ClkTabBar,            0,              Button1,        focuswin,       {0} },
+	{ ClkTabBar,            0,              Button2,        killwin ,       {0} },
+
 };
 
