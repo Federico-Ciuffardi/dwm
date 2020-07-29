@@ -272,6 +272,7 @@ static void tagmon(const Arg *arg);
 static void tile(Monitor *);
 static void togglebar(const Arg *arg);
 static void togglefloating(const Arg *arg);
+static void togglefullscreen(const Arg *arg);
 static void togglesticky(const Arg *arg);
 static void toggletag(const Arg *arg);
 static void toggleview(const Arg *arg);
@@ -788,9 +789,8 @@ clientmessage(XEvent *e)
 		uint i;
 		for (i = 0; i < LENGTH(tags) && !((1 << i) & c->tags); i++);
 		if (i < LENGTH(tags)) return;
-		if ( c->mon == selmon){
+		if ( c->mon == selmon)
 			unfocus(selmon->sel, 0);
-		}
 		selmon = c->mon;
 		warp(c);
 		focus(c);
@@ -1254,7 +1254,7 @@ focusstack(const Arg *arg)
 {
 	Client *c = NULL, *i;
 
-	if (!selmon->sel)
+	if (!selmon->sel || selmon->sel->isfullscreen)
 		return;
 	if (arg->i > 0) {
 		for (c = selmon->sel->next; c && !ISVISIBLE(c); c = c->next);
@@ -1571,14 +1571,17 @@ manage(Window w, XWindowAttributes *wa)
 		(unsigned char *) &(c->win), 1);
 	XMoveResizeWindow(dpy, c->win, c->x + 2 * sw, c->y, c->w, c->h); /* some windows require this */
 	setclientstate(c, NormalState);
-	if (c->mon == selmon)
-		unfocus(selmon->sel, 0);
-	c->mon->sel = c;
+	if(!selmon->sel || !selmon->sel->isfullscreen){
+		if (c->mon == selmon)
+			unfocus(selmon->sel, 0);
+		c->mon->sel = c;
+	}
 	arrange(c->mon);
 	XMapWindow(dpy, c->win);
 	if (term)
 		swallow(term, c);
-	focus(NULL);
+	if(!selmon->sel || !selmon->sel->isfullscreen)
+		focus(NULL);
 }
 
 void
@@ -2397,6 +2400,13 @@ togglefloating(const Arg *arg)
 	if (selmon->sel->isfloating)
 		resize(selmon->sel, selmon->sel->x, selmon->sel->y,
 			selmon->sel->w, selmon->sel->h, 0);
+	arrange(selmon);
+}
+
+void
+togglefullscreen(const Arg *arg)
+{
+	setfullscreen(selmon->sel, !selmon->sel->isfullscreen);
 	arrange(selmon);
 }
 
