@@ -774,12 +774,14 @@ clientmessage(XEvent *e)
 	} else if (cme->message_type == netatom[NetActiveWindow]) {
 		uint i;
 		for (i = 0; i < LENGTH(tags) && !((1 << i) & c->tags); i++);
-		if (i < LENGTH(tags)) return;
-		if ( c->mon == selmon)
+		if (i >= LENGTH(tags)) return;
+		if ( c->mon != selmon)
 			unfocus(selmon->sel, 0);
 		selmon = c->mon;
-		warp(c);
+		const Arg a = {.ui = 1 << i};
+		view(&a);
 		focus(c);
+		warp(c);
 		restack(selmon);
 	}
 }
