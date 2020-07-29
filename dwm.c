@@ -398,6 +398,16 @@ autostart_exec() {
 }
 
 /* function implementations */
+
+void
+setsticky(Client *c, int sticky){
+	c->issticky = sticky;
+	if(sticky)
+		c->tags = 0;
+	else
+		c->tags = selmon->tagset[selmon->seltags];
+}
+
 void
 applyrules(Client *c)
 {
@@ -423,7 +433,7 @@ applyrules(Client *c)
 			c->isterminal = r->isterminal;
 			c->isfloating = r->isfloating;
 			c->noswallow  = r->noswallow;
-			c->issticky   = r->issticky;
+			setsticky(c,r->issticky);
 			c->floatx = r->floatx;
 			c->floaty = r->floaty;
 			c->floatw = r->floatw;
@@ -438,7 +448,8 @@ applyrules(Client *c)
 		XFree(ch.res_class);
 	if (ch.res_name)
 		XFree(ch.res_name);
-	c->tags = c->tags & TAGMASK ? c->tags & TAGMASK : c->mon->tagset[c->mon->seltags];
+	if(!c->issticky)
+		c->tags = c->tags & TAGMASK ? c->tags & TAGMASK : c->mon->tagset[c->mon->seltags];
 }
 
 int
@@ -787,16 +798,19 @@ clientmessage(XEvent *e)
 				|| (cme->data.l[0] == 2 /* _NET_WM_STATE_TOGGLE */ && !c->isfullscreen)));
 	} else if (cme->message_type == netatom[NetActiveWindow]) {
 		uint i;
-		for (i = 0; i < LENGTH(tags) && !((1 << i) & c->tags); i++);
-		if (i >= LENGTH(tags)) return;
-		if ( c->mon != selmon)
+		if(!c->issticky){
+			for (i = 0; i < LENGTH(tags) && !((1 << i) & c->tags); i++);
+			if (i >= LENGTH(tags)) return;
+		}
+		if (c->mon != selmon)
 			unfocus(selmon->sel, 0);
 		else if (c->mon->sel && c->mon->sel->isfullscreen)
 			return;
 		selmon = c->mon;
-		const Arg a = {.ui = 1 << i};
-		focus(NULL);
-		view(&a);
+		if(!c->issticky){
+			const Arg a = {.ui = 1 << i};
+			view(&a);
+		}
 		focus(c);
 		warp(c);
 		restack(selmon);
@@ -1524,7 +1538,8 @@ manage(Window w, XWindowAttributes *wa)
 	c->floatx = c->floaty = c->floatw = c->floath = -1; /* default float* to center */
 	if (XGetTransientForHint(dpy, w, &trans) && (t = wintoclient(trans))) {
 		c->mon = t->mon;
-		c->tags = t->tags;
+		if(!c->issticky)
+			c->tags = t->tags;
 	} else {
 		c->mon = selmon;
 		applyrules(c);
@@ -2030,7 +2045,8 @@ sendmon(Client *c, Monitor *m)
 	detach(c);
 	detachstack(c);
 	c->mon = m;
-	c->tags = m->tagset[m->seltags]; /* assign tags of target monitor */
+	if(!c->issticky)
+		c->tags = m->tagset[m->seltags]; /* assign tags of target monitor */
 	attach(c);
 	attachstack(c);
 	focus(NULL);
@@ -2323,7 +2339,8 @@ void
 tag(const Arg *arg)
 {
 	if (selmon->sel && arg->ui & TAGMASK) {
-		selmon->sel->tags = arg->ui & TAGMASK;
+		if(!selmon->sel->issticky)
+			selmon->sel->tags = arg->ui & TAGMASK;
 		focus(NULL);
 		arrange(selmon);
 	}
@@ -2420,7 +2437,7 @@ togglesticky(const Arg *arg)
 {
 	if (!selmon->sel)
 		return;
-	selmon->sel->issticky = !selmon->sel->issticky;
+	setsticky(selmon->sel,!selmon->sel->issticky);
 	arrange(selmon);
 }
 
@@ -2433,7 +2450,8 @@ toggletag(const Arg *arg)
 		return;
 	newtags = selmon->sel->tags ^ (arg->ui & TAGMASK);
 	if (newtags) {
-		selmon->sel->tags = newtags;
+		if(!selmon->sel->issticky)
+			selmon->sel->tags = newtags;
 		focus(NULL);
 		arrange(selmon);
 	}
