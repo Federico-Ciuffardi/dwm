@@ -791,8 +791,11 @@ clientmessage(XEvent *e)
 		if (i >= LENGTH(tags)) return;
 		if ( c->mon != selmon)
 			unfocus(selmon->sel, 0);
+		else if (c->mon->sel && c->mon->sel->isfullscreen)
+			return;
 		selmon = c->mon;
 		const Arg a = {.ui = 1 << i};
+		focus(NULL);
 		view(&a);
 		focus(c);
 		warp(c);
@@ -3193,6 +3196,7 @@ zoom(const Arg *arg)
 			return;
 	pop(c);
 	focus(o);
+	restack(selmon);
 }
 
 int
