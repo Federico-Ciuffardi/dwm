@@ -90,19 +90,21 @@ static Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_q,      spawn,          SHCMD("$DMENU_BIN/dmenu_leave") },
 	{ MODKEY|ShiftMask,             XK_r,      spawn,          SHCMD("lxsu /bin/sh -c \"cd $HOME/git/dwm/ && make all && make install\" && pkill dwm") },
 	{ MODKEY,                       XK_r,      spawn,          SHCMD("rofi -show drun") },
+	{ MODKEY,                       XK_Tab,    spawn,          SHCMD("rofi -show window") },
 	{ 0,                            XK_Print,  spawn,          SHCMD("screengrab") },
 
 	{ MODKEY,                       XK_space,  zoom,           {0} },
 	{ MODKEY,                       XK_q,      killclient,     {0} },
 	{ MODKEY,                       XK_grave,  focusmon,       {.i = +1 } },
 	{ MODKEY|ShiftMask,             XK_grave,  tagmon,         {.i = +1 } },
-	{ MODKEY,                       XK_f,      togglefloating, {0} },
+	{ MODKEY|ShiftMask,             XK_f,      togglefloating, {0} },
 	{ MODKEY,                       XK_s,      togglesticky,   {0} },
 	{ MODKEY|ShiftMask,             XK_h,      incnmaster,     {.i = +1 } },
 	{ MODKEY|ShiftMask,             XK_l,      incnmaster,     {.i = -1 } },
 	{ MODKEY|ShiftMask,             XK_j,      pushdown,       {0} },
 	{ MODKEY|ShiftMask,             XK_k,      pushup,         {0} },
 
+	{ MODKEY,                       XK_f,      setlayout,      {.v = &layouts[2]} },
 	{ MODKEY|ShiftMask,             XK_d,      setlayout,      {.v = &layouts[0]} },
 	{ MODKEY|ShiftMask,             XK_t,      setlayout,      {.v = &layouts[2]} },
 
@@ -120,14 +122,12 @@ static Key keys[] = {
 	{ 0, XF86XK_AudioLowerVolume,              spawn,          SHCMD("amixer sset Master 5%-") },
 
 
-
 	// Default
 	{ MODKEY,                       XK_b,      togglebar,      {0} },
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
 	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
 	{ MODKEY,                       XK_h,      setmfact,       {.f = -0.05} },
 	{ MODKEY,                       XK_l,      setmfact,       {.f = +0.05} },
-	{ MODKEY,                       XK_Tab,    view,           {0} },
 	{ MODKEY,                       XK_0,      view,           {.ui = ~0 } },
 	{ MODKEY,                       XK_comma,  focusmon,       {.i = -1 } },
 	{ MODKEY,                       XK_period, focusmon,       {.i = +1 } },

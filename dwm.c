@@ -785,8 +785,16 @@ clientmessage(XEvent *e)
 			setfullscreen(c, (cme->data.l[0] == 1 /* _NET_WM_STATE_ADD    */
 				|| (cme->data.l[0] == 2 /* _NET_WM_STATE_TOGGLE */ && !c->isfullscreen)));
 	} else if (cme->message_type == netatom[NetActiveWindow]) {
-		if (c != selmon->sel && !c->isurgent)
-			seturgent(c, 1);
+		uint i;
+		for (i = 0; i < LENGTH(tags) && !((1 << i) & c->tags); i++);
+		if (i < LENGTH(tags)) return;
+		if ( c->mon == selmon){
+			unfocus(selmon->sel, 0);
+		}
+		selmon = c->mon;
+		warp(c);
+		focus(c);
+		restack(selmon);
 	}
 }
 
@@ -1136,7 +1144,7 @@ drawtab(Monitor *m) {
 	  if(m->tab_widths[i] >  maxsize) m->tab_widths[i] = maxsize;
 	  w = m->tab_widths[i];
 	  drw_setscheme(drw, scheme[(c == m->sel) ? SchemeSel : SchemeNorm]);
-	  char* tab_name[sizeof(c->name) + 3];
+	  char tab_name[sizeof(c->name) + 3];
 	  sprintf(tab_name, " > %s", c->name);
 	  drw_text(drw, x, 0, w, th, 0, tab_name, 0);
 	  x += w;
@@ -2578,7 +2586,7 @@ updatebarpos(Monitor *m)
 	}
 
 	for(c = m->clients; c; c = c->next) {
-		if(ISVISIBLE(c)) ++nvis;
+		if(ISVISIBLE(c) && !c->isfloating) ++nvis;
 	}
 
 	if(m->showtab == showtab_always
