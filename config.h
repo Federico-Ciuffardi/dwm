@@ -68,8 +68,8 @@ static const int resizehints = 0;    /* 1 means respect size hints in tiled resi
 static const Layout layouts[] = {
 	/* symbol     arrange function */
 	{ "[Tall]",     tile },    /* first entry is default */
-	{ "[Floating]", NULL },    /* no layout function means floating behavior */
 	{ "[Tabbed]",  monocle },
+	{ "[Floating]", NULL },    /* no layout function means floating behavior */
 };
 
 /* key definitions */
@@ -106,9 +106,9 @@ static Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_j,      pushdown,       {0} },
 	{ MODKEY|ShiftMask,             XK_k,      pushup,         {0} },
 
-	{ MODKEY,                       XK_f,      setlayout,      {.v = &layouts[2]} },
+	{ MODKEY,                       XK_f,      setlayout,      {.v = &layouts[1]} },
 	{ MODKEY|ShiftMask,             XK_d,      setlayout,      {.v = &layouts[0]} },
-	{ MODKEY|ShiftMask,             XK_t,      setlayout,      {.v = &layouts[2]} },
+	{ MODKEY|ShiftMask,             XK_t,      setlayout,      {.v = &layouts[1]} },
 	{ 0,                            XK_F11,    togglefullscreen, {0} },
 
 
@@ -152,7 +152,7 @@ static Key keys[] = {
 static Button buttons[] = {
 	/* click                event mask      button          function        argument */
 	{ ClkLtSymbol,          0,              Button1,        setlayout,      {0} },
-	{ ClkLtSymbol,          0,              Button3,        setlayout,      {.v = &layouts[2]} },
+	{ ClkLtSymbol,          0,              Button3,        setlayout,      {.v = &layouts[1]} },
 	{ ClkWinTitle,          0,              Button2,        killclient,     {0} },
 	{ ClkClientWin,         MODKEY,         Button1,        movemouse,      {0} },
 	{ ClkClientWin,         MODKEY,         Button2,        togglefloating, {0} },
