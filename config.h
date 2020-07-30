@@ -93,14 +93,16 @@ static Key keys[] = {
 	{ MODKEY,                       XK_Tab,    spawn,          SHCMD("rofi -show window") },
 	{ 0,                            XK_Print,  spawn,          SHCMD("screengrab") },
 
-	{ MODKEY,                       XK_space,  zoom,           {0} },
+	{ MODKEY,                       XK_space,  focusmaster,   {0} },
 	{ MODKEY,                       XK_q,      killclient,     {0} },
 	{ MODKEY,                       XK_grave,  focusmon,       {.i = +1 } },
 	{ MODKEY|ShiftMask,             XK_grave,  tagmon,         {.i = +1 } },
 	{ MODKEY|ShiftMask,             XK_f,      togglefloating, {0} },
 	{ MODKEY,                       XK_s,      togglesticky,   {0} },
-	{ MODKEY|ShiftMask,             XK_h,      incnmaster,     {.i = +1 } },
-	{ MODKEY|ShiftMask,             XK_l,      incnmaster,     {.i = -1 } },
+	{ MODKEY|ShiftMask,             XK_h,      zoom,           {0} },
+	{ MODKEY|ShiftMask,             XK_l,      zoom,           {0} },
+	//{ MODKEY|ShiftMask,             XK_h,      incnmaster,     {.i = +1 } },
+	//{ MODKEY|ShiftMask,             XK_l,      incnmaster,     {.i = -1 } },
 	{ MODKEY|ShiftMask,             XK_j,      pushdown,       {0} },
 	{ MODKEY|ShiftMask,             XK_k,      pushup,         {0} },
 
@@ -118,7 +120,7 @@ static Key keys[] = {
 	{ 0, XF86XK_Calculator,                    spawn,          SHCMD("pkill -TERM speedcrunch || speedcrunch") },
 	{ 0, XF86XK_MonBrightnessUp,               spawn,          SHCMD("light -A 15") },
 	{ 0, XF86XK_MonBrightnessDown,             spawn,          SHCMD("light -U 15") },
-	{ 0, XF86XK_AudioMute,                     spawn,          SHCMD("amixer sset Master toggleq") },
+	{ 0, XF86XK_AudioMute,                     spawn,          SHCMD("amixer sset Master toggle") },
 	{ 0, XF86XK_AudioRaiseVolume,              spawn,          SHCMD("amixer sset Master 5%+") },
 	{ 0, XF86XK_AudioLowerVolume,              spawn,          SHCMD("amixer sset Master 5%-") },
 
