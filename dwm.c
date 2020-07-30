@@ -1800,27 +1800,39 @@ void
 pushdown(const Arg *arg) {
 	Client *sel = selmon->sel, *c;
 
-	if(!sel || sel->isfloating || sel == nexttiled(selmon->clients))
+	if(!sel || sel->isfloating || sel->isfullscreen)
 		return;
 	if((c = nexttiled(sel->next))) {
 		detach(sel);
 		sel->next = c->next;
 		c->next = sel;
+		focus(sel);
+		arrange(selmon);
+	}else{
+		zoom(NULL);
 	}
-	focus(sel);
-	arrange(selmon);
 }
 
 void
 pushup(const Arg *arg) {
 	Client *sel = selmon->sel, *c;
 
-	if(!sel || sel->isfloating)
+	if(!sel || sel->isfloating || sel->isfullscreen)
 		return;
-	if((c = prevtiled(sel)) && c != nexttiled(selmon->clients)) {
+	if((c = prevtiled(sel))) {
 		detach(sel);
 		sel->next = c;
-		for(c = selmon->clients; c->next != sel->next; c = c->next);
+		if(selmon->clients != sel->next){
+			for(c = selmon->clients; c->next != sel->next; c = c->next);
+			c->next = sel;
+		}else
+			selmon->clients = sel;
+	}else{
+		if(!(c = nexttiled(sel->next)))
+			return;
+		detach(sel);
+		sel->next = NULL;
+		for(;c->next;c=c->next);
 		c->next = sel;
 	}
 	focus(sel);
@@ -3225,12 +3237,8 @@ focusmaster(const Arg *arg)
 	if (!selmon->lt[selmon->sellt]->arrange
 	|| (selmon->sel && (selmon->sel->isfloating || selmon->sel->isfullscreen)))
 		return;
-	/*if (c == nexttiled(selmon->clients))
-		if (!c || !(c = nexttiled(c->next)))
-			return;*/
 
-	for (c = selmon->clients; c && !ISVISIBLE(c); c = c->next);
-	if (!c)
+	if (!(c = nexttiled(selmon->clients)))
 		return;
 	focus(c);
 }
