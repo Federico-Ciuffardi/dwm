@@ -303,6 +303,7 @@ static int xerrorstart(Display *dpy, XErrorEvent *ee);
 static void zoom(const Arg *arg);
 static void centeredmaster(Monitor *m);
 static void centeredfloatingmaster(Monitor *m);
+static void focusmaster(const Arg *arg);
 static void autostart_exec(void);
 
 static pid_t getparentprocess(pid_t p);
@@ -3214,7 +3215,24 @@ zoom(const Arg *arg)
 			return;
 	pop(c);
 	focus(o);
-	restack(selmon);
+}
+
+void
+focusmaster(const Arg *arg)
+{
+	Client *c = selmon->sel;
+
+	if (!selmon->lt[selmon->sellt]->arrange
+	|| (selmon->sel && (selmon->sel->isfloating || selmon->sel->isfullscreen)))
+		return;
+	/*if (c == nexttiled(selmon->clients))
+		if (!c || !(c = nexttiled(c->next)))
+			return;*/
+
+	for (c = selmon->clients; c && !ISVISIBLE(c); c = c->next);
+	if (!c)
+		return;
+	focus(c);
 }
 
 int
