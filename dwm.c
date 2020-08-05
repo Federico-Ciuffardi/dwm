@@ -2007,7 +2007,7 @@ restack(Monitor *m)
 	}
 	XSync(dpy, False);
 	while (XCheckMaskEvent(dpy, EnterWindowMask, &ev));
-	if (m == selmon && (m->tagset[m->seltags] & m->sel->tags) && selmon->lt[selmon->sellt] != &layouts[2])
+	if (m == selmon && (m->tagset[m->seltags] & m->sel->tags) && selmon->lt[selmon->sellt] != &layouts[1])
 		warp(m->sel);
 }
 
@@ -2062,7 +2062,6 @@ sendmon(Client *c, Monitor *m)
 		c->tags = m->tagset[m->seltags]; /* assign tags of target monitor */
 	attach(c);
 	attachstack(c);
-	focus(NULL);
 	arrange(NULL);
 }
 
@@ -2361,9 +2360,18 @@ tag(const Arg *arg)
 void
 tagmon(const Arg *arg)
 {
-	if (!selmon->sel || !mons->next)
+	Client* c = selmon->sel;
+	if (!c || !mons->next)
 		return;
-	sendmon(selmon->sel, dirtomon(arg->i));
+	Monitor* m = dirtomon(arg->i);
+	if(c->isfloating)
+		c->x += m->mx - c->mon->mx;
+	sendmon(c, m);
+	unfocus(selmon->sel, 0);
+	selmon = c->mon;
+	focus(c);
+	warp(c);
+	restack(selmon);
 }
 
 void
