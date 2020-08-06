@@ -259,7 +259,6 @@ static void seturgent(Client *c, int urg);
 static void showhide(Client *c);
 static void sigchld(int unused);
 static void spawn(const Arg *arg);
-static void tabmode(const Arg *arg);
 static Monitor *systraytomon(Monitor *m);
 static void tag(const Arg *arg);
 static void tagmon(const Arg *arg);
@@ -295,7 +294,7 @@ static int xerror(Display *dpy, XErrorEvent *ee);
 static int xerrordummy(Display *dpy, XErrorEvent *ee);
 static int xerrorstart(Display *dpy, XErrorEvent *ee);
 static void zoom(const Arg *arg);
-static void focusmaster(const Arg *arg);
+static void focushorizontal(const Arg *arg);
 static void autostart_exec(void);
 
 static pid_t getparentprocess(pid_t p);
@@ -761,7 +760,7 @@ clientmessage(XEvent *e)
 			setfullscreen(c, (cme->data.l[0] == 1 /* _NET_WM_STATE_ADD    */
 				|| (cme->data.l[0] == 2 /* _NET_WM_STATE_TOGGLE */ && !c->isfullscreen)));
 	} else if (cme->message_type == netatom[NetActiveWindow]) {
-		uint i;
+		uint i = 0;
 		if(!c->issticky){
 			for (i = 0; i < LENGTH(tags) && !((1 << i) & c->tags); i++);
 			if (i >= LENGTH(tags)) return;
@@ -2327,17 +2326,6 @@ togglebar(const Arg *arg)
 }
 
 void
-tabmode(const Arg *arg)
-{
-	if(arg && arg->i >= 0)
-		selmon->showtab = arg->ui % showtab_nmodes;
-	else
-		selmon->showtab = (selmon->showtab + 1 ) % showtab_nmodes;
-	arrange(selmon);
-}
-
-
-void
 togglefloating(const Arg *arg)
 {
 	if (!selmon->sel)
@@ -3090,7 +3078,7 @@ zoom(const Arg *arg)
 }
 
 void
-focusmaster(const Arg *arg)
+focushorizontal(const Arg *arg)
 {
 	Client *c = selmon->sel;
 
