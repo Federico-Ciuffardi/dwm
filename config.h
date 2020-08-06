@@ -74,6 +74,7 @@ static const Layout layouts[] = {
 
 /* key definitions */
 #define MODKEY Mod1Mask
+#define ALTMODKEY Mod4Mask
 #define TAGKEYS(KEY,TAG) \
 	{ MODKEY,                       KEY,      view,           {.ui = 1 << TAG} }, \
 	{ MODKEY|ControlMask,           KEY,      toggleview,     {.ui = 1 << TAG} }, \
@@ -93,16 +94,19 @@ static Key keys[] = {
 	{ MODKEY,                       XK_Tab,    spawn,          SHCMD("rofi -show window") },
 	{ 0,                            XK_Print,  spawn,          SHCMD("screengrab") },
 
-	{ MODKEY,                       XK_space,  focusmaster,   {0} },
-	{ MODKEY,                       XK_q,      killclient,     {0} },
-	{ MODKEY,                       XK_grave,  focusmon,       {.i = +1 } },
-	{ MODKEY|ShiftMask,             XK_grave,  tagmon,         {.i = +1 } },
-	{ MODKEY|ShiftMask,             XK_f,      togglefloating, {0} },
-	{ MODKEY,                       XK_s,      togglesticky,   {0} },
-	{ MODKEY|ShiftMask,             XK_h,      zoom,           {0} },
-	{ MODKEY|ShiftMask,             XK_l,      zoom,           {0} },
-	//{ MODKEY|ShiftMask,             XK_h,      incnmaster,     {.i = +1 } },
-	//{ MODKEY|ShiftMask,             XK_l,      incnmaster,     {.i = -1 } },
+	{ MODKEY,                       XK_q,      killclient,      {0} },
+	{ MODKEY,                       XK_grave,  focusmon,        {.i = +1 } },
+	{ MODKEY|ShiftMask,             XK_grave,  tagmon,          {.i = +1 } },
+	{ MODKEY|ShiftMask,             XK_f,      togglefloating,  {0} },
+	{ MODKEY,                       XK_s,      togglesticky,    {0} },
+	{ MODKEY|ShiftMask,             XK_h,      zoom,            {0} },
+	{ MODKEY|ShiftMask,             XK_l,      zoom,            {0} },
+	//{ MODKEY|ShiftMask,           XK_h,      incnmaster,      {.i = +1 } },
+	//{ MODKEY|ShiftMask,           XK_l,      incnmaster,      {.i = -1 } },
+	{ MODKEY,                       XK_h,      focushorizontal, {0} },
+	{ MODKEY,                       XK_l,      focushorizontal, {0} },
+	{ MODKEY|ShiftMask|ControlMask, XK_h,      setmfact,        {.f = -0.05} },
+	{ MODKEY|ShiftMask|ControlMask, XK_l,      setmfact,       {.f = +0.05} },
 	{ MODKEY|ShiftMask,             XK_j,      pushdown,       {0} },
 	{ MODKEY|ShiftMask,             XK_k,      pushup,         {0} },
 
@@ -129,8 +133,6 @@ static Key keys[] = {
 	{ MODKEY,                       XK_b,      togglebar,      {0} },
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
 	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
-	{ MODKEY,                       XK_h,      setmfact,       {.f = -0.05} },
-	{ MODKEY,                       XK_l,      setmfact,       {.f = +0.05} },
 	{ MODKEY,                       XK_0,      view,           {.ui = ~0 } },
 	{ MODKEY,                       XK_comma,  focusmon,       {.i = -1 } },
 	{ MODKEY,                       XK_period, focusmon,       {.i = +1 } },
