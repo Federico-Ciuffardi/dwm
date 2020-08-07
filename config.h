@@ -69,7 +69,8 @@ static const int resizehints = 0;    /* 1 means respect size hints in tiled resi
 static const Layout layouts[] = {
 	/* symbol     arrange function */
 	{ "[Tall]",     tile },    /* first entry is default */
-	{ "[Tabbed]",  monocle },
+	{ "[Tabs]",     monocle },
+	{ "[Grid]",     gaplessgrid },
 	{ "[Floating]", NULL },    /* no layout function means floating behavior */
 };
 
@@ -97,27 +98,28 @@ static Key keys[] = {
 	{ 0,                            XK_Print,  spawn,          SHCMD("screengrab") },
 
 	{ MODKEY,                       XK_q,      killclient,      {0} },
+	{ MODKEY,                       XK_t,      togglefloating,  {0} },
+	{ MODKEY,                       XK_s,      togglesticky,    {0} },
+
+	{ MODKEY,                       XK_h,      horizontalfocus, {.i = -1 } },
+	{ MODKEY,                       XK_l,      horizontalfocus, {.i = +1 } },
+	{ MODKEY|ShiftMask|ControlMask, XK_h,      setmfact,        {.f = -0.05} },
+	{ MODKEY|ShiftMask|ControlMask, XK_l,      setmfact,        {.f = +0.05} },
+	{ MODKEY|ShiftMask,             XK_j,      pushdown,        {0} },
+	{ MODKEY|ShiftMask,             XK_k,      pushup,          {0} },
+	{ MODKEY,                       XK_a,      view,            {.ui = ~0 } },
 	{ MODKEY,                       XK_grave,  focusmon,        {.i = +1 } },
 	{ MODKEY|ShiftMask,             XK_grave,  tagmon,          {.i = +1 } },
-	{ MODKEY|ShiftMask,             XK_f,      togglefloating,  {0} },
-	{ MODKEY,                       XK_s,      togglesticky,    {0} },
 	{ MODKEY|ShiftMask,             XK_h,      zoom,            {-1} },
 	{ MODKEY|ShiftMask,             XK_l,      zoom,            {+1} },
 	//{ MODKEY|ShiftMask,           XK_h,      incnmaster,      {.i = +1 } },
 	//{ MODKEY|ShiftMask,           XK_l,      incnmaster,      {.i = -1 } },
-	{ MODKEY,                       XK_h,      horizontalfocus, {.i = -1 } },
-	{ MODKEY,                       XK_l,      horizontalfocus, {.i = +1 } },
-	{ MODKEY|ShiftMask|ControlMask, XK_h,      setmfact,        {.f = -0.05} },
-	{ MODKEY|ShiftMask|ControlMask, XK_l,      setmfact,       {.f = +0.05} },
-	{ MODKEY|ShiftMask,             XK_j,      pushdown,       {0} },
-	{ MODKEY|ShiftMask,             XK_k,      pushup,         {0} },
-	{ MODKEY,                       XK_a,      view,           {.ui = ~0 } },
 
-	{ MODKEY,                       XK_f,      setlayout,      {.v = &layouts[1]} },
-	{ MODKEY|ShiftMask,             XK_d,      setlayout,      {.v = &layouts[0]} },
-	{ MODKEY|ShiftMask,             XK_t,      setlayout,      {.v = &layouts[1]} },
+	{ MODKEY|ShiftMask,             XK_g,      setlayout,        {.v = &layouts[2]} },
+	{ MODKEY|ShiftMask,             XK_d,      setlayout,        {.v = &layouts[0]} },
+	{ MODKEY,                       XK_f,      setlayout,        {.v = &layouts[1]} },
+	{ MODKEY|ShiftMask,             XK_f,      togglefullscreen, {0} },
 	{ 0,                            XK_F11,    togglefullscreen, {0} },
-
 
 	{ MODKEY,                       XK_Return, spawn,          SHCMD("$TERMINAL") },
 	{ MODKEY,                       XK_e,      spawn,          SHCMD("$TERMINAL -e ranger-standalone") },
