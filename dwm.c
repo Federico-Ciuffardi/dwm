@@ -419,7 +419,7 @@ applyrules(Client *c)
 			c->floaty = r->floaty;
 			c->floatw = r->floatw;
 			c->floath = r->floath;
-			c->tags |= r->tags;
+			c->tags = (r->tags) ? r->tags : c->tags;
 			for (m = mons; m && m->num != r->monitor; m = m->next);
 			if (m)
 				c->mon = m;
