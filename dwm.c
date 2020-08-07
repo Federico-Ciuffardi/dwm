@@ -168,7 +168,6 @@ typedef struct {
 	const char *instance;
 	const char *title;
 	unsigned int tags;
-	unsigned int issticky;
 	int isfloating;
 	int floatx, floaty, floatw, floath;
 	int isterminal;
@@ -400,7 +399,10 @@ applyrules(Client *c)
 
 	/* rule matching */
 	c->isfloating = 0;
-	c->tags = 0;
+	if(!c->issticky)
+		c->tags = c->tags & TAGMASK ? c->tags & TAGMASK : c->mon->tagset[c->mon->seltags];
+	else
+		c->tags = 0;
 	XGetClassHint(dpy, c->win, &ch);
 	class    = ch.res_class ? ch.res_class : broken;
 	instance = ch.res_name  ? ch.res_name  : broken;
@@ -414,12 +416,15 @@ applyrules(Client *c)
 			c->isterminal = r->isterminal;
 			c->isfloating = r->isfloating;
 			c->noswallow  = r->noswallow;
-			setsticky(c,r->issticky);
 			c->floatx = r->floatx;
 			c->floaty = r->floaty;
 			c->floatw = r->floatw;
 			c->floath = r->floath;
-			c->tags = (r->tags) ? r->tags : c->tags;
+			if(r->tags == ~0 || c->tags == TAGMASK )
+				setsticky(c, 1);
+			else if(r->tags)
+				c->tags = r->tags & TAGMASK;
+
 			for (m = mons; m && m->num != r->monitor; m = m->next);
 			if (m)
 				c->mon = m;
@@ -429,8 +434,6 @@ applyrules(Client *c)
 		XFree(ch.res_class);
 	if (ch.res_name)
 		XFree(ch.res_name);
-	if(!c->issticky)
-		c->tags = c->tags & TAGMASK ? c->tags & TAGMASK : c->mon->tagset[c->mon->seltags];
 }
 
 int
@@ -2857,10 +2860,13 @@ updatewmhints(Client *c)
 void
 view(const Arg *arg)
 {
-	if ((arg->ui & TAGMASK) == selmon->tagset[selmon->seltags])
+	if (arg->ui != ~0 && (arg->ui & TAGMASK) == selmon->tagset[selmon->seltags])
 		return;
 	selmon->seltags ^= 1; /* toggle sel tagset */
-	if (arg->ui & TAGMASK)
+	if(arg->ui == ~0 && selmon->tagset[selmon->seltags^1] == TAGMASK){
+		if(selmon->sel && !selmon->sel->issticky)
+			selmon->tagset[selmon->seltags] = selmon->sel->tags;
+	}else if(arg->ui & TAGMASK)
 		selmon->tagset[selmon->seltags] = arg->ui & TAGMASK;
 	focus(NULL);
 	arrange(selmon);
