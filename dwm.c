@@ -297,7 +297,7 @@ static int xerror(Display *dpy, XErrorEvent *ee);
 static int xerrordummy(Display *dpy, XErrorEvent *ee);
 static int xerrorstart(Display *dpy, XErrorEvent *ee);
 static void zoom(const Arg *arg);
-static void focushorizontal(const Arg *arg);
+static void horizontalfocus(const Arg *arg);
 static void autostart_exec(void);
 
 static pid_t getparentprocess(pid_t p);
@@ -1229,13 +1229,16 @@ focusmon(const Arg *arg)
 {
 	Monitor *m;
 
-	if (!mons->next)
-		return;
-	if ((m = dirtomon(arg->i)) == selmon)
+	if (!mons->next || (m = dirtomon(arg->i)) == selmon)
 		return;
 	unfocus(selmon->sel, 0);
 	selmon = m;
-	focus(NULL);
+	Client *c = nexttiled(selmon->clients); 
+	if (!c || !arg->ui)
+		c = NULL;
+	else if(arg->ui == -1)
+		c = nexttiled(c->next);
+	focus(c);
 	warp(selmon->sel);
 }
 
@@ -3146,16 +3149,21 @@ zoom(const Arg *arg)
 }
 
 void
-focushorizontal(const Arg *arg)
+horizontalfocus(const Arg *arg)
 {
-	Client *c = selmon->sel;
+	Client *c = nexttiled(selmon->clients) ;
 
-	if (!selmon->lt[selmon->sellt]->arrange
-	|| (selmon->sel && (selmon->sel->isfloating || selmon->sel->isfullscreen)))
-		return;
-
-	if (!(c = nexttiled(selmon->clients)))
-		return;
+	if (!c || !nexttiled(c->next)
+	|| !selmon->lt[selmon->sellt]->arrange
+	|| selmon->sel->isfloating || selmon->sel->isfullscreen
+	|| selmon->lt[selmon->sellt] == &layouts[1] 
+	|| ((arg->i<0) == (nexttiled(selmon->clients) == selmon->sel))){
+		const Arg a = {.i = arg->i, .ui = arg->i};
+		focusmon(&a);
+	    return;
+	}
+	if (arg->i>0)
+		c = nexttiled(c->next);
 	focus(c);
 }
 
