@@ -302,6 +302,7 @@ static int xerrorstart(Display *dpy, XErrorEvent *ee);
 static void zoom(const Arg *arg);
 static void horizontalfocus(const Arg *arg);
 static void autostart_exec(void);
+static void gaplessgrid(Monitor *m);
 
 static pid_t getparentprocess(pid_t p);
 static int isdescprocess(pid_t p, pid_t c);
@@ -3235,7 +3236,7 @@ zoom(const Arg *arg)
 	if (arg && (!c || !nexttiled(c->next)
 	|| !selmon->lt[selmon->sellt]->arrange
 	|| selmon->sel->isfloating || selmon->sel->isfullscreen
-	|| selmon->lt[selmon->sellt] == &layouts[1] 
+	|| selmon->lt[selmon->sellt] != &layouts[0] 
 	|| ((arg->i<0) == (nexttiled(selmon->clients) == selmon->sel)))){
 		const Arg a = {.i = arg->i, .ui = (arg->i==1)};
 		tagmon(&a);
@@ -3259,7 +3260,7 @@ horizontalfocus(const Arg *arg)
 	if (!c || !nexttiled(c->next)
 	|| !selmon->lt[selmon->sellt]->arrange
 	|| selmon->sel->isfloating || selmon->sel->isfullscreen
-	|| selmon->lt[selmon->sellt] == &layouts[1] 
+	|| selmon->lt[selmon->sellt] != &layouts[0] 
 	|| ((arg->i<0) == (nexttiled(selmon->clients) == selmon->sel))){
 		const Arg a = {.i = arg->i, .ui = arg->i};
 		focusmon(&a);
@@ -3268,6 +3269,43 @@ horizontalfocus(const Arg *arg)
 	if (arg->i>0)
 		c = nexttiled(c->next);
 	focus(c);
+}
+
+/*layouts*/
+void
+gaplessgrid(Monitor *m) {
+	unsigned int n, cols, rows, cn, rn, i, cx, cy, cw, ch;
+	Client *c;
+
+	for(n = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), n++) ;
+	if(n == 0)
+		return;
+
+	/* grid dimensions */
+	for(cols = 0; cols <= n/2; cols++)
+		if(cols*cols >= n)
+			break;
+	if(n == 5) /* set layout against the general calculation: not 1:2:2, but 2:3 */
+		cols = 2;
+	rows = n/cols;
+
+	/* window geometries */
+	cw = cols ? m->ww / cols : m->ww;
+	cn = 0; /* current column number */
+	rn = 0; /* current row number */
+	for(i = 0, c = nexttiled(m->clients); c; i++, c = nexttiled(c->next)) {
+		if(i/rows + 1 > cols - n%cols)
+			rows = n/cols + 1;
+		ch = rows ? m->wh / rows : m->wh;
+		cx = m->wx + cn*cw;
+		cy = m->wy + rn*ch;
+		resize(c, cx, cy, cw - 2 * c->bw, ch - 2 * c->bw, False);
+		rn++;
+		if(rn >= rows) {
+			rn = 0;
+			cn++;
+		}
+	}
 }
 
 int
