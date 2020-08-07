@@ -53,11 +53,12 @@ static const Rule rules[] = {
 	 *	WM_NAME(STRING) = title
 	 */
 	/* class                      | instance | title         |tags| issticky |isfloating | float x,y,w,h % | isterminal | noswallow | monitor */
-	{ "Gimp"                      , NULL     , NULL          , 0  ,        0 , 1          , CENTER         , 0          , 0         , -1 },
-	{ "whatsapp-nativefier-d52542", NULL     , NULL          , 0  ,        1 , 1          , 10,10,80,80    , 0          , 0         , -1 },
-	{ "firefox"                   , "Toolkit", NULL          , 0  ,        1 , 1          , HINTS          , 0          , 0         , -1 },
-	{ "st"                        , NULL     , NULL          , 0  ,        0 , 0          , CENTER         , 1          , 1         , -1 },
-	{ NULL                        , NULL     , "Event Tester", 0  ,        0 , 0          , CENTER         , 0          , 1         , -1 },
+	{ "Gimp"                      , NULL     , NULL          , 0    ,        0 , 1          , CENTER         , 0          , 0         , -1 },
+	{ "Thunderbird"               , NULL     , NULL          , 1<<8 ,        0 , 0          , CENTER         , 0          , 0         , 0  },
+	{ "whatsapp-nativefier-d52542", NULL     , NULL          , 0    ,        1 , 1          , 10,10,80,80    , 0          , 0         , -1 },
+	{ "firefox"                   , "Toolkit", NULL          , 0    ,        1 , 1          , HINTS          , 0          , 0         , -1 },
+	{ "st"                        , NULL     , NULL          , 0    ,        0 , 0          , CENTER         , 1          , 1         , -1 },
+	{ NULL                        , NULL     , "Event Tester", 0    ,        0 , 0          , CENTER         , 0          , 1         , -1 },
 };
 
 /* layout(s) */
