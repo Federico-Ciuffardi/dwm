@@ -52,13 +52,13 @@ static const Rule rules[] = {
 	 *	WM_CLASS(STRING) = instance, class
 	 *	WM_NAME(STRING) = title
 	 */
-	/* class                      | instance | title         |tags| issticky |isfloating | float x,y,w,h % | isterminal | noswallow | monitor */
-	{ "Gimp"                      , NULL     , NULL          , 0    ,        0 , 1          , CENTER         , 0          , 0         , -1 },
-	{ "Thunderbird"               , NULL     , NULL          , 1<<8 ,        0 , 0          , CENTER         , 0          , 0         , 0  },
-	{ "whatsapp-nativefier-d52542", NULL     , NULL          , 0    ,        1 , 1          , 10,10,80,80    , 0          , 0         , -1 },
-	{ "firefox"                   , "Toolkit", NULL          , 0    ,        1 , 1          , HINTS          , 0          , 0         , -1 },
-	{ "st"                        , NULL     , NULL          , 0    ,        0 , 0          , CENTER         , 1          , 1         , -1 },
-	{ NULL                        , NULL     , "Event Tester", 0    ,        0 , 0          , CENTER         , 0          , 1         , -1 },
+	/* class                      | instance | title         |tags  | isfloating | float x,y,w,h % | isterminal | noswallow | monitor */
+	{ "Gimp"                      , NULL     , NULL          , 0    , 1          , CENTER         , 0          , 0         , -1 },
+	{ "Thunderbird"               , NULL     , NULL          , 1<<8 , 0          , CENTER         , 0          , 0         , 0  },
+	{ "whatsapp-nativefier-d52542", NULL     , NULL          , ~0   , 1          , 10,10,80,80    , 0          , 0         , -1 },
+	{ "firefox"                   , "Toolkit", NULL          , ~0   , 1          , HINTS          , 0          , 0         , -1 },
+	{ "st"                        , NULL     , NULL          , 0    , 0          , CENTER         , 1          , 1         , -1 },
+	{ NULL                        , NULL     , "Event Tester", 0    , 0          , CENTER         , 0          , 1         , -1 },
 };
 
 /* layout(s) */
@@ -92,7 +92,8 @@ static Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_q,      spawn,          SHCMD("$DMENU_BIN/dmenu_leave") },
 	{ MODKEY|ShiftMask,             XK_r,      spawn,          SHCMD("lxsu /bin/sh -c \"cd $HOME/git/dwm/ && make all && make install\" && pkill dwm") },
 	{ MODKEY,                       XK_r,      spawn,          SHCMD("rofi -show drun") },
-	{ MODKEY,                       XK_Tab,    spawn,          SHCMD("rofi -show window") },
+	{ MODKEY,                       XK_Tab,    view,           {.ui = ~0 } },
+	{ MODKEY|ShiftMask,             XK_Tab,    spawn,          SHCMD("rofi -show window") },
 	{ 0,                            XK_Print,  spawn,          SHCMD("screengrab") },
 
 	{ MODKEY,                       XK_q,      killclient,      {0} },
@@ -110,6 +111,7 @@ static Key keys[] = {
 	{ MODKEY|ShiftMask|ControlMask, XK_l,      setmfact,       {.f = +0.05} },
 	{ MODKEY|ShiftMask,             XK_j,      pushdown,       {0} },
 	{ MODKEY|ShiftMask,             XK_k,      pushup,         {0} },
+	{ MODKEY,                       XK_a,      view,           {.ui = ~0 } },
 
 	{ MODKEY,                       XK_f,      setlayout,      {.v = &layouts[1]} },
 	{ MODKEY|ShiftMask,             XK_d,      setlayout,      {.v = &layouts[0]} },
@@ -134,7 +136,6 @@ static Key keys[] = {
 	{ MODKEY,                       XK_b,      togglebar,      {0} },
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
 	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
-	{ MODKEY,                       XK_0,      view,           {.ui = ~0 } },
 	{ MODKEY,                       XK_comma,  focusmon,       {.i = -1 } },
 	{ MODKEY,                       XK_period, focusmon,       {.i = +1 } },
 	{ MODKEY|ShiftMask,             XK_comma,  tagmon,         {.i = -1 } },
