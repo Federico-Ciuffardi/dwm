@@ -253,6 +253,7 @@ static void restack(Monitor *m);
 static void run(void);
 static void scan(void);
 static int sendevent(Window w, Atom proto, int m, long d0, long d1, long d2, long d3, long d4);
+static void sendtomon(Client *c, Monitor *m, int master);
 static void sendmon(Client *c, Monitor *m);
 static void setclientstate(Client *c, long state);
 static void setfocus(Client *c);
@@ -2050,7 +2051,7 @@ scan(void)
 }
 
 void
-sendmon(Client *c, Monitor *m)
+sendtomon(Client *c, Monitor *m, int master)
 {
 	if (c->mon == m)
 		return;
@@ -2060,9 +2061,20 @@ sendmon(Client *c, Monitor *m)
 	c->mon = m;
 	if(!c->issticky)
 		c->tags = m->tagset[m->seltags]; /* assign tags of target monitor */
-	attach(c);
+	Client* cmaster = nexttiled(m->clients);
+	if ( !master && cmaster ){
+			c->next = cmaster->next;
+			cmaster->next = c;
+	}else
+		attach(c);
 	attachstack(c);
 	arrange(NULL);
+}
+
+void
+sendmon(Client *c, Monitor *m)
+{
+	sendtomon(c, m, 1);
 }
 
 void
@@ -2366,7 +2378,7 @@ tagmon(const Arg *arg)
 	Monitor* m = dirtomon(arg->i);
 	if(c->isfloating)
 		c->x += m->mx - c->mon->mx;
-	sendmon(c, m);
+	sendtomon(c, m, arg->ui);
 	unfocus(selmon->sel, 0);
 	selmon = c->mon;
 	focus(c);
@@ -3212,12 +3224,20 @@ systraytomon(Monitor *m) {
 void
 zoom(const Arg *arg)
 {
-	Client *c = selmon->sel;
+	Client *c = nexttiled(selmon->clients) ;
+
+	if (arg && (!c || !nexttiled(c->next)
+	|| !selmon->lt[selmon->sellt]->arrange
+	|| selmon->sel->isfloating || selmon->sel->isfullscreen
+	|| selmon->lt[selmon->sellt] == &layouts[1] 
+	|| ((arg->i<0) == (nexttiled(selmon->clients) == selmon->sel)))){
+		const Arg a = {.i = arg->i, .ui = (arg->i==1)};
+		tagmon(&a);
+    return;
+	}
+	c = selmon->sel;
 	Client *o = c;
 
-	if (!selmon->lt[selmon->sellt]->arrange
-	|| (selmon->sel && selmon->sel->isfloating))
-		return;
 	if (c == nexttiled(selmon->clients))
 		if (!c || !(c = nexttiled(c->next)))
 			return;
@@ -3237,7 +3257,7 @@ horizontalfocus(const Arg *arg)
 	|| ((arg->i<0) == (nexttiled(selmon->clients) == selmon->sel))){
 		const Arg a = {.i = arg->i, .ui = arg->i};
 		focusmon(&a);
-	    return;
+    return;
 	}
 	if (arg->i>0)
 		c = nexttiled(c->next);
