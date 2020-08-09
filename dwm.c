@@ -1542,9 +1542,9 @@ manage(Window w, XWindowAttributes *wa)
 	updatewindowtype(c);
 	updatesizehints(c);
 	if (c->floatw > 0) /* set the position/size of the floating window according to the rules */
-		c->w = (c->mon->mw * c->floatw) / 100.0;
+		c->w = (c->mon->mw * c->floatw) / 100.0 - c->bw*2;
 	if (c->floath > 0)
-		c->h = (c->mon->mh * c->floath) / 100.0;
+		c->h = (c->mon->mh * c->floath) / 100.0 - c->bw*2;
 	if (c->floatx >= 0)
 		c->x = c->mon->mx + (c->mon->mw * c->floatx) / 100.0;
 	else if(c->floatx != -2)
@@ -2383,9 +2383,6 @@ tagmon(const Arg *arg)
 	sendtomon(c, m, arg->ui);
 	unfocus(selmon->sel, 0);
 	selmon = c->mon;
-	focus(c);
-	warp(c);
-	restack(selmon);
 }
 
 void
@@ -3179,15 +3176,19 @@ systraytomon(Monitor *m) {
 void
 zoom(const Arg *arg)
 {
-	Client *c = nexttiled(selmon->clients) ;
+	Client *cm = nexttiled(selmon->clients);
+	Client *c = selmon->sel;
 
-	if (arg && (!c || !nexttiled(c->next)
+	if (arg && (!cm || !nexttiled(cm->next)
 	|| !selmon->lt[selmon->sellt]->arrange
 	|| selmon->sel->isfloating || selmon->sel->isfullscreen
 	|| selmon->lt[selmon->sellt] != &layouts[0] 
-	|| ((arg->i<0) == (nexttiled(selmon->clients) == selmon->sel)))){
+	|| ((arg->i<0) == (nexttiled(selmon->clients) == c )))){
 		const Arg a = {.i = arg->i, .ui = (arg->i==1)};
 		tagmon(&a);
+		focus(c);
+		warp(c);
+		restack(selmon);
     return;
 	}
 	c = selmon->sel;
