@@ -59,7 +59,7 @@ static const Rule rules[] = {
 	{ "whatsapp-nativefier-d52542", NULL     , NULL          , ~0   , 1          , 10,10,80,80    , 0          , 0         , -1 },
 	{ "firefox"                   , "Toolkit", NULL          , ~0   , 1          , HINTS          , 0          , 0         , -1 },
 	{ "st-256color"               , NULL     , NULL          , 0    , 0          , CENTER         , 1          , 1         , -1 },
-	{ "st-256color-floating"      , NULL     , NULL          , ~0   , 1          , CENTER         , 1          , 1         , -1 },
+	{ "st-256color-floating"      , NULL     , NULL          , ~0   , 1          , 0,80,100,20    , 1          , 1         , -1 },
 	{ NULL                        , NULL     , "Event Tester", 0    , 0          , CENTER         , 0          , 1         , -1 },
 };
 
@@ -110,8 +110,8 @@ static Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_j,      pushdown,        {0} },
 	{ MODKEY|ShiftMask,             XK_k,      pushup,          {0} },
 	{ MODKEY,                       XK_a,      view,            {.ui = ~0 } },
-	{ MODKEY,                       XK_grave,  focusmon,        {.i = +1 } },
-	{ MODKEY|ShiftMask,             XK_grave,  tagmon,          {.i = +1 } },
+	{ MODKEY,                       XK_grave,  focusmon,        {.i = 1 } },
+	{ MODKEY|ShiftMask,             XK_grave,  tagmon,          {.i = 1 } },
 	{ MODKEY|ShiftMask,             XK_h,      zoom,            {-1} },
 	{ MODKEY|ShiftMask,             XK_l,      zoom,            {+1} },
 	//{ MODKEY|ShiftMask,           XK_h,      incnmaster,      {.i = +1 } },
