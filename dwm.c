@@ -1594,7 +1594,7 @@ motionnotify(XEvent *e)
 void
 movemouse(const Arg *arg)
 {
-	int x, y, ocx, ocy, nx, ny;
+	int x, y, ocx, ocy, nx, ny,tofloat = 0;
 	Client *c;
 	Monitor *m;
 	XEvent ev;
@@ -1636,9 +1636,10 @@ movemouse(const Arg *arg)
 			else if (abs((selmon->wy + selmon->wh) - (ny + HEIGHT(c))) < snap)
 				ny = selmon->wy + selmon->wh - HEIGHT(c);
 			if (!c->isfloating && selmon->lt[selmon->sellt]->arrange
-			&& (abs(nx - c->x) > snap || abs(ny - c->y) > snap))
+			&& (abs(nx - c->x) > snap || abs(ny - c->y) > snap)){
 				togglefloating(NULL);
-			if (!selmon->lt[selmon->sellt]->arrange || c->isfloating)
+				tofloat = 1;	
+			} if (!selmon->lt[selmon->sellt]->arrange || c->isfloating)
 				resize(c, nx, ny, c->w, c->h, 1);
 			break;
 		}
@@ -1648,7 +1649,11 @@ movemouse(const Arg *arg)
 		sendmon(c, m);
 		selmon = m;
 		focus(NULL);
-	}
+	} else if( arg-> i)
+		pop(c);
+	if( arg->i && tofloat )
+		togglefloating(NULL);
+
 }
 
 Client *
