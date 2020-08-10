@@ -45,7 +45,10 @@ static const char *colors[][3]      = {
 };
 
 /* tagging */
-static const char *tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
+static const char *tags[][4] = {
+	{ "1", "2", "3", "F1" },
+	{ "4", "5", "6", "F2" }
+};
 
 static const Rule rules[] = {
 	/* xprop(1):
@@ -55,7 +58,7 @@ static const Rule rules[] = {
 	/* tag ~0 means sticky */
 	/* class                      | instance | title         |tags  | isfloating | float x,y,w,h % | isterminal | noswallow | monitor */
 	{ "Gimp"                      , NULL     , NULL          , 0    , 1          , CENTER         , 0          , 0         , -1 },
-	{ "Thunderbird"               , NULL     , NULL          , 1<<8 , 0          , CENTER         , 0          , 0         , 0  },
+	{ "Thunderbird"               , NULL     , NULL          , 1<<3 , 0          , CENTER         , 0          , 0         , 0  },
 	{ "whatsapp-nativefier-d52542", NULL     , NULL          , ~0   , 1          , 10,10,80,80    , 0          , 0         , -1 },
 	{ "firefox"                   , "Toolkit", NULL          , ~0   , 1          , HINTS          , 0          , 0         , -1 },
 	{ "st-256color"               , NULL     , NULL          , 0    , 0          , CENTER         , 1          , 1         , -1 },
@@ -84,6 +87,10 @@ static const Layout layouts[] = {
 	{ MODKEY|ControlMask,           KEY,      toggleview,     {.ui = 1 << TAG} }, \
 	{ MODKEY|ShiftMask,             KEY,      tag,            {.ui = 1 << TAG} }, \
 	{ MODKEY|ControlMask|ShiftMask, KEY,      toggletag,      {.ui = 1 << TAG} },
+
+#define MONTAGKEYS(KEY,MON,TAG) \
+	{ MODKEY,                       KEY,      viewonmon,      {.ui2 = {MON, 1 << TAG } } }, \
+	{ MODKEY|ShiftMask,             KEY,      tagonmon,       {.ui2 = {MON, 1 << TAG } } }, \
 
 /* commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
@@ -145,15 +152,14 @@ static Key keys[] = {
 	{ MODKEY,                       XK_period, focusmon,       {.i = +1 } },
 	{ MODKEY|ShiftMask,             XK_comma,  tagmon,         {.i = -1 } },
 	{ MODKEY|ShiftMask,             XK_period, tagmon,         {.i = +1 } },
-	TAGKEYS(                        XK_1,                      0)
-	TAGKEYS(                        XK_2,                      1)
-	TAGKEYS(                        XK_3,                      2)
-	TAGKEYS(                        XK_4,                      3)
-	TAGKEYS(                        XK_5,                      4)
-	TAGKEYS(                        XK_6,                      5)
-	TAGKEYS(                        XK_7,                      6)
-	TAGKEYS(                        XK_8,                      7)
-	TAGKEYS(                        XK_9,                      8)
+	MONTAGKEYS(                     XK_1,      0,              0)
+	MONTAGKEYS(                     XK_2,      0,              1)
+	MONTAGKEYS(                     XK_3,      0,              2)
+	MONTAGKEYS(                     XK_4,      1,              0)
+	MONTAGKEYS(                     XK_5,      1,              1)
+	MONTAGKEYS(                     XK_6,      1,              2)
+	MONTAGKEYS(                     XK_F1,     0,              3)
+	MONTAGKEYS(                     XK_F2,     1,              3)
 };
 
 /* button definitions */

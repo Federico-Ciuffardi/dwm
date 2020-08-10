@@ -56,7 +56,7 @@
 #define MOUSEMASK               (BUTTONMASK|PointerMotionMask)
 #define WIDTH(X)                ((X)->w + 2 * (X)->bw)
 #define HEIGHT(X)               ((X)->h + 2 * (X)->bw)
-#define TAGMASK                 ((1 << LENGTH(tags)) - 1)
+#define TAGMASK                 ((1 << LENGTH(tags[0])) - 1)
 #define TEXTW(X)                (drw_fontset_getwidth(drw, (X)) + lrpad)
 
 #define SYSTEM_TRAY_REQUEST_DOCK    0
@@ -90,6 +90,7 @@ enum { ClkTagBar, ClkTabBar, ClkLtSymbol, ClkStatusText, ClkWinTitle,
 typedef union {
 	int i;
 	unsigned int ui;
+	unsigned int ui2[2];
 	float f;
 	const void *v;
 } Arg;
@@ -161,6 +162,7 @@ struct Monitor {
 	int ntabs;
 	int tab_widths[MAXTABS];
 	const Layout *lt[2];
+	int id;
 };
 
 typedef struct {
@@ -210,6 +212,7 @@ static void expose(XEvent *e);
 static void focus(Client *c);
 static void focusin(XEvent *e);
 static void focusmon(const Arg *arg);
+static void viewonmon(const Arg *arg);
 static void focusstack(const Arg *arg);
 static void focuswin(const Arg* arg);
 static void killwin(const Arg* arg);
@@ -262,6 +265,7 @@ static void spawn(const Arg *arg);
 static Monitor *systraytomon(Monitor *m);
 static void tag(const Arg *arg);
 static void tagmon(const Arg *arg);
+static void tagonmon(const Arg *arg);
 static void tile(Monitor *);
 static void togglebar(const Arg *arg);
 static void togglefloating(const Arg *arg);
@@ -348,7 +352,7 @@ static xcb_connection_t *xcon;
 #include "config.h"
 
 /* compile-time check if all tags fit into an unsigned int bit array. */
-struct NumTags { char limitexceeded[LENGTH(tags) > 31 ? -1 : 1]; };
+struct NumTags { char limitexceeded[LENGTH(tags[0]) > 31 ? -1 : 1]; };
 
 /* dwm will keep pid's of processes from autostart array and kill them at quit */
 static pid_t *autostart_pids;
@@ -601,9 +605,9 @@ buttonpress(XEvent *e)
 	if (ev->window == selmon->barwin) {
 		i = x = 0;
 		do
-			x += TEXTW(tags[i]);
-		while (ev->x >= x && ++i < LENGTH(tags));
-		if (i < LENGTH(tags)) {
+			x += TEXTW(tags[selmon->id][i]);
+		while (ev->x >= x && ++i < LENGTH(tags[0]));
+		if (i < LENGTH(tags[0])) {
 			click = ClkTagBar;
 			arg.ui = 1 << i;
 		} else if (ev->x < x + blw)
@@ -767,8 +771,8 @@ clientmessage(XEvent *e)
 	} else if (cme->message_type == netatom[NetActiveWindow]) {
 		uint i = 0;
 		if(!c->issticky){
-			for (i = 0; i < LENGTH(tags) && !((1 << i) & c->tags); i++);
-			if (i >= LENGTH(tags)) return;
+			for (i = 0; i < LENGTH(tags[0]) && !((1 << i) & c->tags); i++);
+			if (i >= LENGTH(tags[0])) return;
 		}
 		if (c->mon != selmon)
 			unfocus(selmon->sel, 0);
@@ -985,10 +989,10 @@ drawbar(Monitor *m)
 			urg |= c->tags;
 	}
 	x = 0;
-	for (i = 0; i < LENGTH(tags); i++) {
-		w = TEXTW(tags[i]);
+	for (i = 0; i < LENGTH(tags[0]); i++) {
+		w = TEXTW(tags[m->id][i]);
 		drw_setscheme(drw, scheme[m->tagset[m->seltags] & 1 << i ? SchemeSel : SchemeNorm]);
-		drw_text(drw, x, 0, w, bh, lrpad / 2, tags[i], urg & 1 << i);
+		drw_text(drw, x, 0, w, bh, lrpad / 2, tags[m->id][i], urg & 1 << i);
 		if (occ & 1 << i)
 			drw_rect(drw, x + boxs, boxs, boxw, boxw,
 				m == selmon && selmon->sel && selmon->sel->tags & 1 << i,
@@ -1053,7 +1057,7 @@ drawtab(Monitor *m) {
 	int w = 0;
 
 	//view_info: indicate the tag which is displayed in the view
-	for(i = 0; i < LENGTH(tags); ++i){
+	for(i = 0; i < LENGTH(tags[0]); ++i){
 	  if((selmon->tagset[selmon->seltags] >> i) & 1) {
 	    if(itag >=0){ //more than one tag selected
 	      itag = -1;
@@ -1210,6 +1214,24 @@ focusmon(const Arg *arg)
 	focus(c);
 	warp(selmon->sel);
 }
+
+
+void
+viewonmon(const Arg *arg)
+{
+	Monitor *m = mons;
+	for(int i = 0; i < arg->ui2[0] && m; i++, m = m->next);
+	if(!m)
+		return;
+	unfocus(selmon->sel, 0);
+	selmon = m;	
+	Arg a;
+	a.ui = arg->ui2[1];
+	view(&a);
+	focus(NULL);
+	warp(selmon->sel);
+}
+
 
 void
 focusstack(const Arg *arg)
@@ -2321,6 +2343,27 @@ tagmon(const Arg *arg)
 }
 
 void
+tagonmon(const Arg *arg)
+{
+	Client* c = selmon->sel;
+	if(!c || c->issticky)
+		return;
+	Monitor *m = mons;
+	for(int i = 0; i < arg->ui2[0] && m; i++, m = m->next);
+	if(!m)
+		return;
+	if(m != selmon){
+		if(c->isfloating)
+			c->x += m->mx - c->mon->mx;
+		sendmon(c, m);
+	}
+	if (c && arg->ui2[1] & TAGMASK) {
+		c->tags = arg->ui2[1] & TAGMASK;
+		arrange(m);
+	}
+}
+
+void
 tile(Monitor *m)
 {
 	unsigned int i, n, h, mw, my, ty;
@@ -2602,9 +2645,10 @@ updategeom(void)
 		if (n <= nn) { /* new monitors available */
 			for (i = 0; i < (nn - n); i++) {
 				for (m = mons; m && m->next; m = m->next);
-				if (m)
+				if (m){
 					m->next = createmon();
-				else
+					m->next->id = m->id+1;
+				}else
 					mons = createmon();
 			}
 			for (i = 0, m = mons; i < nn && m; m = m->next, i++)
