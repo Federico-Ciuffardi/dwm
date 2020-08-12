@@ -2961,8 +2961,14 @@ view(const Arg *arg)
 			selmon->tagset[selmon->seltags] = selmon->sel->tags;
 	}else if(arg->ui & TAGMASK)
 		selmon->tagset[selmon->seltags] = arg->ui & TAGMASK;
-	focus(NULL);
-	arrange(selmon);
+	if((selmon->lt[selmon->sellt] != &layouts[2]) == (selmon->tagset[selmon->seltags] == (~0 & TAGMASK))){
+		Arg a;
+		a.v = &layouts[2];
+		setlayout(&a);
+	}else{
+		focus(NULL);
+		arrange(selmon);
+	}
 }
 
 pid_t
