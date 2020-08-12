@@ -15,8 +15,8 @@
 static const char *const autostart[] = {
 	"/bin/sh", "-c", "(sleep 30 && whatsapp-nativefier-dark) &", NULL,
 	"/bin/sh", "-c", "(sleep 30 && thunderbird) &", NULL,
-	"/bin/sh", "-c", "volumeicon &", NULL,
-	"/bin/sh", "-c", "$DWM_BIN/date_to_statusbar &", NULL,
+	"/bin/sh", "-c", "pkill dwmblocks ; dwmblocks", NULL,
+	//"/bin/sh", "-c", "$DWM_BIN/date_to_statusbar &", NULL,
 	NULL /* terminate */
 };
 
@@ -36,7 +36,9 @@ enum showtab_modes { showtab_never, showtab_auto, showtab_nmodes, showtab_always
 static const int showtab			= showtab_auto;        /* Default tab bar show mode */
 static const int toptab				= True;  
 
-static const char *fonts[]          = { "monospace:size=10" };
+static const char *fonts[]          = { "Roboto Mono:style=Medium:antialias=true:size=10;1",
+																				"monospace:size=10",
+																				"Noto Color Emoji:pixelsize=12:antialias=true:autohint=true"};
 static const char dmenufont[]       = "monospace:size=10";
 static const char *colors[][3]      = {
 	/*               fg         bg         border   */
@@ -160,6 +162,12 @@ static Key keys[] = {
 /* click can be ClkTagBar, ClkLtSymbol, ClkStatusText, ClkWinTitle, ClkClientWin, or ClkRootWin */
 static Button buttons[] = {
 	/* click                event mask      button          function        argument */
+	{ ClkStatusText,        0,              Button1,        sigdwmblocks,   {.i = 1} },
+	{ ClkStatusText,        0,              Button2,        sigdwmblocks,   {.i = 2} },
+	{ ClkStatusText,        0,              Button3,        sigdwmblocks,   {.i = 3} },
+	{ ClkStatusText,        0,              Button4,        sigdwmblocks,   {.i = 4} },
+	{ ClkStatusText,        0,              Button5,        sigdwmblocks,   {.i = 5} },
+	{ ClkStatusText,        ShiftMask,      Button1,        sigdwmblocks,   {.i = 6} },
 	{ ClkLtSymbol,          0,              Button1,        setlayout,      {0} },
 	{ ClkLtSymbol,          0,              Button3,        setlayout,      {.v = &layouts[1]} },
 	{ ClkClientWin,         MODKEY,         Button1,        movemouse,      {.i=0} },
