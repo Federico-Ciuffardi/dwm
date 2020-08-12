@@ -591,6 +591,7 @@ unswallow(Client *c)
 void
 buttonpress(XEvent *e)
 {
+	int stw = 0;
 	unsigned int i, x, click;
 	Arg arg = {0};
 	Client *c;
@@ -604,6 +605,10 @@ buttonpress(XEvent *e)
 		selmon = m;
 		focus(NULL);
 	}
+
+	if(showsystray && m == systraytomon(m))
+		stw = getsystraywidth();
+
 	if (ev->window == selmon->barwin) {
 		i = x = 0;
 		do
@@ -614,7 +619,7 @@ buttonpress(XEvent *e)
 			arg.ui = 1 << i;
 		} else if (ev->x < x + blw)
 			click = ClkLtSymbol;
-		else if (ev->x > (x = selmon->ww - TEXTW(stext) - getsystraywidth() + lrpad))
+		else if (ev->x > (x = selmon->ww - TEXTW(stext) - stw + lrpad)){
 			click = ClkStatusText;
 
 			char *text = rawstext;
@@ -625,7 +630,7 @@ buttonpress(XEvent *e)
 				if ((unsigned char)text[i] < ' ') {
 					ch = text[i];
 					text[i] = '\0';
-					x += TEXTW(text) - lrpad;
+					x += TEXTW(text) - lrpad - 2;
 					text[i] = ch;
 					text += i+1;
 					i = -1;
@@ -1370,6 +1375,11 @@ getstate(Window w)
 	XFree(p);
 	return result;
 }
+
+getsystraywidthonselmon(){
+	systraytomon(NULL);
+}
+
 
 unsigned int
 getsystraywidth()
