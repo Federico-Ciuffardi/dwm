@@ -3041,9 +3041,15 @@ view(const Arg *arg)
 
 	if (selmon->showbar != selmon->pertag->showbars[selmon->pertag->curtag])
 		togglebar(NULL);
-
-	focus(NULL);
-	arrange(selmon);
+		
+	if((selmon->lt[selmon->sellt] != &layouts[2]) == (selmon->tagset[selmon->seltags] == (~0 & TAGMASK))){
+		Arg a;
+		a.v = &layouts[2];
+		setlayout(&a);
+	}else{
+		focus(NULL);
+		arrange(selmon);
+	}
 }
 
 pid_t
