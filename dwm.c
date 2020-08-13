@@ -2975,10 +2975,9 @@ view(const Arg *arg)
 		Arg a;
 		a.v = &layouts[2];
 		setlayout(&a);
-	}else{
-		focus(NULL);
-		arrange(selmon);
 	}
+	focus(NULL);
+	arrange(selmon);
 }
 
 pid_t
