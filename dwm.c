@@ -3021,8 +3021,11 @@ view(const Arg *arg)
 		return;
 	selmon->seltags ^= 1; /* toggle sel tagset */
 	if(arg->ui == ~0 && selmon->tagset[selmon->seltags^1] == TAGMASK){
-		if(selmon->sel && !selmon->sel->issticky)
+		if(selmon->sel && !selmon->sel->issticky){
 			selmon->tagset[selmon->seltags] = selmon->sel->tags;
+			for (i = 0; !(selmon->sel->tags & 1 << i); i++);
+			selmon->pertag->curtag = i + 1;
+		}
 	}else if(arg->ui & TAGMASK){
 		selmon->tagset[selmon->seltags] = arg->ui & TAGMASK;
 		selmon->pertag->prevtag = selmon->pertag->curtag;
@@ -3030,7 +3033,7 @@ view(const Arg *arg)
 		if (arg->ui == ~0)
 			selmon->pertag->curtag = 0;
 		else {
-			for (i = 0; !(arg->ui & 1 << i); i++) ;
+			for (i = 0; !(arg->ui & 1 << i); i++);
 			selmon->pertag->curtag = i + 1;
 		}
 	} else {
@@ -3048,7 +3051,7 @@ view(const Arg *arg)
 	if (selmon->showbar != selmon->pertag->showbars[selmon->pertag->curtag])
 		togglebar(NULL);
 
-	if((selmon->lt[selmon->sellt] != &layouts[2]) == (selmon->tagset[selmon->seltags] == (~0 & TAGMASK))){
+	if((selmon->lt[selmon->sellt] != &layouts[2]) == (selmon->tagset[selmon->seltags] == (~0 & TAGMASK))){//TODO
 		Arg a;
 		a.v = &layouts[2];
 		setlayout(&a);
