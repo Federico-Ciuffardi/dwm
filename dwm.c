@@ -316,6 +316,7 @@ static pid_t winpid(Window w);
 
 
 /* variables */
+static warping = 0;
 static Systray *systray =  NULL;
 static const char broken[] = "broken";
 static char stext[256];
@@ -824,7 +825,6 @@ clientmessage(XEvent *e)
 			view(&a);
 		}
 		focus(c);
-		warp(c);
 		restack(selmon);
 	}
 }
@@ -1199,6 +1199,10 @@ drawtab(Monitor *m) {
 void
 enternotify(XEvent *e)
 {
+	if (warping){
+		warping = 0;
+		return;
+	}	
 	Client *c;
 	Monitor *m;
 	XCrossingEvent *ev = &e->xcrossing;
@@ -1666,6 +1670,10 @@ monocle(Monitor *m)
 void
 motionnotify(XEvent *e)
 {
+	if (warping){
+		warping = 0;
+		return;
+	}
 	static Monitor *mon = NULL;
 	Monitor *m;
 	XMotionEvent *ev = &e->xmotion;
@@ -2053,7 +2061,7 @@ restack(Monitor *m)
 	}
 	XSync(dpy, False);
 	while (XCheckMaskEvent(dpy, EnterWindowMask, &ev));
-	if (m == selmon && (m->tagset[m->seltags] & m->sel->tags) && selmon->lt[selmon->sellt] != &layouts[1])
+	if (m == selmon && ((m->tagset[m->seltags] & m->sel->tags) || m->sel->issticky )  && selmon->lt[selmon->sellt] != &layouts[1])
 		warp(m->sel);
 }
 
@@ -3166,6 +3174,7 @@ warp(const Client *c)
 	int x, y;
 
 	if (!c) {
+		warping = 1;
 		XWarpPointer(dpy, None, root, 0, 0, 0, 0, selmon->wx + selmon->ww/2, selmon->wy + selmon->wh/2);
 		return;
 	}
@@ -3178,7 +3187,7 @@ warp(const Client *c)
 	    (y > c->mon->by && y < c->mon->by + bh) ||
 	    (c->mon->topbar && !y))
 		return;
-
+	warping = 1;
 	XWarpPointer(dpy, None, c->win, 0, 0, 0, 0, c->w / 2, c->h / 2);
 }
 
@@ -3319,6 +3328,7 @@ horizontalfocus(const Arg *arg)
 	if (arg->i>0)
 		c = nexttiled(c->next);
 	focus(c);
+	warp(c);
 }
 
 /*layouts*/
