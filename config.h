@@ -55,14 +55,21 @@ static const Rule rules[] = {
 	 *	WM_NAME(STRING) = title
 	 */
 	/* tag ~0 means sticky */
-	/* class                      | instance | title         |tags  | isfloating | float x,y,w,h % | isterminal | noswallow | monitor */
-	{ "Gimp"                      , NULL     , NULL          , 0    , 1          , CENTER         , 0          , 0         , -1 },
-	{ "Thunderbird"               , NULL     , NULL          , 1<<8 , 0          , CENTER         , 0          , 0         , 0  },
-	{ "whatsapp-nativefier-d52542", NULL     , NULL          , ~0   , 1          , 10,10,80,80    , 0          , 0         , -1 },
-	{ "firefox"                   , "Toolkit", NULL          , ~0   , 1          , HINTS          , 0          , 0         , -1 },
-	{ "st-256color"               , NULL     , NULL          , 0    , 0          , CENTER         , 1          , 1         , -1 },
-	{ "st-256color-floating"      , NULL     , NULL          , ~0   , 1          , 0,80,100,20    , 1          , 1         , -1 },
-	{ NULL                        , NULL     , "Event Tester", 0    , 0          , CENTER         , 0          , 1         , -1 },
+	/* class                      | instance | title         |tags  | isfloating | float x,y,w,h % | isterminal | noswallow | sp_id | monitor */
+	{ "Gimp"                      , NULL     , NULL          , 0    , 1          , CENTER         , 0          , 0          ,     0 , -1 },
+	{ "Thunderbird"               , NULL     , NULL          , 1<<8 , 0          , CENTER         , 0          , 0          ,     0 , 0  },
+	{ "whatsapp-nativefier-d52542", NULL     , NULL          , ~0   , 1          , 10,10,80,80    , 0          , 0          ,     0 , -1 },
+	{ "firefox"                   , "Toolkit", NULL          , ~0   , 1          , HINTS          , 0          , 0          ,     0 , -1 },
+	{ "st-256color"               , NULL     , NULL          , 0    , 0          , CENTER         , 1          , 1          ,     0 , -1 },
+	{ "st-256color-c"             , NULL     , NULL          , ~0   , 1          , 10,10,80,80    , 1          , 1          ,     0 , -1 },
+	{ "st-256color-ur"            , NULL     , NULL          , ~0   , 1          , 60,2,40,20     , 1          , 1          ,     0 , -1 },
+	{ NULL                        , NULL     , "Event Tester", 0    , 0          , CENTER         , 0          , 1          ,     0 , -1 },
+	{ "st-256color-docked"        , NULL     , NULL          , ~0   , 1          , 0,80,100,20    , 1          , 1          ,     1 , -1 },
+};
+
+
+static const char* scratchpads_cmd[] = {
+	"$TERMINAL -c st-256color-docked",
 };
 
 /* layout(s) */
@@ -125,7 +132,9 @@ static Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_f,      togglefullscreen, {0} },
 	{ 0,                            XK_F11,    togglefullscreen, {0} },
 
-	{ MODKEY|ShiftMask,             XK_Return, spawn,          SHCMD("$TERMINAL -c st-256color-floating") },
+	//{ MODKEY|ShiftMask,             XK_Return, spawn,          SHCMD("$TERMINAL -c st-256color-docked") },
+  { MODKEY|ShiftMask,             XK_Return, toggle_sp,       {.i = 1} },
+
 	{ MODKEY,                       XK_Return, spawn,          SHCMD("$TERMINAL") },
 	{ MODKEY,                       XK_e,      spawn,          SHCMD("$TERMINAL -e ranger-standalone") },
 	{ MODKEY,                       XK_w,      spawn,          SHCMD("$BROWSER") },
