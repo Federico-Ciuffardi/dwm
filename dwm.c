@@ -1283,7 +1283,7 @@ focusmon(const Arg *arg)
 	unfocus(selmon->sel, 0);
 	selmon = m;
 	Client *c = nexttiled(selmon->clients); 
-	if (!c || !arg->ui)
+	if (!c || !arg->ui || selmon->lt[selmon->sellt] != &layouts[0] )
 		c = NULL;
 	else if(arg->ui == -1)
 		c = nexttiled(c->next);
