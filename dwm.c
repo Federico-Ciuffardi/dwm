@@ -106,6 +106,7 @@ typedef struct Monitor Monitor;
 typedef struct Client Client;
 struct Client {
 	char name[256];
+	int sp_id;
 	float mina, maxa;
 	int x, y, w, h;
 	int floatx, floaty, floatw, floath;
@@ -175,6 +176,7 @@ typedef struct {
 	int floatx, floaty, floatw, floath;
 	int isterminal;
 	int noswallow;
+	int sp_id;
 	int monitor;
 } Rule;
 
@@ -265,6 +267,7 @@ static void showhide(Client *c);
 static void sigchld(int unused);
 static void sigdwmblocks(const Arg *arg);
 static void spawn(const Arg *arg);
+static void toggle_sp(const Arg *arg);
 static Monitor *systraytomon(Monitor *m);
 static void tag(const Arg *arg);
 static void tagmon(const Arg *arg);
@@ -316,7 +319,7 @@ static pid_t winpid(Window w);
 
 
 /* variables */
-static warping = 0;
+static int warping = 0;
 static Systray *systray =  NULL;
 static const char broken[] = "broken";
 static char stext[256];
@@ -437,6 +440,7 @@ applyrules(Client *c)
 		&& (!r->class || strstr(class, r->class))
 		&& (!r->instance || strstr(instance, r->instance)))
 		{
+			c->sp_id = r->sp_id;
 			c->isterminal = r->isterminal;
 			c->isfloating = r->isfloating;
 			c->noswallow  = r->noswallow;
@@ -1411,11 +1415,6 @@ getstate(Window w)
 	return result;
 }
 
-getsystraywidthonselmon(){
-	systraytomon(NULL);
-}
-
-
 unsigned int
 getsystraywidth()
 {
@@ -1530,6 +1529,12 @@ killclient(const Arg *arg)
 {
 	if (!selmon->sel)
 		return;
+	if (selmon->sel->sp_id){
+		selmon->sel->issticky = 0;
+		focus(NULL);
+		arrange(selmon);
+		return;
+	}
 	if (!sendevent(selmon->sel->win, wmatom[WMDelete], NoEventMask, wmatom[WMDelete], CurrentTime, 0 , 0, 0)) {
 		XGrabServer(dpy);
 		XSetErrorHandler(xerrordummy);
@@ -2510,6 +2515,30 @@ togglesticky(const Arg *arg)
 		return;
 	setsticky(selmon->sel,!selmon->sel->issticky);
 	arrange(selmon);
+}
+
+void
+toggle_sp(const Arg *arg)
+{
+	Client *c = NULL;
+	Monitor* m =NULL;
+	for (m = mons; m && !c; m = m->next)
+		for (c = m->clients; c && c->sp_id != arg->i; c = c->next);
+	if (c) {
+		if(c != selmon->sel){
+			if (!c->issticky){
+				c->issticky = 1;
+				if(c->mon != selmon)
+					sendmon(c, selmon);
+			}
+			focus(c);
+			arrange(selmon);
+		}
+	}else{
+		Arg a;
+		a.v = (const char*[]){ "/bin/sh", "-c", scratchpads_cmd[arg->i-1], NULL };
+		spawn(&a);
+	}
 }
 
 void
