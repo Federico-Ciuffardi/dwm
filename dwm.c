@@ -254,7 +254,7 @@ static void restack(Monitor *m);
 static void run(void);
 static void scan(void);
 static int sendevent(Window w, Atom proto, int m, long d0, long d1, long d2, long d3, long d4);
-static void sendtomon(Client *c, Monitor *m, int master);
+static void sendtomon(Client *c, Monitor *m, int master, int preserve);
 static void sendmon(Client *c, Monitor *m);
 static void setclientstate(Client *c, long state);
 static void setfocus(Client *c);
@@ -2105,10 +2105,14 @@ scan(void)
 }
 
 void
-sendtomon(Client *c, Monitor *m, int master)
+sendtomon(Client *c, Monitor *m, int master, int preserve)
 {
 	if (c->mon == m)
 		return;
+  if (preserve && c->isfloating){
+    c->x += m->mx - c->mon->mx;
+    c->y += m->my - c->mon->my;
+  }
 	unfocus(c, 1);
 	detach(c);
 	detachstack(c);
@@ -2128,7 +2132,7 @@ sendtomon(Client *c, Monitor *m, int master)
 void
 sendmon(Client *c, Monitor *m)
 {
-	sendtomon(c, m, 1);
+	sendtomon(c, m, 1, 0);
 }
 
 void
@@ -2430,9 +2434,7 @@ tagmon(const Arg *arg)
 	if (!c || !mons->next)
 		return;
 	Monitor* m = dirtomon(arg->i);
-	if(c->isfloating)
-		c->x += m->mx - c->mon->mx;
-	sendtomon(c, m, arg->ui);
+	sendtomon(c, m, arg->ui, 1);
 	unfocus(selmon->sel, 0);
 	selmon = c->mon;
 }
@@ -2524,10 +2526,8 @@ toggle_sp(const Arg *arg)
 		if(c != selmon->sel){
 			if (!c->issticky){
 				c->issticky = 1;
-        if(c->isfloating)
-          c->x += selmon->mx - c->mon->mx;
 				if(c->mon != selmon)
-					sendmon(c, selmon);
+          sendtomon(c, selmon, 1, 1);
 			}
 			focus(c);
 			arrange(selmon);
