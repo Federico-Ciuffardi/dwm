@@ -2524,6 +2524,8 @@ toggle_sp(const Arg *arg)
 		if(c != selmon->sel){
 			if (!c->issticky){
 				c->issticky = 1;
+        if(c->isfloating)
+          c->x += selmon->mx - c->mon->mx;
 				if(c->mon != selmon)
 					sendmon(c, selmon);
 			}
