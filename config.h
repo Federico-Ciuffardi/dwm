@@ -65,11 +65,13 @@ static const Rule rules[] = {
 	{ "st-256color-ur"            , NULL     , NULL          , ~0   , 1          , 60,2,40,20     , 1          , 1          ,     0 , -1 },
 	{ NULL                        , NULL     , "Event Tester", 0    , 0          , CENTER         , 0          , 1          ,     0 , -1 },
 	{ "st-256color-docked"        , NULL     , NULL          , ~0   , 1          , 0,80,100,20    , 1          , 1          ,     1 , -1 },
+	{ "st-256color-notes"         , NULL     , NULL          , ~0   , 1          , 10,10,80,80    , 1          , 1          ,     2 , -1 },
 };
 
 
 static const char* scratchpads_cmd[] = {
 	"$TERMINAL -c st-256color-docked",
+  "$TERMINAL -c st-256color-notes -e $SHELL -c \"$EDITOR \"$HOME\"/.local/share/notes\""
 };
 
 /* layout(s) */
@@ -134,6 +136,7 @@ static Key keys[] = {
 
 	//{ MODKEY|ShiftMask,             XK_Return, spawn,          SHCMD("$TERMINAL -c st-256color-docked") },
   { MODKEY|ShiftMask,             XK_Return, toggle_sp,       {.i = 1} },
+  { MODKEY,                       XK_n,      toggle_sp,       {.i = 2} },
 
 	{ MODKEY,                       XK_Return, spawn,          SHCMD("$TERMINAL") },
 	{ MODKEY,                       XK_e,      spawn,          SHCMD("$TERMINAL -e ranger-standalone") },
