@@ -278,6 +278,7 @@ static void togglefullscreen(const Arg *arg);
 static void togglesticky(const Arg *arg);
 static void toggletag(const Arg *arg);
 static void toggleview(const Arg *arg);
+static void incview(const Arg *arg);
 static void unfocus(Client *c, int setfocus);
 static void unmanage(Client *c, int destroyed);
 static void unmapnotify(XEvent *e);
@@ -1237,7 +1238,7 @@ void
 focus(Client *c)
 {
   Client *f;
-  for (f = selmon->stack; f && !ISVISIBLE(f); f = f->snext);
+ 	for (f = selmon->stack; f && !ISVISIBLE(f); f = f->snext);
 	if (!c || !ISVISIBLE(c) || f->isfullscreen)
 	  c = f;
 	if (selmon->sel && selmon->sel != c)
@@ -2591,6 +2592,21 @@ toggleview(const Arg *arg)
 		focus(NULL);
 		arrange(selmon);
 	}
+}
+
+void incview(const Arg *arg){
+  unsigned int rotatetagset,shifttagset,newtagset;
+  if (arg->i > 0){
+	  shifttagset  = selmon->tagset[selmon->seltags]  << arg->i;
+	  rotatetagset = shifttagset & (TAGMASK << LENGTH(tags));
+    newtagset    = (shifttagset | (rotatetagset >> LENGTH(tags))) & TAGMASK;
+  }else{
+	  shifttagset  = selmon->tagset[selmon->seltags] >> (- arg->i);
+	  rotatetagset = selmon->tagset[selmon->seltags]<<(LENGTH(tags) + arg->i);
+    newtagset    = (rotatetagset | shifttagset) & TAGMASK;
+  }
+  const Arg a = {.ui = newtagset};
+  view(&a);
 }
 
 void
