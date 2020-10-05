@@ -1,14 +1,17 @@
 /* See LICENSE file for copyright and license details. */
 
 #include <X11/X.h>
+/* Buttons */
 #include <X11/XF86keysym.h>
-
 #define Button6 6
 #define Button7 7
 #define Button8 8
 #define Button9 9
-#define CENTER -1,-1,-1,-1
-#define HINTS -2,-2,-2,-2
+
+/* window placements */
+#define CENTER_HINTS -1,-1,-1,-1
+#define CENTER       10,10,80,80
+#define HINTS        -2,-2,-2,-2
 
 #define SHCMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
 
@@ -16,7 +19,7 @@
 static const char *const autostart[] = {
 	"/bin/sh", "-c", "(sleep 30 && whatsapp-nativefier-dark) &", NULL,
 	"/bin/sh", "-c", "(sleep 30 && thunderbird) &", NULL,
-	"/bin/sh", "-c", "pkill dwmblocks ; dwmblocks", NULL,
+	"/bin/sh", "-c", "ps -e | grep dwmblocks || while true ; do dwmblocks ; done", NULL,
 	//"/bin/sh", "-c", "$DWM_BIN/date_to_statusbar &", NULL,
 	NULL /* terminate */
 };
@@ -57,16 +60,17 @@ static const Rule rules[] = {
 	 */
 	/* tag ~0 means sticky */
 	/* class                      | instance | title         |tags  | isfloating | float x,y,w,h % | isterminal | noswallow | sp_id | monitor */
-	{ "Gimp"                      , NULL     , NULL          , 0    , 1          , CENTER         , 0          , 0          ,     0 , -1 },
-	{ "Thunderbird"               , NULL     , NULL          , 1<<8 , 0          , CENTER         , 0          , 0          ,     0 , 0  },
-	{ "whatsapp-nativefier-d52542", NULL     , NULL          , ~0   , 1          , 10,10,80,80    , 0          , 0          ,     0 , -1 },
+	{ "Gimp"                      , NULL     , NULL          , 0    , 1          , HINTS          , 0          , 0          ,     0 , -1 },
+	{ "Thunderbird"               , NULL     , NULL          , 1<<8 , 0          , HINTS          , 0          , 0          ,     0 , 0  },
+	{ "whatsapp-nativefier-d52542", NULL     , NULL          , ~0   , 1          , CENTER         , 0          , 0          ,     0 , -1 },
 	{ "firefox"                   , "Toolkit", NULL          , ~0   , 1          , HINTS          , 0          , 0          ,     0 , -1 },
-	{ "st-256color"               , NULL     , NULL          , 0    , 0          , CENTER         , 1          , 1          ,     0 , -1 },
+	{ "st-256color"               , NULL     , NULL          , 0    , 0          , CENTER_HINTS   , 1          , 1          ,     0 , -1 },
 	{ "st-256color-c"             , NULL     , NULL          , ~0   , 1          , 10,10,80,80    , 1          , 1          ,     0 , -1 },
 	{ "st-256color-ur"            , NULL     , NULL          , ~0   , 1          , 60,2,40,20     , 1          , 1          ,     0 , -1 },
-	{ NULL                        , NULL     , "Event Tester", 0    , 0          , CENTER         , 0          , 1          ,     0 , -1 },
+	{ "SpeedCrunch"               , NULL     , NULL          , ~0   , 1          , CENTER         , 1          , 1          ,     0 , -1 },
+	{ NULL                        , NULL     , "Event Tester", 0    , 0          , HINTS          , 0          , 1          ,     0 , -1 },
 	{ "st-256color-docked"        , NULL     , NULL          , ~0   , 1          , 0,80,100,20    , 1          , 1          ,     1 , -1 },
-	{ "st-256color-notes"         , NULL     , NULL          , ~0   , 1          , 10,10,80,80    , 1          , 1          ,     2 , -1 },
+	{ "st-256color-notes"         , NULL     , NULL          , ~0   , 1          , CENTER         , 1          , 1          ,     2 , -1 },
 };
 
 
