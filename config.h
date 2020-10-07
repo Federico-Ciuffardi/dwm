@@ -130,8 +130,8 @@ static Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_grave,  tagmon,          {.i = 1 } },
 	{ MODKEY|ShiftMask,             XK_h,      zoom,            {-1} },
 	{ MODKEY|ShiftMask,             XK_l,      zoom,            {+1} },
-	{ MODKEY|ControlMask,           XK_l,      incview,         {.i =  1} },
-	{ MODKEY|ControlMask,           XK_h,      incview,         {.i = -1} },
+	{ MODKEY|ControlMask,           XK_j,      incview,         {.i =  1} },
+	{ MODKEY|ControlMask,           XK_k,      incview,         {.i = -1} },
 	//{ MODKEY|ShiftMask,           XK_h,      incnmaster,      {.i = +1 } },
 	//{ MODKEY|ShiftMask,           XK_l,      incnmaster,      {.i = -1 } },
 
