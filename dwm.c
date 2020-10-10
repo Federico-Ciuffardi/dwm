@@ -77,7 +77,7 @@
 
 /* enums */
 enum { CurNormal, CurResize, CurMove, CurLast }; /* cursor */
-enum { SchemeNorm, SchemeSel }; /* color schemes */
+enum { SchemeNorm, SchemeSel, SchemeNormTab, SchemeSelTab}; /* color schemes */
 enum { NetSupported, NetWMName, NetWMState, NetWMCheck,
        NetSystemTray, NetSystemTrayOP, NetSystemTrayOrientation, NetSystemTrayOrientationHorz,
        NetWMFullscreen, NetActiveWindow, NetWMWindowType,
@@ -1179,7 +1179,7 @@ drawtab(Monitor *m) {
 	  if(i >= m->ntabs) break;
 	  if(m->tab_widths[i] >  maxsize) m->tab_widths[i] = maxsize;
 	  w = m->tab_widths[i];
-	  drw_setscheme(drw, scheme[(c == m->sel) ? SchemeSel : SchemeNorm]);
+	  drw_setscheme(drw, scheme[(c == m->sel) ? SchemeSelTab : SchemeNormTab]);
 	  char tab_name[sizeof(c->name) + 3];
 	  sprintf(tab_name, " > %s", c->name);
 	  drw_text(drw, x, 0, w, th, 0, tab_name, 0);
@@ -1187,7 +1187,7 @@ drawtab(Monitor *m) {
 	  ++i;
 	}
 
-	drw_setscheme(drw, scheme[SchemeNorm]);
+	drw_setscheme(drw, scheme[SchemeNormTab]);
 
 	/* cleans interspace between window names and current viewed tag label */
 	w = m->ww - view_info_w - x;
@@ -2444,6 +2444,8 @@ tagmon(const Arg *arg)
 	sendtomon(c, m, arg->ui, 1);
 	unfocus(selmon->sel, 0);
 	selmon = c->mon;
+  focus(NULL);
+
 }
 
 void
