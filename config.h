@@ -48,6 +48,8 @@ static const char *colors[][3]      = {
 	/*               fg         bg         border   */
 	[SchemeNorm] = { "#ffffff", "#1d2021", "#222222" },
 	[SchemeSel]  = { "#ffffff", "#0058a0", "#D3D3D3"  },
+	[SchemeNormTab] = { "#ffffff", "#2d3031", "#222222" },
+	[SchemeSelTab]  = { "#ffffff", "#1068b0", "#D3D3D3"  },
 };
 
 /* tagging */
@@ -188,6 +190,7 @@ static Button buttons[] = {
 	{ ClkStatusText,        0,              Button5,        sigdwmblocks,   {.i = 5} },
 	{ ClkStatusText,        ShiftMask,      Button1,        sigdwmblocks,   {.i = 6} },
 	{ ClkLtSymbol,          0,              Button1,        setlayout,      {0} },
+	{ ClkLtSymbol,          0,              Button2,        view,           {.ui = ~0 }  },
 	{ ClkLtSymbol,          0,              Button3,        setlayout,      {.v = &layouts[1]} },
 	{ ClkClientWin,         MODKEY,         Button1,        movemouse,      {.i=0} },
 	{ ClkClientWin,         MODKEY,         Button2,        killclient,     {0} },
@@ -200,6 +203,11 @@ static Button buttons[] = {
 	{ ClkTagBar,            MODKEY,         Button3,        toggletag,      {0} },
 	{ ClkTabBar,            0,              Button1,        focuswin,       {0} },
 	{ ClkTabBar,            0,              Button2,        killwin ,       {0} },
-
+	{ ClkTagBar,            0,              Button4,        incview,        {.i =  1} },
+	{ ClkTagBar,            0,              Button5,        incview,        {.i = -1} },
+	{ ClkWinTitle,          0,              Button5,        focusstack,     {.i =  1} },
+  { ClkWinTitle,          0,              Button4,        focusstack,     {.i = -1} },
+	{ ClkWinTitle,          0,              Button9,        killclient,     {0} },
+	{ ClkWinTitle,         0,              Button8,        tagmon,         {.i=1} },
 };
 
