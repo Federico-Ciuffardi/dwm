@@ -40,7 +40,7 @@ enum showtab_modes { showtab_never, showtab_auto, showtab_nmodes, showtab_always
 static const int showtab			= showtab_auto;        /* Default tab bar show mode */
 static const int toptab				= True;  
 
-static const char *fonts[]          = { "Roboto Mono:style=Medium:antialias=true:size=10;1",
+static const char *fonts[]          = { "Roboto Mono:size=10",
 																				"monospace:size=10",
 																				"Noto Color Emoji:pixelsize=12:antialias=true:autohint=true"};
 static const char dmenufont[]       = "monospace:size=10";
@@ -71,13 +71,13 @@ static const Rule rules[] = {
 	{ "st-256color-ur"            , NULL     , NULL          , ~0   , 1          , 60,2,40,20     , 1          , 1          ,     0 , -1 },
 	{ "SpeedCrunch"               , NULL     , NULL          , ~0   , 1          , CENTER         , 1          , 1          ,     0 , -1 },
 	{ NULL                        , NULL     , "Event Tester", 0    , 0          , HINTS          , 0          , 1          ,     0 , -1 },
-	{ "st-256color-docked"        , NULL     , NULL          , ~0   , 1          , 0,80,100,20    , 1          , 1          ,     1 , -1 },
+	{ "tabbed"           , NULL     , NULL          , ~0   , 1          , 0,80,100,20    , 1          , 1          ,     1 , -1 },
 	{ "st-256color-notes"         , NULL     , NULL          , ~0   , 1          , CENTER         , 1          , 1          ,     2 , -1 },
 };
 
 
 static const char* scratchpads_cmd[] = {
-	"$TERMINAL -c st-256color-docked",
+	"tabbed -r 2 st -w ''",
   "$TERMINAL -c st-256color-notes -e $SHELL -c \"$EDITOR \"$HOME\"/.local/share/notes\""
 };
 
