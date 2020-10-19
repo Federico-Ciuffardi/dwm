@@ -2540,7 +2540,10 @@ toggle_sp(const Arg *arg)
 			}
 			focus(c);
 			arrange(selmon);
-		}
+		} else {
+      if (c->snext)
+        focus(c->snext);
+    }
 	}else{
 		Arg a;
 		a.v = (const char*[]){ "/bin/sh", "-c", scratchpads_cmd[arg->i-1], NULL };
