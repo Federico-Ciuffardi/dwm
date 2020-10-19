@@ -139,8 +139,8 @@ static Key keys[] = {
 
 	{ MODKEY|ShiftMask,             XK_g,      setlayout,        {.v = &layouts[2]} },
 	{ MODKEY|ShiftMask,             XK_d,      setlayout,        {.v = &layouts[0]} },
-	{ MODKEY,                       XK_f,      setlayout,        {.v = &layouts[1]} },
-	{ MODKEY|ShiftMask,             XK_f,      togglefullscreen, {0} },
+	{ MODKEY|ShiftMask,             XK_f,      setlayout,        {.v = &layouts[1]} },
+	{ MODKEY,                       XK_f,      togglefullscreen, {0} },
 	{ 0,                            XK_F11,    togglefullscreen, {0} },
 
 	//{ MODKEY|ShiftMask,             XK_Return, spawn,          SHCMD("$TERMINAL -c st-256color-docked") },
