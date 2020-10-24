@@ -71,7 +71,7 @@ static const Rule rules[] = {
 	{ "st-256color-ur"            , NULL     , NULL          , ~0   , 1          , 60,2,40,20     , 1          , 1          ,     0 , -1 },
 	{ "SpeedCrunch"               , NULL     , NULL          , ~0   , 1          , CENTER         , 1          , 1          ,     0 , -1 },
 	{ NULL                        , NULL     , "Event Tester", 0    , 0          , HINTS          , 0          , 1          ,     0 , -1 },
-	{ "tabbed"           , NULL     , NULL          , ~0   , 1          , 0,80,100,20    , 1          , 1          ,     1 , -1 },
+	{ "tabbed"                    , NULL     , NULL          , ~0   , 1          , 0,80,100,20    , 0          , 1          ,     1 , -1 },
 	{ "st-256color-notes"         , NULL     , NULL          , ~0   , 1          , CENTER         , 1          , 1          ,     2 , -1 },
 };
 
@@ -111,7 +111,7 @@ static Key keys[] = {
 	/* modifier                     key        function        argument */
 	// Mine
 	{ MODKEY|ShiftMask,             XK_q,      spawn,          SHCMD("$DMENU_BIN/dmenu_leave") },
-	{ MODKEY|ShiftMask,             XK_r,      spawn,          SHCMD("lxsu /bin/sh -c \"cd $HOME/git/dwm/ && make all && make install\" && pkill dwm") },
+	{ MODKEY|ShiftMask,             XK_r,      spawn,          SHCMD("lxsu /bin/sh -c \"cd $HOME/.build/dwm/ && make all && make install\" && pkill dwm") },
 	{ MODKEY,                       XK_r,      spawn,          SHCMD("rofi -show drun") },
 	{ MODKEY,                       XK_Tab,    view,           {.ui = ~0 } },
 	{ MODKEY|ShiftMask,             XK_Tab,    spawn,          SHCMD("rofi -show window") },
@@ -128,8 +128,9 @@ static Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_j,      pushdown,        {0} },
 	{ MODKEY|ShiftMask,             XK_k,      pushup,          {0} },
 	{ MODKEY,                       XK_a,      view,            {.ui = ~0 } },
-	{ MODKEY,                       XK_grave,  focusmon,        {.i = 1 } },
-	{ MODKEY|ShiftMask,             XK_grave,  tagmon,          {.i = 1 } },
+	{ MODKEY,                       XK_grave,  lastview,        {.i = 1 } },
+	{ MODKEY,                       XK_Escape, focusmon,        {.i = 1 } },
+	{ MODKEY|ShiftMask,             XK_Escape, tagmon,          {.i = 1 } },
 	{ MODKEY|ShiftMask,             XK_h,      zoom,            {-1} },
 	{ MODKEY|ShiftMask,             XK_l,      zoom,            {+1} },
 	{ MODKEY|ControlMask,           XK_j,      incview,         {.i =  1} },
@@ -140,8 +141,9 @@ static Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_g,      setlayout,        {.v = &layouts[2]} },
 	{ MODKEY|ShiftMask,             XK_d,      setlayout,        {.v = &layouts[0]} },
 	{ MODKEY|ShiftMask,             XK_f,      setlayout,        {.v = &layouts[1]} },
-	{ MODKEY,                       XK_f,      togglefullscreen, {0} },
-	{ 0,                            XK_F11,    togglefullscreen, {0} },
+	{ MODKEY,                       XK_f,      togglefullscreen    , {0} },
+	{ MODKEY|ShiftMask|ControlMask, XK_f,      togglefullfullscreen, {0} },
+	{ 0,                            XK_F11,    togglefullfullscreen, {0} },
 
 	//{ MODKEY|ShiftMask,             XK_Return, spawn,          SHCMD("$TERMINAL -c st-256color-docked") },
   { MODKEY|ShiftMask,             XK_Return, toggle_sp,       {.i = 1} },
@@ -158,6 +160,9 @@ static Key keys[] = {
 	{ 0, XF86XK_AudioMute,                     spawn,          SHCMD("amixer sset Master toggle && pkill -RTMIN+2 dwmblocks") },
 	{ 0, XF86XK_AudioRaiseVolume,              spawn,          SHCMD("amixer sset Master 5%+ && pkill -RTMIN+2 dwmblocks") },
 	{ 0, XF86XK_AudioLowerVolume,              spawn,          SHCMD("amixer sset Master 5%- && pkill -RTMIN+2 dwmblocks") },
+	{ 0, XF86XK_AudioPlay,                     spawn,          SHCMD("playerctl play-pause") },
+	{ 0, XF86XK_AudioNext,                     spawn,          SHCMD("playerctl next") },
+	{ 0, XF86XK_AudioPrev,                     spawn,          SHCMD("playerctl previous") },
 
 
 	// Default
