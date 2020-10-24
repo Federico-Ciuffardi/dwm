@@ -274,11 +274,13 @@ static void tagmon(const Arg *arg);
 static void tile(Monitor *);
 static void togglebar(const Arg *arg);
 static void togglefloating(const Arg *arg);
+static void togglefullfullscreen(const Arg *arg);
 static void togglefullscreen(const Arg *arg);
 static void togglesticky(const Arg *arg);
 static void toggletag(const Arg *arg);
 static void toggleview(const Arg *arg);
 static void incview(const Arg *arg);
+static void lastview();
 static void unfocus(Client *c, int setfocus);
 static void unmanage(Client *c, int destroyed);
 static void unmapnotify(XEvent *e);
@@ -2227,6 +2229,35 @@ setfullscreen(Client *c, int fullscreen)
 }
 
 void
+setfullfullscreen(Client *c, int fullscreen)
+{
+	if (fullscreen && !c->isfullscreen) {
+		XChangeProperty(dpy, c->win, netatom[NetWMState], XA_ATOM, 32,
+			PropModeReplace, (unsigned char*)&netatom[NetWMFullscreen], 1);
+		c->isfullscreen = 1;
+		c->oldstate = c->isfloating;
+		c->oldbw = c->bw;
+		c->bw = 0;
+		c->isfloating = 1;
+		resizeclient(c, 0, c->mon->my, c->mon->mw*2, c->mon->mh);
+		XRaiseWindow(dpy, c->win);
+	} else if (!fullscreen && c->isfullscreen){
+		XChangeProperty(dpy, c->win, netatom[NetWMState], XA_ATOM, 32,
+			PropModeReplace, (unsigned char*)0, 0);
+		c->isfullscreen = 0;
+		c->isfloating = c->oldstate;
+		c->bw = c->oldbw;
+		c->x = c->oldx;
+		c->y = c->oldy;
+		c->w = c->oldw;
+		c->h = c->oldh;
+		resizeclient(c, c->x, c->y, c->w, c->h);
+		arrange(c->mon);
+	}
+}
+
+
+void
 setlayout(const Arg *arg)
 {
 	selmon->sellt = selmon->pertag->sellts[selmon->pertag->curtag] ^= 1;
@@ -2514,6 +2545,12 @@ togglefullscreen(const Arg *arg)
 	setfullscreen(selmon->sel, !selmon->sel->isfullscreen);
 	arrange(selmon);
 }
+void
+togglefullfullscreen(const Arg *arg)
+{
+	setfullfullscreen(selmon->sel, !selmon->sel->isfullscreen);
+	arrange(selmon);
+}
 
 void
 togglesticky(const Arg *arg)
@@ -2615,6 +2652,11 @@ void incview(const Arg *arg){
     newtagset    = (rotatetagset | shifttagset) & TAGMASK;
   }
   const Arg a = {.ui = newtagset};
+  view(&a);
+}
+
+void lastview(){
+  const Arg a = {.ui =  selmon->tagset[selmon->seltags^1]};
   view(&a);
 }
 
