@@ -2511,11 +2511,11 @@ togglebar(const Arg *arg)
 	selmon->showbar = selmon->pertag->showbars[selmon->pertag->curtag] = !selmon->showbar;
 	updatebarpos(selmon);
 	resizebarwin(selmon);
-	if (showsystray) {
+	if (showsystray && selmon == systraytomon(NULL) ) {
 		XWindowChanges wc;
 		if (!selmon->showbar)
 			wc.y = -bh;
-		else if (selmon->showbar) {
+		else {
 			wc.y = 0;
 			if (!selmon->topbar)
 				wc.y = selmon->mh - bh;
