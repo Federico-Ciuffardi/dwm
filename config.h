@@ -157,7 +157,7 @@ static Key keys[] = {
 	{ 0, XF86XK_Calculator,                    spawn,          SHCMD("pkill -TERM speedcrunch || speedcrunch") },
 	{ 0, XF86XK_MonBrightnessUp,               spawn,          SHCMD("light -A 15") },
 	{ 0, XF86XK_MonBrightnessDown,             spawn,          SHCMD("light -U 15") },
-	{ 0, XF86XK_AudioMute,                     spawn,          SHCMD("amixer sset Master toggle && pkill -RTMIN+2 dwmblocks") },
+	{ 0, XF86XK_AudioMute,                     spawn,          SHCMD("amixer -q -D pulse sset Master toggle && pkill -RTMIN+2 dwmblocks") },
 	{ 0, XF86XK_AudioRaiseVolume,              spawn,          SHCMD("amixer sset Master 5%+ && pkill -RTMIN+2 dwmblocks") },
 	{ 0, XF86XK_AudioLowerVolume,              spawn,          SHCMD("amixer sset Master 5%- && pkill -RTMIN+2 dwmblocks") },
 	{ 0, XF86XK_AudioPlay,                     spawn,          SHCMD("playerctl play-pause") },
