@@ -73,6 +73,7 @@ static const Rule rules[] = {
 	{ NULL                        , NULL     , "Event Tester", 0    , 0          , HINTS          , 0          , 1          ,     0 , -1 },
 	{ "tabbed"                    , NULL     , NULL          , ~0   , 1          , 0,80,100,20    , 0          , 1          ,     1 , -1 },
 	{ "st-256color-notes"         , NULL     , NULL          , ~0   , 1          , CENTER         , 1          , 1          ,     2 , -1 },
+	{ "Yad"                       , NULL     , NULL          , 0    , 1          , HINTS          , 0          , 0          ,     0 , -1 },
 };
 
 
