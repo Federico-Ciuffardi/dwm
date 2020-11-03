@@ -78,7 +78,7 @@ static const Rule rules[] = {
 
 
 static const char* scratchpads_cmd[] = {
-	"tabbed -r 2 st -w ''",
+	"tabbed $TERMINAL --embed", // "tabbed -r 2 st -w ''",
   "$TERMINAL -c st-256color-notes -e $SHELL -c \"$EDITOR \"$HOME\"/.local/share/notes\""
 };
 
