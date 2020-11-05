@@ -67,6 +67,7 @@ static const Rule rules[] = {
 	{ "whatsapp-nativefier-d52542", NULL     , NULL          , ~0   , 1          , CENTER         , 0          , 0          ,     0 , -1 },
 	{ "firefox"                   , "Toolkit", NULL          , ~0   , 1          , HINTS          , 0          , 0          ,     0 , -1 },
 	{ "st-256color"               , NULL     , NULL          , 0    , 0          , CENTER_HINTS   , 1          , 1          ,     0 , -1 },
+	{ "Alacritty"                 , NULL     , NULL          , 0    , 0          , CENTER_HINTS   , 1          , 1          ,     0 , -1 },
 	{ "st-256color-c"             , NULL     , NULL          , ~0   , 1          , 10,10,80,80    , 1          , 1          ,     0 , -1 },
 	{ "st-256color-ur"            , NULL     , NULL          , ~0   , 1          , 60,2,40,20     , 1          , 1          ,     0 , -1 },
 	{ "SpeedCrunch"               , NULL     , NULL          , ~0   , 1          , CENTER         , 1          , 1          ,     0 , -1 },
@@ -79,7 +80,7 @@ static const Rule rules[] = {
 
 static const char* scratchpads_cmd[] = {
 	"tabbed $TERMINAL --embed", // "tabbed -r 2 st -w ''",
-  "st -c st-256color-notes -e $SHELL -c \"$EDITOR \"$HOME\"/.local/share/notes\""
+  "st -c st-256color-notes -e $SHELL -c \"$EDITOR \"$HOME\"/.local/share/vimwiki/index.wiki\""
 };
 
 /* layout(s) */
