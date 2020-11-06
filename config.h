@@ -65,6 +65,7 @@ static const Rule rules[] = {
 	{ "Gimp"                      , NULL     , NULL          , 0    , 1          , HINTS          , 0          , 0          ,     0 , -1 },
 	{ "Thunderbird"               , NULL     , NULL          , 1<<8 , 0          , HINTS          , 0          , 0          ,     0 , 0  },
 	{ "whatsapp-nativefier-d52542", NULL     , NULL          , ~0   , 1          , CENTER         , 0          , 0          ,     0 , -1 },
+	{ "tridactyl_editor"          , NULL     , NULL          , ~0   , 1          , CENTER         , 0          , 0          ,     0 , -1 },
 	{ "firefox"                   , "Toolkit", NULL          , ~0   , 1          , HINTS          , 0          , 0          ,     0 , -1 },
 	{ "st-256color"               , NULL     , NULL          , 0    , 0          , CENTER_HINTS   , 1          , 1          ,     0 , -1 },
 	{ "Alacritty"                 , NULL     , NULL          , 0    , 0          , CENTER_HINTS   , 1          , 1          ,     0 , -1 },
