@@ -144,15 +144,16 @@ static Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_g,      setlayout,        {.v = &layouts[2]} },
 	{ MODKEY|ShiftMask,             XK_d,      setlayout,        {.v = &layouts[0]} },
 	{ MODKEY|ShiftMask,             XK_f,      setlayout,        {.v = &layouts[1]} },
-	{ MODKEY,                       XK_f,      togglefullscreen    , {0} },
+	{ MODKEY,                       XK_f,      togglefullscreen,     {0} },
 	{ MODKEY|ShiftMask|ControlMask, XK_f,      togglefullfullscreen, {0} },
-	{ 0,                            XK_F11,    togglefullfullscreen, {0} },
+	{ 0,                            XK_F11,    togglefullscreen,     {0} },
 
 	//{ MODKEY|ShiftMask,             XK_Return, spawn,          SHCMD("$TERMINAL -c st-256color-docked") },
   { MODKEY|ShiftMask,             XK_Return, toggle_sp,       {.i = 1} },
   { MODKEY,                       XK_n,      toggle_sp,       {.i = 2} },
 
 	{ MODKEY,                       XK_Return, spawn,          SHCMD("$TERMINAL") },
+	{ MODKEY|ShiftMask|ControlMask, XK_Return, spawn,          SHCMD("$TERMINAL --class st-256color-c,st-256color-c") },
 	{ MODKEY,                       XK_e,      spawn,          SHCMD("$TERMINAL -e ranger-standalone") },
 	{ MODKEY,                       XK_w,      spawn,          SHCMD("$BROWSER") },
 	{ MODKEY|ShiftMask,             XK_w,      spawn,          SHCMD("whatsapp-nativefier-dark") },
