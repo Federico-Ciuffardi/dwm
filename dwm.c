@@ -267,6 +267,7 @@ static void showhide(Client *c);
 static void sigchld(int unused);
 static void sigdwmblocks(const Arg *arg);
 static void spawn(const Arg *arg);
+static void toggledock(const Arg *arg);
 static void toggle_sp(const Arg *arg);
 static Monitor *systraytomon(Monitor *m);
 static void tag(const Arg *arg);
@@ -2555,6 +2556,16 @@ togglesticky(const Arg *arg)
 		return;
 	setsticky(selmon->sel,!selmon->sel->issticky);
 	arrange(selmon);
+}
+
+
+void
+toggledock(const Arg *arg)
+{
+  toggle_sp(arg);
+  selmon->wh = 864;
+  selmon->mh = 864;
+  arrange(selmon);
 }
 
 void
