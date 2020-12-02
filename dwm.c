@@ -217,6 +217,7 @@ static void focus(Client *c);
 static void focusin(XEvent *e);
 static void focusmon(const Arg *arg);
 static void focusstack(const Arg *arg);
+static void togglefocustype(const Arg *arg);
 static int getdwmblockspid();
 static void focuswin(const Arg* arg);
 static void killwin(const Arg* arg);
@@ -1296,6 +1297,12 @@ focusmon(const Arg *arg)
 	warp(selmon->sel);
 }
 
+int
+validtarget(Client *c, int floating){
+  /* return ISVISIBLE(c); (old behavior) */
+  return ISVISIBLE(c) && c->isfloating == floating;
+}
+
 void
 focusstack(const Arg *arg)
 {
@@ -1304,16 +1311,16 @@ focusstack(const Arg *arg)
 	if (!selmon->sel || selmon->sel->isfullscreen)
 		return;
 	if (arg->i > 0) {
-		for (c = selmon->sel->next; c && !ISVISIBLE(c); c = c->next);
+		for (c = selmon->sel->next; c && !validtarget(c,selmon->sel->isfloating); c = c->next);
 		if (!c)
-			for (c = selmon->clients; c && !ISVISIBLE(c); c = c->next);
+			for (c = selmon->clients; c && !validtarget(c,selmon->sel->isfloating); c = c->next);
 	} else {
 		for (i = selmon->clients; i != selmon->sel; i = i->next)
-			if (ISVISIBLE(i))
+			if (validtarget(i,selmon->sel->isfloating))
 				c = i;
 		if (!c)
 			for (; i; i = i->next)
-				if (ISVISIBLE(i))
+				if (validtarget(i,selmon->sel->isfloating))
 					c = i;
 	}
 	if (c) {
@@ -1321,6 +1328,26 @@ focusstack(const Arg *arg)
 		restack(selmon);
 	}
 }
+
+void
+togglefocustype(const Arg *arg)
+{
+	Client *c = NULL;
+
+	if (!selmon->sel || selmon->sel->isfullscreen)
+		return;
+  for (c = selmon->sel->snext; c && !validtarget(c,!selmon->sel->isfloating); c = c->snext);
+
+  if (!c)
+    for (c = selmon->clients; c && !validtarget(c,!selmon->sel->isfloating); c = c->next);
+
+  if (c) {
+		focus(c);
+		restack(selmon);
+	}
+}
+
+
 
 void
 focuswin(const Arg* arg){
