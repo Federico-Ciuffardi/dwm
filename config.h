@@ -94,6 +94,8 @@ static const Layout layouts[] = {
 	{ "[Tall]",     tile },    /* first entry is default */
 	{ "[Tabs]",     monocle },
 	{ "[Grid]",     gaplessgrid },
+	{ "[CenterF]",  centeredfloatingmaster },
+	{ "[Center]",   centeredmaster },
 	{ "[Floating]", NULL },    /* no layout function means floating behavior */
 };
 
@@ -146,6 +148,7 @@ static Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_g,      setlayout,        {.v = &layouts[2]} },
 	{ MODKEY|ShiftMask,             XK_d,      setlayout,        {.v = &layouts[0]} },
 	{ MODKEY|ShiftMask,             XK_f,      setlayout,        {.v = &layouts[1]} },
+	{ MODKEY|ShiftMask,             XK_p,      setlayout,        {.v = &layouts[3]} },
 	{ MODKEY,                       XK_f,      togglefullscreen,     {0} },
 	{ MODKEY|ShiftMask|ControlMask, XK_f,      togglefullfullscreen, {0} },
 	{ 0,                            XK_F11,    togglefullscreen,     {0} },
