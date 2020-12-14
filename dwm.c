@@ -1552,15 +1552,19 @@ keypress(XEvent *e)
 			keys[i].func(&(keys[i].arg));
 }
 
+void hide(Client* c){
+  c->issticky = 0;
+}
+
 void
 killclient(const Arg *arg)
 {
 	if (!selmon->sel)
 		return;
 	if (selmon->sel->sp_id){
-		selmon->sel->issticky = 0;
-		focus(NULL);
-		arrange(selmon);
+    hide(selmon->sel);
+    focus(NULL);
+	  arrange(selmon);
 		return;
 	}
 	if (!sendevent(selmon->sel->win, wmatom[WMDelete], NoEventMask, wmatom[WMDelete], CurrentTime, 0 , 0, 0)) {
@@ -2603,8 +2607,9 @@ toggle_sp(const Arg *arg)
 			focus(c);
 			arrange(selmon);
 		} else {
-      if (c->snext)
-        focus(c->snext);
+      hide(c);
+      focus(c->snext);
+	    arrange(selmon);
     }
 	}else{
 		Arg a;
