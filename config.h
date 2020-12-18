@@ -84,6 +84,9 @@ static const char* scratchpads_cmd[] = {
   "st -c st-256color-notes -e $SHELL -c \"$EDITOR \"$HOME\"/.local/share/vimwiki/index.wiki\""
 };
 
+
+static const int floatingdims[] = { CENTER };
+
 /* layout(s) */
 static const float mfact     = 0.55; /* factor of master area size [0.05..0.95] */
 static const int nmaster     = 1;    /* number of clients in master area */
@@ -121,7 +124,7 @@ static Key keys[] = {
 	{ 0,                            XK_Print,  spawn,          SHCMD("screengrab") },
 
 	{ MODKEY,                       XK_q,      killclient,      {0} },
-	{ MODKEY,                       XK_t,      togglefloating,  {0} },
+	{ MODKEY,                       XK_a,      togglefloating,  {0} },
 	{ MODKEY,                       XK_s,      togglesticky,    {0} },
 
 	{ MODKEY,                       XK_semicolon,togglefocustype,{0} },
@@ -132,7 +135,6 @@ static Key keys[] = {
 	{ MODKEY|ShiftMask|ControlMask, XK_l,      setmfact,        {.f = +0.05} },
 	{ MODKEY|ShiftMask,             XK_j,      pushdown,        {0} },
 	{ MODKEY|ShiftMask,             XK_k,      pushup,          {0} },
-	{ MODKEY,                       XK_a,      view,            {.ui = ~0 } },
 	{ MODKEY,                       XK_grave,  lastview,        {.i = 1 } },
 	{ MODKEY,                       XK_Escape, focusmon,        {.i = 1 } },
 	{ MODKEY|ShiftMask,             XK_Escape, tagmon,          {.i = 1 } },
