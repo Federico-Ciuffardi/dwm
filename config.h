@@ -220,6 +220,6 @@ static Button buttons[] = {
 	{ ClkWinTitle,          0,              Button5,        focusstack,     {.i =  1} },
   { ClkWinTitle,          0,              Button4,        focusstack,     {.i = -1} },
 	{ ClkWinTitle,          0,              Button9,        killclient,     {0} },
-	{ ClkWinTitle,         0,              Button8,        tagmon,         {.i=1} },
+	{ ClkWinTitle,          0,              Button8,        tagmon,         {.i=1} },
 };
 
