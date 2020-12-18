@@ -2561,14 +2561,16 @@ togglefloating(const Arg *arg)
 		togglefullscreen(NULL);
 	selmon->sel->isfloating = !selmon->sel->isfloating || selmon->sel->isfixed;
 	if (selmon->sel->isfloating){
-    selmon->sel->x = selmon->mx + (floatingdims[0]*selmon->mw)/100.0;
-    selmon->sel->y = selmon->my + (floatingdims[1]*selmon->mh)/100.0;
-    selmon->sel->w = (floatingdims[2]*selmon->mw)/100.0;
-    selmon->sel->h = (floatingdims[3]*selmon->mh)/100.0;
+    if ( arg ){
+      selmon->sel->x = selmon->mx + (floatingdims[0]*selmon->mw)/100.0;
+      selmon->sel->y = selmon->my + (floatingdims[1]*selmon->mh)/100.0;
+      selmon->sel->w = (floatingdims[2]*selmon->mw)/100.0;
+      selmon->sel->h = (floatingdims[3]*selmon->mh)/100.0;
+      XMoveResizeWindow(dpy, selmon->sel->win, selmon->sel->x + 2 * sw,
+        selmon->sel->y, selmon->sel->w, selmon->sel->h);
+    }
 		resize(selmon->sel, selmon->sel->x, selmon->sel->y,
 			selmon->sel->w, selmon->sel->h, 0);
-    XMoveResizeWindow(dpy, selmon->sel->win, selmon->sel->x + 2 * sw,
-      selmon->sel->y, selmon->sel->w, selmon->sel->h);
   }
 	arrange(selmon);
 }

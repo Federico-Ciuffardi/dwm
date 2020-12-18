@@ -124,7 +124,7 @@ static Key keys[] = {
 	{ 0,                            XK_Print,  spawn,          SHCMD("screengrab") },
 
 	{ MODKEY,                       XK_q,      killclient,      {0} },
-	{ MODKEY,                       XK_a,      togglefloating,  {0} },
+	{ MODKEY,                       XK_a,      togglefloating,  {.i = 1} },
 	{ MODKEY,                       XK_s,      togglesticky,    {0} },
 
 	{ MODKEY,                       XK_semicolon,togglefocustype,{0} },
