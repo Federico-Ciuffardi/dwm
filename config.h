@@ -153,8 +153,8 @@ static Key keys[] = {
 	{ 0,                            XK_F11,    togglefullscreen,     {0} },
 
 	//{ MODKEY|ShiftMask,             XK_Return, spawn,          SHCMD("$TERMINAL -c st-256color-docked") },
-  { MODKEY,                       XK_space,  toggle_sp,       {.i = 1} },
-  { MODKEY,                       XK_n,      toggle_sp,       {.i = 2} },
+  { MODKEY,                       XK_space,  togglesp,       {.i = 1} },
+  { MODKEY,                       XK_n,      togglesp,       {.i = 2} },
 
 	{ MODKEY,                       XK_Return, spawn,          SHCMD("$TERMINAL") },
 	{ MODKEY|ShiftMask,             XK_Return, spawn,          SHCMD("$TERMINAL --class st-256color-c,st-256color-c") },

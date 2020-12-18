@@ -268,7 +268,7 @@ static void showhide(Client *c);
 static void sigchld(int unused);
 static void sigdwmblocks(const Arg *arg);
 static void spawn(const Arg *arg);
-static void toggle_sp(const Arg *arg);
+static void togglesp(const Arg *arg);
 static Monitor *systraytomon(Monitor *m);
 static void tag(const Arg *arg);
 static void tagmon(const Arg *arg);
@@ -2598,7 +2598,7 @@ togglesticky(const Arg *arg)
 }
 
 void
-toggle_sp(const Arg *arg)
+togglesp(const Arg *arg)
 {
 	Client *c = NULL;
 	Monitor* m =NULL;
