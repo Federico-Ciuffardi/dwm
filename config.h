@@ -77,6 +77,7 @@ static const Rule rules[] = {
 	{ "tabbed"                    , NULL     , NULL          , ~0   , 1          , 0,80,100,20    , 0          , 1          ,     1 , -1 },
 	{ "st-256color-notes"         , NULL     , NULL          , ~0   , 1          , CENTER         , 1          , 1          ,     2 , -1 },
 	{ "Yad"                       , NULL     , NULL          , 0    , 1          , HINTS          , 0          , 0          ,     0 , -1 },
+	{ "Dragon-drag-and-drop"      , NULL     , NULL          , ~0   , 1          , CENTER_HINTS   , 0          , 0          ,     0 , -1 },
 };
 
 
@@ -163,8 +164,9 @@ static Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_e,      spawn,          SHCMD("$TERMINAL --class st-256color-c,st-256color-c -e ranger-standalone") },
 	{ MODKEY,                       XK_w,      spawn,          SHCMD("$BROWSER") },
 	{ MODKEY|ShiftMask,             XK_w,      spawn,          SHCMD("whatsapp-nativefier-dark") },
-
 	{ 0, XF86XK_Calculator,                    spawn,          SHCMD("pkill -TERM speedcrunch || speedcrunch") },
+	{ MODKEY,                       XK_u,      spawn,          SHCMD("st -c st-256color-ur -e $STATUSBAR_AUX_BIN/popupgrade") },
+
 	{ 0, XF86XK_MonBrightnessUp,               spawn,          SHCMD("light -A 15") },
 	{ 0, XF86XK_MonBrightnessDown,             spawn,          SHCMD("light -U 15") },
 	{ 0, XF86XK_AudioMute,                     spawn,          SHCMD("amixer -q -D pulse sset Master toggle && pkill -RTMIN+2 dwmblocks") },
