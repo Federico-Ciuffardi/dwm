@@ -3451,19 +3451,18 @@ horizontalfocus(const Arg *arg)
 {
 	Client *c = nexttiled(selmon->clients) ;
 
-	if (!c || !nexttiled(c->next)
-	|| !selmon->lt[selmon->sellt]->arrange
-	|| selmon->sel->isfloating || selmon->sel->isfullscreen
-	|| selmon->lt[selmon->sellt] != &layouts[0] 
-	|| ((arg->i<0) == (nexttiled(selmon->clients) == selmon->sel))){
-		const Arg a = {.i = arg->i, .ui = arg->i};
-		focusmon(&a);
-    return;
+	if (c && nexttiled(c->next)	&& !selmon->sel->isfloating && !selmon->sel->isfullscreen){
+    if ( (c == selmon->sel) == arg->i > 0 
+    && selmon->lt[selmon->sellt] == &layouts[0] ){
+      if (arg->i > 0)
+        c = nexttiled(c->next);
+      focus(c);
+      warp(c);
+      return;
+    }
 	}
-	if (arg->i>0)
-		c = nexttiled(c->next);
-	focus(c);
-	warp(c);
+  const Arg a = {.i = arg->i, .ui = arg->i};
+  focusmon(&a);
 }
 
 /*layouts*/
