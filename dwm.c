@@ -309,7 +309,7 @@ static int xerrorstart(Display *dpy, XErrorEvent *ee);
 static void zoom(const Arg *arg);
 static void horizontalfocus(const Arg *arg);
 static void autostart_exec(void);
-static void gaplessgrid(Monitor *m);
+static void grid(Monitor *m);
 
 static pid_t getparentprocess(pid_t p);
 static int isdescprocess(pid_t p, pid_t c);
@@ -319,6 +319,7 @@ static pid_t winpid(Window w);
 
 
 /* variables */
+unsigned int cols,rows;
 static int warping = 0;
 static Systray *systray =  NULL;
 static const char broken[] = "broken";
@@ -1275,20 +1276,50 @@ focusin(XEvent *e)
 		setfocus(selmon->sel);
 }
 
+Client*
+focustiled(Client* c, int n)
+{
+  if(n > 0)
+    for (;c && n ; c = nexttiled(c->next), n--); 
+  else {
+    Client *i1, *i2;
+    i1 = i2 = nexttiled(selmon->clients);
+    for (; i2 && i2 != c ; i2 = nexttiled(i2->next)){
+      if ( n < 0)
+        n++;
+      else
+        i1 = nexttiled(i1->next);
+    }
+    if (n<0) 
+      return NULL;
+    else 
+      c = i1;
+  }
+  return c;
+}
+
 void
 focusmon(const Arg *arg)
 {
 	Monitor *m;
+  Client *c;
 
 	if (!mons->next || (m = dirtomon(arg->i)) == selmon)
 		return;
+
 	unfocus(selmon->sel, 0);
 	selmon = m;
-	Client *c = nexttiled(selmon->clients); 
-	if (!c || !arg->ui || selmon->lt[selmon->sellt] != &layouts[0] )
-		c = NULL;
-	else if(arg->ui == -1)
-		c = nexttiled(c->next);
+
+	if ((c = nexttiled(selmon->clients))){
+    if (selmon->lt[selmon->sellt] == &layouts[0] ){
+      if (arg->ui == -1)
+        c = nexttiled(c->next);
+    }else if ( selmon->lt[selmon->sellt] == &layouts[2] ){
+      if (arg->ui == -1)
+        c = focustiled(c,rows*(cols -1));
+    }
+  }   
+
 	focus(c);
 	warp(selmon->sel);
 }
@@ -3452,13 +3483,21 @@ horizontalfocus(const Arg *arg)
 	Client *c = nexttiled(selmon->clients) ;
 
 	if (c && nexttiled(c->next)	&& !selmon->sel->isfloating && !selmon->sel->isfullscreen){
-    if ( (c == selmon->sel) == arg->i > 0 
-    && selmon->lt[selmon->sellt] == &layouts[0] ){
-      if (arg->i > 0)
-        c = nexttiled(c->next);
-      focus(c);
-      warp(c);
-      return;
+    if ( selmon->lt[selmon->sellt] == &layouts[0] ){
+      if ( (c == selmon->sel) == (arg->i > 0) ){
+        if (arg->i > 0)
+          c = nexttiled(c->next);
+        focus(c);
+        warp(c);
+        return;
+      }
+    }else if ( selmon->lt[selmon->sellt] == &layouts[2] ){
+      c = focustiled(selmon->sel,arg->i*rows);
+      if (c){
+        focus(c);
+        warp(c);
+        return;
+      }
     }
 	}
   const Arg a = {.i = arg->i, .ui = arg->i};
@@ -3467,39 +3506,31 @@ horizontalfocus(const Arg *arg)
 
 /*layouts*/
 void
-gaplessgrid(Monitor *m) {
-	unsigned int n, cols, rows, cn, rn, i, cx, cy, cw, ch;
-	Client *c;
-
-	for(n = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), n++) ;
-	if(n == 0)
-		return;
-
-	/* grid dimensions */
-	for(cols = 0; cols <= n/2; cols++)
-		if(cols*cols >= n)
-			break;
-	if(n == 5) /* set layout against the general calculation: not 1:2:2, but 2:3 */
-		cols = 2;
-	rows = n/cols;
-
-	/* window geometries */
-	cw = cols ? m->ww / cols : m->ww;
-	cn = 0; /* current column number */
-	rn = 0; /* current row number */
-	for(i = 0, c = nexttiled(m->clients); c; i++, c = nexttiled(c->next)) {
-		if(i/rows + 1 > cols - n%cols)
-			rows = n/cols + 1;
-		ch = rows ? m->wh / rows : m->wh;
-		cx = m->wx + cn*cw;
-		cy = m->wy + rn*ch;
-		resize(c, cx, cy, cw - 2 * c->bw, ch - 2 * c->bw, False);
-		rn++;
-		if(rn >= rows) {
-			rn = 0;
-			cn++;
-		}
-	}
+grid(Monitor *m) {
+ 	unsigned int i, n, cx, cy, cw, ch, aw, ah;
+ 	Client *c;
+ 
+ 	for(n = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next))
+ 		n++;
+ 
+ 	/* grid dimensions */
+ 	for(rows = 0; rows <= n/2; rows++)
+ 		if(rows*rows >= n)
+ 			break;
+ 	cols = (rows && (rows - 1) * rows >= n) ? rows - 1 : rows;
+ 
+ 	/* window geoms (cell height/width) */
+ 	ch = m->wh / (rows ? rows : 1);
+ 	cw = m->ww / (cols ? cols : 1);
+ 	for(i = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next)) {
+ 		cx = m->wx + (i / rows) * cw;
+ 		cy = m->wy + (i % rows) * ch;
+ 		/* adjust height/width of last row/column's windows */
+ 		ah = ((i + 1) % rows == 0) ? m->wh - ch * rows : 0;
+ 		aw = (i >= rows * (cols - 1)) ? m->ww - cw * cols : 0;
+ 		resize(c, cx, cy, cw - 2 * c->bw + aw, ch - 2 * c->bw + ah, False);
+ 		i++;
+ 	}
 }
 
 int

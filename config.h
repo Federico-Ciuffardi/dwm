@@ -98,7 +98,7 @@ static const Layout layouts[] = {
 	/* symbol     arrange function */
 	{ "[Tall]",     tile },    /* first entry is default */
 	{ "[Tabs]",     monocle },
-	{ "[Grid]",     gaplessgrid },
+	{ "[Grid]",     grid },
 	{ "[Floating]", NULL },    /* no layout function means floating behavior */
 };
 
