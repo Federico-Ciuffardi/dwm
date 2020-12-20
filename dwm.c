@@ -1262,10 +1262,12 @@ focusmon(const Arg *arg)
     }else if ( selmon->lt[selmon->sellt] == &layouts[2] ){
       if (arg->ui == -1)
         c = focustiled(c,rows*(cols -1));
+    }else{
+      c = NULL;
     }
   }   
 
-	focus(c);
+  focus(c);
 	warp(selmon->sel);
 }
 
