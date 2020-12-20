@@ -2590,11 +2590,13 @@ togglesp(const Arg *arg)
           sendtomon(c, selmon, 1, 1);
 			}
 			focus(c);
+	    warp(c);
 			arrange(selmon);
 		} else {
       hide(c);
       focus(c->snext);
-	    arrange(selmon);
+	    warp(c->snext);
+      arrange(selmon);
     }
 	}else{
 		Arg a;
