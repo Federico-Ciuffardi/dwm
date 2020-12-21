@@ -110,6 +110,8 @@ struct Client {
 	float mina, maxa;
 	int x, y, w, h;
 	int floatx, floaty, floatw, floath;
+  int ofloatzonex, ofloatzoney; 
+  int floatzonex, floatzoney; 
 	int oldx, oldy, oldw, oldh;
 	int basew, baseh, incw, inch, maxw, maxh, minw, minh;
 	int bw, oldbw;
@@ -174,6 +176,7 @@ typedef struct {
 	unsigned int tags;
 	int isfloating;
 	int floatx, floaty, floatw, floath;
+	int floatzonex, floatzoney;
 	int isterminal;
 	int noswallow;
 	int sp_id;
@@ -310,6 +313,10 @@ static void zoom(const Arg *arg);
 static void horizontalfocus(const Arg *arg);
 static void autostart_exec(void);
 static void grid(Monitor *m);
+static void movevertical(const Arg* arg);
+static void movehorizontal(const Arg* arg);
+static void resizevertical(const Arg* arg);
+static void resizehorizontal(const Arg* arg);
 
 static pid_t getparentprocess(pid_t p);
 static int isdescprocess(pid_t p, pid_t c);
@@ -427,6 +434,7 @@ applyrules(Client *c)
 
 	/* rule matching */
 	c->isfloating = 0;
+  c->ofloatzonex = c->floatzonex = c->ofloatzoney = c->floatzoney = -1;
 	if(!c->issticky)
 		c->tags = c->tags & TAGMASK ? c->tags & TAGMASK : c->mon->tagset[c->mon->seltags];
 	else
@@ -449,6 +457,8 @@ applyrules(Client *c)
 			c->floaty = r->floaty;
 			c->floatw = r->floatw;
 			c->floath = r->floath;
+			c->floatzonex = c->ofloatzonex = r->floatzonex;
+			c->floatzoney = c->ofloatzoney = r->floatzoney;
 			if(r->tags == ~0 || c->tags == TAGMASK )
 				setsticky(c, 1);
 			else if(r->tags)
@@ -1961,6 +1971,45 @@ resizeclient(Client *c, int x, int y, int w, int h)
 	configure(c);
 	XSync(dpy, False);
 }
+int mod(int x, int mod){
+  x = x % mod;
+  return x >= 0 ? x : x + mod;
+}
+
+void
+changefloatzone(int cx,int cy){
+ Client *c = selmon->sel;
+  if (!c) return;
+  if (c->floatzonex < 0) c->floatzonex = 1;
+  if (c->floatzoney < 0) c->floatzoney = 1;
+  if ( c->floatzonex + cx < 0 || 2 < c->floatzonex + cx ){
+    Monitor* m = dirtomon(c->floatzonex + cx < 0 ? -1 : 1);
+    sendmon(c, m);
+    unfocus(selmon->sel, 0);
+    selmon = c->mon;
+    focus(NULL);
+  }
+  c->floatzonex = mod(c->floatzonex + cx, 3);
+  c->floatzoney = mod(c->floatzoney + cy, 3);
+  int x = selmon->wx + floatzones[c->floatzoney][c->floatzonex][0] * selmon->ww / 100;
+  int y = selmon->wy + floatzones[c->floatzoney][c->floatzonex][1] * selmon->wh / 100;
+  int w = (floatzones[c->floatzoney][c->floatzonex][2] * selmon->ww / 100) - 2*c->bw;
+  int h = (floatzones[c->floatzoney][c->floatzonex][3] * selmon->wh / 100) - 2*c->bw;
+  resize(c, x, y, w, h,0);
+  warp(c);
+}
+
+void
+changefloatzonex(const Arg *arg)
+{
+  changefloatzone(arg->i,0);
+}
+
+void
+changefloatzoney(const Arg *arg)
+{
+  changefloatzone(0,arg->i);
+}
 
 void
 resizemouse(const Arg *arg)
@@ -2539,11 +2588,20 @@ togglefloating(const Arg *arg)
 		togglefullscreen(NULL);
 	selmon->sel->isfloating = !selmon->sel->isfloating || selmon->sel->isfixed;
 	if (selmon->sel->isfloating){
+		int fzx = selmon->sel->floatzonex = selmon->sel->ofloatzonex;
+		int fzy = selmon->sel->floatzoney = selmon->sel->ofloatzoney;
     if ( arg ){
-      selmon->sel->x = selmon->mx + (floatingdims[0]*selmon->mw)/100.0;
-      selmon->sel->y = selmon->my + (floatingdims[1]*selmon->mh)/100.0;
-      selmon->sel->w = (floatingdims[2]*selmon->mw)/100.0;
-      selmon->sel->h = (floatingdims[3]*selmon->mh)/100.0;
+      if( fzx >= 0 && fzy >= 0 ) {
+        selmon->sel->x = selmon->wx + floatzones[fzy][fzx][0] * selmon->ww / 100;
+        selmon->sel->y = selmon->wy + floatzones[fzy][fzx][1] * selmon->wh / 100;
+        selmon->sel->w = (floatzones[fzy][fzx][2] * selmon->ww / 100) - 2*selmon->sel->bw;
+        selmon->sel->h = (floatzones[fzy][fzx][3] * selmon->wh / 100) - 2*selmon->sel->bw;
+      }else{
+        selmon->sel->x = selmon->mx + (floatingdims[0]*selmon->mw)/100.0;
+        selmon->sel->y = selmon->my + (floatingdims[1]*selmon->mh)/100.0;
+        selmon->sel->w = (floatingdims[2]*selmon->mw)/100.0;
+        selmon->sel->h = (floatingdims[3]*selmon->mh)/100.0;
+      }
       XMoveResizeWindow(dpy, selmon->sel->win, selmon->sel->x + 2 * sw,
         selmon->sel->y, selmon->sel->w, selmon->sel->h);
     }
@@ -3481,6 +3539,45 @@ grid(Monitor *m) {
  		resize(c, cx, cy, cw - 2 * c->bw + aw, ch - 2 * c->bw + ah, False);
  		i++;
  	}
+}
+
+void
+resizehorizontal(const Arg* arg){
+  if(selmon->sel){
+    if(selmon->sel->isfloating)
+      changefloatzonex(arg);
+    else{
+      Arg a;
+      if(arg->i<0)
+        a.f = -0.05;
+      else
+        a.f =  0.05;
+      setmfact(&a);
+    }
+  }
+}
+
+void
+resizevertical(const Arg* arg){
+  if(selmon->sel)
+    if(selmon->sel->isfloating)
+      changefloatzoney(arg);
+}
+void
+movehorizontal(const Arg* arg){
+  if(selmon->sel)
+    zoom(arg);
+}
+
+void
+movevertical(const Arg* arg){
+  if(selmon->sel){
+    if(!selmon->sel->isfloating)
+      if(arg->i<0)
+        pushup(NULL);
+      else
+        pushdown(NULL);
+  }
 }
 
 int

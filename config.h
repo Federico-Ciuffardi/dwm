@@ -13,6 +13,17 @@
 #define CENTER       10,10,80,80
 #define HINTS        -2,-2,-2,-2
 
+#define UL            0,  0
+#define UM            1,  0
+#define UR            2,  0
+#define ML            0,  1
+#define MM            1,  1
+#define MR            2,  1
+#define LL            0,  2
+#define LM            1,  2
+#define LR            2,  2
+#define NN           -1, -1
+
 #define SHCMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
 
 /* autostart */
@@ -62,22 +73,22 @@ static const Rule rules[] = {
 	 *	WM_NAME(STRING) = title
 	 */
 	/* tag ~0 means sticky */
-	/* class                      | instance | title         |tags  | isfloating | float x,y,w,h % | isterminal | noswallow | sp_id | monitor */
-	{ "Gimp"                      , NULL     , NULL          , 0    , 1          , HINTS          , 0          , 0          ,     0 , -1 },
-	{ "Thunderbird"               , NULL     , NULL          , 1<<8 , 0          , HINTS          , 0          , 0          ,     0 , 0  },
-	{ "whatsapp-nativefier-d52542", NULL     , NULL          , ~0   , 1          , CENTER         , 0          , 0          ,     0 , -1 },
-	{ "tridactyl_editor"          , NULL     , NULL          , ~0   , 1          , CENTER         , 0          , 0          ,     0 , -1 },
-	{ "firefox"                   , "Toolkit", NULL          , ~0   , 1          , HINTS          , 0          , 0          ,     0 , -1 },
-	{ "st-256color"               , NULL     , NULL          , 0    , 0          , CENTER_HINTS   , 1          , 1          ,     0 , -1 },
-	{ "Alacritty"                 , NULL     , NULL          , 0    , 0          , CENTER_HINTS   , 1          , 1          ,     0 , -1 },
-	{ "st-256color-c"             , NULL     , NULL          , ~0   , 1          , 10,10,80,80    , 1          , 1          ,     0 , -1 },
-	{ "st-256color-ur"            , NULL     , NULL          , ~0   , 1          , 60,2,40,20     , 1          , 1          ,     0 , -1 },
-	{ "SpeedCrunch"               , NULL     , NULL          , ~0   , 1          , CENTER         , 1          , 1          ,     0 , -1 },
-	{ NULL                        , NULL     , "Event Tester", 0    , 0          , HINTS          , 0          , 1          ,     0 , -1 },
-	{ "tabbed"                    , NULL     , NULL          , ~0   , 1          , 0,80,100,20    , 0          , 1          ,     1 , -1 },
-	{ "st-256color-notes"         , NULL     , NULL          , ~0   , 1          , CENTER         , 1          , 1          ,     2 , -1 },
-	{ "Yad"                       , NULL     , NULL          , 0    , 1          , HINTS          , 0          , 0          ,     0 , -1 },
-	{ "Dragon-drag-and-drop"      , NULL     , NULL          , ~0   , 1          , CENTER_HINTS   , 0          , 0          ,     0 , -1 },
+	/* class                      | instance | title         |tags  | isfloating | float x,y,w,h % | float zone | isterminal | noswallow | sp_id | monitor */
+	{ "Gimp"                      , NULL     , NULL          , 0    , 1          , HINTS           , NN         , 0          , 0         ,     0 , -1      },
+	{ "Thunderbird"               , NULL     , NULL          , 1<<8 , 0          , HINTS           , NN         , 0          , 0         ,     0 ,  0      },
+	{ "whatsapp-nativefier-d52542", NULL     , NULL          , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     0 , -1      },
+	{ "tridactyl_editor"          , NULL     , NULL          , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     0 , -1      },
+	{ "firefox"                   , "Toolkit", NULL          , ~0   , 1          , HINTS           , LR         , 0          , 0         ,     0 , -1      },
+	{ "st-256color"               , NULL     , NULL          , 0    , 0          , CENTER_HINTS    , NN         , 1          , 1         ,     0 , -1      },
+	{ "Alacritty"                 , NULL     , NULL          , 0    , 0          , CENTER_HINTS    , NN         , 1          , 1         ,     0 , -1      },
+	{ "st-256color-c"             , NULL     , NULL          , ~0   , 1          , 10,10,80,80     , NN         , 1          , 1         ,     0 , -1      },
+	{ "st-256color-ur"            , NULL     , NULL          , ~0   , 1          , 60,2,40,20      , NN         , 1          , 1         ,     0 , -1      },
+	{ "SpeedCrunch"               , NULL     , NULL          , ~0   , 1          , CENTER          , NN         , 1          , 1         ,     0 , -1      },
+	{ NULL                        , NULL     , "Event Tester", 0    , 0          , HINTS           , NN         , 0          , 1         ,     0 , -1      },
+	{ "tabbed"                    , NULL     , NULL          , ~0   , 1          , 0,80,100,20     , LM         , 0          , 1         ,     1 , -1      },
+	{ "st-256color-notes"         , NULL     , NULL          , ~0   , 1          , CENTER          , NN         , 1          , 1         ,     2 , -1      },
+	{ "Yad"                       , NULL     , NULL          , 0    , 1          , HINTS           , NN         , 0          , 0         ,     0 , -1      },
+	{ "Dragon-drag-and-drop"      , NULL     , NULL          , ~0   , 1          , CENTER_HINTS    , NN         , 0          , 0         ,     0 , -1      },
 };
 
 
@@ -86,6 +97,14 @@ static const char* scratchpads_cmd[] = {
   "st -c st-256color-notes -e $SHELL -c \"$EDITOR \"$HOME\"/.local/share/vimwiki/index.wiki\""
 };
 
+typedef int dims[4];
+
+static dims floatzones[][3] = {
+	/*      |  L         | M             |  R           */
+  /* U */	{ {0,0,30,30} , {0,0,100,20} , {70,0,30,30} },
+	/* M */	{ {0,0,25,100}, {10,10,80,80}, {75,0,25,100}},
+	/* L */	{ {0,70,30,30}, {0,80,100,20}, {70,70,30,30}},
+};
 
 static const int floatingdims[] = { CENTER };
 
@@ -133,23 +152,30 @@ static Key keys[] = {
 
 	{ MODKEY,                       XK_h,      horizontalfocus, {.i = -1 } },
 	{ MODKEY,                       XK_l,      horizontalfocus, {.i = +1 } },
-	{ MODKEY|ShiftMask|ControlMask, XK_h,      setmfact,        {.f = -0.05} },
-	{ MODKEY|ShiftMask|ControlMask, XK_l,      setmfact,        {.f = +0.05} },
-	{ MODKEY|ShiftMask,             XK_j,      pushdown,        {0} },
-	{ MODKEY|ShiftMask,             XK_k,      pushup,          {0} },
-	{ MODKEY,                       XK_grave,  lastview,        {.i = 1 } },
-	{ MODKEY,                       XK_Escape, focusmon,        {.i = 1 } },
-	{ MODKEY|ShiftMask,             XK_Escape, tagmon,          {.i = 1 } },
-	{ MODKEY|ShiftMask,             XK_h,      zoom,            {-1} },
-	{ MODKEY|ShiftMask,             XK_l,      zoom,            {+1} },
-	{ MODKEY|ControlMask,           XK_j,      incview,         {.i =  1} },
-	{ MODKEY|ControlMask,           XK_k,      incview,         {.i = -1} },
+	{ MODKEY|ShiftMask,             XK_h,      movehorizontal,  {.i = -1} },
+	{ MODKEY|ShiftMask,             XK_l,      movehorizontal,  {.i = +1} },
+	{ MODKEY|ShiftMask|ControlMask, XK_h,      resizehorizontal,{.i = -1} },
+	{ MODKEY|ShiftMask|ControlMask, XK_l,      resizehorizontal,{.i = +1} },
+	/* { MODKEY|ShiftMask|ControlMask, XK_h,      setmfact,        {.f = -0.05} }, */
+	/* { MODKEY|ShiftMask|ControlMask, XK_l,      setmfact,        {.f = +0.05} }, */
+	{ MODKEY,                       XK_j,      focusstack,      {.i = +1 } },
+	{ MODKEY,                       XK_k,      focusstack,      {.i = -1 } },
+	{ MODKEY|ShiftMask,             XK_j,      movevertical,    {.i =  1 } },
+	{ MODKEY|ShiftMask,             XK_k,      movevertical,    {.i = -1 } },
+	{ MODKEY|ShiftMask|ControlMask, XK_j,      resizevertical,  {.i =  1 } },
+	{ MODKEY|ShiftMask|ControlMask, XK_k,      resizevertical,  {.i = -1 } },
+	{ MODKEY,                       XK_grave,  lastview,        {.i =  1 } },
+	{ MODKEY,                       XK_Escape, focusmon,        {.i =  1 } },
+	{ MODKEY|ShiftMask,             XK_Escape, tagmon,          {.i =  1 } },
+	{ MODKEY|ControlMask,           XK_j,      incview,         {.i =  1 } },
+	{ MODKEY|ControlMask,           XK_k,      incview,         {.i = -1 } },
 	//{ MODKEY|ShiftMask,           XK_h,      incnmaster,      {.i = +1 } },
 	//{ MODKEY|ShiftMask,           XK_l,      incnmaster,      {.i = -1 } },
 
 	{ MODKEY,                       XK_d,      setlayout,        {.v = &layouts[0]} },
 	{ MODKEY|ShiftMask,             XK_f,      setlayout,        {.v = &layouts[1]} },
-	{ MODKEY,                       XK_g,    setlayout,        {.v = &layouts[2]} },
+	{ MODKEY,                       XK_g,      setlayout,        {.v = &layouts[2]} },
+	{ MODKEY,                       XK_t,      setlayout,        {.v = &layouts[1]} },
 	/* { MODKEY,                       XK_Tab,    setlayout,        {.v = &layouts[2]} }, */
 	{ MODKEY,                       XK_f,      togglefullscreen,     {0} },
 	{ MODKEY|ShiftMask|ControlMask, XK_f,      togglefullfullscreen, {0} },
@@ -180,8 +206,6 @@ static Key keys[] = {
 
 	// Default
 	{ MODKEY,                       XK_b,      togglebar,      {0} },
-	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
-	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
 	TAGKEYS(                        XK_1,                      0)
 	TAGKEYS(                        XK_2,                      1)
 	TAGKEYS(                        XK_3,                      2)
