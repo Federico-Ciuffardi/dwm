@@ -220,6 +220,7 @@ static void focus(Client *c);
 static void focusin(XEvent *e);
 static void focusmon(const Arg *arg);
 static void focusstack(const Arg *arg);
+static void swappos(const Arg *arg);
 static void togglefocustype(const Arg *arg);
 static int getdwmblockspid();
 static void focuswin(const Arg* arg);
@@ -1266,7 +1267,7 @@ focusmon(const Arg *arg)
 	selmon = m;
 
 	if ((c = nexttiled(selmon->clients))){
-    if (selmon->lt[selmon->sellt] == &layouts[0] ){
+    if (selmon->lt[selmon->sellt] == &layouts[0] && !selmon->sel->isfloating){
       if (arg->ui == -1)
         c = nexttiled(c->next);
     }else if ( selmon->lt[selmon->sellt] == &layouts[2] ){
@@ -1287,14 +1288,13 @@ validtarget(Client *c, int floating){
   return ISVISIBLE(c) && c->isfloating == floating;
 }
 
-void
-focusstack(const Arg *arg)
-{
+Client*
+focusstackcore(int dir){
 	Client *c = NULL, *i;
 
 	if (!selmon->sel || selmon->sel->isfullscreen)
 		return;
-	if (arg->i > 0) {
+	if (dir > 0) {
 		for (c = selmon->sel->next; c && !validtarget(c,selmon->sel->isfloating); c = c->next);
 		if (!c)
 			for (c = selmon->clients; c && !validtarget(c,selmon->sel->isfloating); c = c->next);
@@ -1307,6 +1307,14 @@ focusstack(const Arg *arg)
 				if (validtarget(i,selmon->sel->isfloating))
 					c = i;
 	}
+
+  return c;
+}
+
+void
+focusstack(const Arg *arg)
+{
+  Client *c = focusstackcore(arg->i);
 	if (c) {
 		focus(c);
 		restack(selmon);
@@ -1365,6 +1373,20 @@ killwin(const Arg* arg){
 		}
     restack(selmon);
   }
+}
+
+
+void
+swappos(const Arg *a)
+{
+	if (!selmon->sel || selmon->sel->isfullscreen || !selmon->sel->isfloating)
+		return;
+  togglefloatingcore(a);
+  unfocus(selmon->sel, 0);
+  selmon->sel = focusstackcore(a->i);
+  togglefloatingcore(a);
+  focus(selmon->sel);
+	arrange(selmon);
 }
 
 
@@ -2580,8 +2602,7 @@ togglebar(const Arg *arg)
 }
 
 void
-togglefloating(const Arg *arg)
-{
+togglefloatingcore(int setzone){
 	if (!selmon->sel)
 		return;
 	if (selmon->sel->isfullscreen) /* no support for fullscreen windows */
@@ -2590,7 +2611,7 @@ togglefloating(const Arg *arg)
 	if (selmon->sel->isfloating){
 		int fzx = selmon->sel->floatzonex = selmon->sel->ofloatzonex;
 		int fzy = selmon->sel->floatzoney = selmon->sel->ofloatzoney;
-    if ( arg ){
+    if ( setzone ){
       if( fzx >= 0 && fzy >= 0 ) {
         selmon->sel->x = selmon->wx + floatzones[fzy][fzx][0] * selmon->ww / 100;
         selmon->sel->y = selmon->wy + floatzones[fzy][fzx][1] * selmon->wh / 100;
@@ -2608,6 +2629,12 @@ togglefloating(const Arg *arg)
 		resize(selmon->sel, selmon->sel->x, selmon->sel->y,
 			selmon->sel->w, selmon->sel->h, 0);
   }
+}
+
+void
+togglefloating(const Arg *arg)
+{
+  togglefloatingcore(arg);
 	arrange(selmon);
 }
 

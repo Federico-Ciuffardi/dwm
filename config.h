@@ -148,7 +148,10 @@ static Key keys[] = {
 	{ MODKEY,                       XK_a,      togglefloating,  {.i = 1} },
 	{ MODKEY,                       XK_s,      togglesticky,    {0} },
 
-	{ MODKEY,                       XK_semicolon,togglefocustype,{0} },
+	{ MODKEY,                       XK_semicolon, togglefocustype, {0} },
+
+	{ MODKEY,                       XK_comma,  swappos,      {.i = -1 } },
+	{ MODKEY,                       XK_period, swappos,      {.i = +1 } },
 
 	{ MODKEY,                       XK_h,      horizontalfocus, {.i = -1 } },
 	{ MODKEY,                       XK_l,      horizontalfocus, {.i = +1 } },
