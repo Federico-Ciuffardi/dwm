@@ -1997,8 +1997,8 @@ reorganizetags(const Arg *arg) {
     if (!c->issticky && (c->tags & (1 << focc)) )
         c->tags = 1 << funocc;
 
-	if (selmon->sel)
-		selmon->tagset[selmon->seltags] = selmon->sel->tags;
+	if (selmon->tagset[selmon->seltags] & (1 << focc))
+		selmon->tagset[selmon->seltags] = (1 << funocc);
 
 	arrange(selmon);
 }
