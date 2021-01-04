@@ -287,6 +287,7 @@ static void togglesticky(const Arg *arg);
 static void toggletag(const Arg *arg);
 static void toggleview(const Arg *arg);
 static void freeview(const Arg *arg);
+static void freetag(const Arg *arg);
 static void incview(const Arg *arg);
 static void lastview();
 static void unfocus(Client *c, int setfocus);
@@ -2815,6 +2816,44 @@ toggleview(const Arg *arg)
 		arrange(selmon);
 	}
 }
+
+void freetag(const Arg *arg){
+  unsigned int rotatetagset,shifttagset, newtags, occ;
+
+  if ( selmon->sel->issticky )
+    return;
+
+	occ = 0;
+	for (Client *c = selmon->clients; c; c = c->next)
+    if (!c->issticky)
+      occ |= (1 << (ffs(c->tags)-1));
+
+  newtags = selmon->tagset[selmon->seltags];
+
+  if (arg->i > 0){
+    for (int i = 0; i < LENGTH(tags); i++){
+      shifttagset  = newtags << arg->i;
+      rotatetagset = shifttagset & (TAGMASK << LENGTH(tags));
+      newtags = (shifttagset | (rotatetagset >> LENGTH(tags))) & TAGMASK;
+      if (!(newtags & occ))
+        break;
+    }
+  }else{
+    for (int i = 0; i < LENGTH(tags); i++){
+      shifttagset  = newtags >> (- arg->i);
+      rotatetagset = newtags << (LENGTH(tags) + arg->i);
+      newtags = (rotatetagset | shifttagset) & TAGMASK;
+      if (!(newtags & occ))
+        break;
+    }
+  }
+
+	selmon->sel->tags = newtags;
+  
+	focus(NULL);
+  arrange(selmon);
+}
+
 
 void freeview(const Arg *arg){
   unsigned int rotatetagset,shifttagset, occ;
