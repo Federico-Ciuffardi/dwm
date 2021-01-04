@@ -2745,6 +2745,7 @@ togglesp(const Arg *arg)
 				if(c->mon != selmon)
           sendtomon(c, selmon, 1, 1);
 			}
+      unfocus(selmon->sel, 1);
 	    selmon = c->mon;
 			focus(c);
 	    warp(c);
