@@ -279,6 +279,7 @@ static void tag(const Arg *arg);
 static void tagmon(const Arg *arg);
 static void tile(Monitor *);
 static void togglebar(const Arg *arg);
+static void togglefloatingcore(int);
 static void togglefloating(const Arg *arg);
 static void togglefullfullscreen(const Arg *arg);
 static void togglefullscreen(const Arg *arg);
@@ -1131,7 +1132,7 @@ cmpint(const void *p1, const void *p2) {
 void
 drawtab(Monitor *m) {
 	Client *c;
-	int i, n;
+	int i;
 
 	/* Calculates number of labels and their width */
  	for(m->ntabs = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next)){
@@ -1294,7 +1295,7 @@ focusstackcore(int dir){
 	Client *c = NULL, *i;
 
 	if (!selmon->sel || selmon->sel->isfullscreen)
-		return;
+		return NULL;
 	if (dir > 0) {
 		for (c = selmon->sel->next; c && !validtarget(c,selmon->sel->isfloating); c = c->next);
 		if (!c)
@@ -1382,10 +1383,10 @@ swappos(const Arg *a)
 {
 	if (!selmon->sel || selmon->sel->isfullscreen || !selmon->sel->isfloating)
 		return;
-  togglefloatingcore(a);
+  togglefloatingcore(a != NULL);
   unfocus(selmon->sel, 0);
   selmon->sel = focusstackcore(a->i);
-  togglefloatingcore(a);
+  togglefloatingcore(a != NULL);
   focus(selmon->sel);
 	arrange(selmon);
 }
@@ -1967,7 +1968,7 @@ removesystrayicon(Client *i)
 void
 reorganizetags(const Arg *arg) {
 	Client *c;
-	unsigned int occ, unocc, funocc, focc;
+	unsigned int occ, funocc, focc;
 
 	occ = 0;
 	for (c = selmon->clients; c; c = c->next)
@@ -1993,9 +1994,9 @@ reorganizetags(const Arg *arg) {
       return;
   }
     
-	for (c = selmon->clients; c; c = c->next)
-    if (!c->issticky && (c->tags & (1 << focc)) )
-        c->tags = 1 << funocc;
+  for (c = selmon->clients; c; c = c->next)
+    if ( !c->issticky && (c->tags & (1 << focc)) )
+       c->tags = 1 << funocc;
 
 	if (selmon->tagset[selmon->seltags] & (1 << focc))
 		selmon->tagset[selmon->seltags] = (1 << funocc);
@@ -2670,7 +2671,7 @@ togglebar(const Arg *arg)
 }
 
 void
-togglefloatingcore(int setzone){
+togglefloatingcore(int setzone){ // setzone acts as bool
 	if (!selmon->sel)
 		return;
 	if (selmon->sel->isfullscreen) /* no support for fullscreen windows */
@@ -2702,7 +2703,7 @@ togglefloatingcore(int setzone){
 void
 togglefloating(const Arg *arg)
 {
-  togglefloatingcore(arg);
+  togglefloatingcore(arg != NULL);
 	arrange(selmon);
 }
 
@@ -3682,11 +3683,12 @@ movehorizontal(const Arg* arg){
 void
 movevertical(const Arg* arg){
   if(selmon->sel){
-    if(!selmon->sel->isfloating)
+    if(!selmon->sel->isfloating){
       if(arg->i<0)
         pushup(NULL);
       else
         pushdown(NULL);
+    }
   }
 }
 
