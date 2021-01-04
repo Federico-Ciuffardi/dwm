@@ -173,6 +173,7 @@ static Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_Escape, tagmon,          {.i =  1 } },
 	{ MODKEY|ControlMask,           XK_j,      incview,         {.i =  1 } },
 	{ MODKEY|ControlMask,           XK_k,      incview,         {.i = -1 } },
+	{ MODKEY,                       XK_grave,  freeview,        {.i =  1 } },
 	//{ MODKEY|ShiftMask,           XK_h,      incnmaster,      {.i = +1 } },
 	//{ MODKEY|ShiftMask,           XK_l,      incnmaster,      {.i = -1 } },
 
