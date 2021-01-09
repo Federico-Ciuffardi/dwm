@@ -80,12 +80,11 @@ static const Rule rules[] = {
 	{ "tridactyl_editor"          , NULL     , NULL          , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     0 , -1      },
 	{ "firefox"                   , "Toolkit", NULL          , ~0   , 1          , HINTS           , LR         , 0          , 0         ,     0 , -1      },
 	{ "st-256color"               , NULL     , NULL          , 0    , 0          , CENTER_HINTS    , NN         , 1          , 1         ,     0 , -1      },
-	{ "Alacritty"                 , NULL     , NULL          , 0    , 0          , CENTER_HINTS    , NN         , 1          , 1         ,     0 , -1      },
 	{ "st-256color-c"             , NULL     , NULL          , ~0   , 1          , 10,10,80,80     , NN         , 1          , 1         ,     0 , -1      },
 	{ "st-256color-ur"            , NULL     , NULL          , ~0   , 1          , 60,2,40,20      , UR         , 1          , 1         ,     0 , -1      },
 	{ "SpeedCrunch"               , NULL     , NULL          , ~0   , 1          , CENTER          , NN         , 1          , 1         ,     0 , -1      },
 	{ NULL                        , NULL     , "Event Tester", 0    , 0          , HINTS           , NN         , 0          , 1         ,     0 , -1      },
-	{ "tabbed"                    , NULL     , NULL          , ~0   , 1          , 0,80,100,20     , LM         , 0          , 1         ,     1 , -1      },
+	{ "st-256color-docked"        , NULL     , NULL          , ~0   , 1          , 0,80,100,20     , LM         , 0          , 1         ,     1 , -1      },
 	{ "st-256color-notes"         , NULL     , NULL          , ~0   , 1          , CENTER          , NN         , 1          , 1         ,     2 , -1      },
 	{ "Yad"                       , NULL     , NULL          , 0    , 1          , HINTS           , NN         , 0          , 0         ,     0 , -1      },
 	{ "Dragon-drag-and-drop"      , NULL     , NULL          , ~0   , 1          , CENTER_HINTS    , NN         , 0          , 0         ,     0 , -1      },
@@ -93,8 +92,8 @@ static const Rule rules[] = {
 
 
 static const char* scratchpads_cmd[] = {
-	"tabbed $TERMINAL --embed", // "tabbed -r 2 st -w ''",
-  "st -c st-256color-notes -e $SHELL -c \"$EDITOR \"$HOME\"/.local/share/vimwiki/index.wiki\""
+	"$TERMINAL -c st-256color-docked -e tmux", // "tabbed -r 2 st -w ''",
+  "$TERMINAL -c st-256color-notes -e $SHELL -c \"$EDITOR \"$HOME\"/.local/share/vimwiki/index.wiki\""
 };
 
 typedef int dims[4];
@@ -191,14 +190,14 @@ static Key keys[] = {
   { MODKEY,                       XK_space,  togglesp,       {.i = 1} },
   { MODKEY,                       XK_n,      togglesp,       {.i = 2} },
 
-	{ MODKEY,                       XK_Return, spawn,          SHCMD("$TERMINAL") },
-	{ MODKEY|ShiftMask,             XK_Return, spawn,          SHCMD("$TERMINAL --class st-256color-c,st-256color-c") },
-	{ MODKEY,                       XK_e,      spawn,          SHCMD("$TERMINAL -e ranger-standalone") },
-	{ MODKEY|ShiftMask,             XK_e,      spawn,          SHCMD("$TERMINAL --class st-256color-c,st-256color-c -e ranger-standalone") },
+	{ MODKEY,                       XK_Return, spawn,          SHCMD("$TERMINAL -e tmux") },
+	{ MODKEY|ShiftMask,             XK_Return, spawn,          SHCMD("$TERMINAL -c st-256color-c -e tmux") },
+	{ MODKEY,                       XK_e,      spawn,          SHCMD("$TERMINAL -e tmux new ranger-standalone") },
+	{ MODKEY|ShiftMask,             XK_e,      spawn,          SHCMD("$TERMINAL -c st-256color-c -e tmux new ranger-standalone") },
 	{ MODKEY,                       XK_w,      spawn,          SHCMD("$BROWSER") },
 	{ MODKEY|ShiftMask,             XK_w,      spawn,          SHCMD("whatsapp-nativefier-dark") },
 	{ 0, XF86XK_Calculator,                    spawn,          SHCMD("pkill -TERM speedcrunch || speedcrunch") },
-	{ MODKEY,                       XK_u,      spawn,          SHCMD("st -c st-256color-ur -e $STATUSBAR_AUX_BIN/popupgrade") },
+	{ MODKEY,                       XK_u,      spawn,          SHCMD("$TERMINAL -e $STATUSBAR_AUX_BIN/popupgrade") },
 
 	{ 0, XF86XK_MonBrightnessUp,               spawn,          SHCMD("light -A 15") },
 	{ 0, XF86XK_MonBrightnessDown,             spawn,          SHCMD("light -U 15") },
