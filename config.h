@@ -93,7 +93,7 @@ static const Rule rules[] = {
 
 static const char* scratchpads_cmd[] = {
 	"$TERMINAL -c st-256color-docked -e tmux", // "tabbed -r 2 st -w ''",
-  "$TERMINAL -c st-256color-notes -e $SHELL -c \"$EDITOR \"$HOME\"/.local/share/vimwiki/index.wiki\""
+  "$TERMINAL -c st-256color-notes -T notes  -e $SHELL -c \"$EDITOR \"$HOME\"/.local/share/vimwiki/index.wiki\""
 };
 
 typedef int dims[4];
