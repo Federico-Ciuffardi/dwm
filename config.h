@@ -29,9 +29,8 @@
 /* autostart */
 static const char *const autostart[] = {
 	"/bin/sh", "-c", "(sleep 30 && whatsapp-nativefier-dark) &", NULL,
-	"/bin/sh", "-c", "(sleep 30 && thunderbird) &", NULL,
+	/* "/bin/sh", "-c", "(sleep 30 && thunderbird) &", NULL, */
 	"/bin/sh", "-c", "ps -e | grep dwmblocks || while true ; do dwmblocks ; done", NULL,
-	//"/bin/sh", "-c", "$DWM_BIN/date_to_statusbar &", NULL,
 	NULL /* terminate */
 };
 
