@@ -1201,8 +1201,9 @@ expose(XEvent *e)
 void
 focus(Client *c)
 {
-  Client *f;
- 	for (f = selmon->stack; f && !ISVISIBLE(f); f = f->snext);
+  Client *f = selmon->stack;
+  if (f && !f->issticky)
+    for (; f && (!ISVISIBLE(f) || f->issticky); f = f->snext);
 	if (!c || !ISVISIBLE(c) || f->isfullscreen)
 	  c = f;
 	if (selmon->sel && selmon->sel != c)
