@@ -1204,7 +1204,7 @@ focus(Client *c)
   Client *f = selmon->stack;
   if (f && !f->issticky)
     for (; f && (!ISVISIBLE(f) || f->issticky); f = f->snext);
-	if (!c || !ISVISIBLE(c) || f->isfullscreen)
+	if (!c || !ISVISIBLE(c) || ( f && f->isfullscreen ) )
 	  c = f;
 	if (selmon->sel && selmon->sel != c)
 		unfocus(selmon->sel, 0);
