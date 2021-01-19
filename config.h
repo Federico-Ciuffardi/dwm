@@ -73,7 +73,6 @@ static const Rule rules[] = {
 	 */
 	/* tag ~0 means sticky */
 	/* class                      | instance | title         |tags  | isfloating | float x,y,w,h % | float zone | isterminal | noswallow | sp_id | monitor */
-	{ "Gimp"                      , NULL     , NULL          , 0    , 1          , HINTS           , NN         , 0          , 0         ,     0 , -1      },
 	{ "Thunderbird"               , NULL     , NULL          , 1<<8 , 0          , HINTS           , NN         , 0          , 0         ,     0 ,  0      },
 	{ "whatsapp-nativefier-d52542", NULL     , NULL          , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     0 , -1      },
 	{ "tridactyl_editor"          , NULL     , NULL          , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     0 , -1      },
