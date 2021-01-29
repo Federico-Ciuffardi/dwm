@@ -54,13 +54,17 @@ static const char *fonts[]          = { "Roboto Mono:size=10",
 																				"monospace:size=10",
 																				"Noto Color Emoji:pixelsize=12:antialias=true:autohint=true"};
 static const char dmenufont[]       = "monospace:size=10";
-static const char *colors[][4]      = {
+static const char *colors[][6]      = {
 	/*                  fg         bg         border   */
 	[SchemeNorm]    = { "#ffffff", "#1d2021", "#222222"},
 	[SchemeSel]     = { "#ffffff", "#0058a0", "#D3D3D3"},
+
 	[SchemeNormTab] = { "#ffffff", "#2d3031", "#222222"},
 	[SchemeSelTab]  = { "#ffffff", "#1068b0", "#D3D3D3"},
 	[SchemeSelAlt]  = { "#ffffff", "#3d4041", "#D3D3D3"},
+
+	[SchemeNormSticky] = { "#ffffff", "#D7A53B", "#333308"},
+	[SchemeSelSticky]  = { "#ffffff", "#F9C75D", "#ffffab"},
 };
 
 /* tagging */
