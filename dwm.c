@@ -3421,11 +3421,12 @@ view(const Arg *arg)
   if (selmon->showbar != selmon->pertag->showbars[selmon->pertag->curtag])
     togglebar(NULL);
 
-  if((selmon->lt[selmon->sellt] != &layouts[2]) == (selmon->tagset[selmon->seltags] == (~0 & TAGMASK))){//TODO
+  if((selmon->tagset[selmon->seltags] == (~0 & TAGMASK))  && (selmon->lt[selmon->sellt] != &layouts[2]) ){
     Arg a;
     a.v = &layouts[2];
     setlayout(&a);
   }
+
   focus(NULL);
   arrange(selmon);
 }
@@ -3706,10 +3707,10 @@ grid(Monitor *m) {
     n++;
 
   /* grid dimensions */
-  for(rows = 0; rows <= n/2; rows++)
-    if(rows*rows >= n)
+  for(cols = 0; cols <= n/2; cols++)
+    if(cols*cols >= n)
       break;
-  cols = (rows && (rows - 1) * rows >= n) ? rows - 1 : rows;
+  rows = (cols && (cols - 1) * cols >= n) ? cols - 1 : cols;
 
   /* window geoms (cell height/width) */
   ch = m->wh / (rows ? rows : 1);
