@@ -1202,8 +1202,14 @@ expose(XEvent *e)
 focus(Client *c)
 {
   Client *f = selmon->stack;
-  if (f && !f->issticky)
-    for (; f && (!ISVISIBLE(f) || f->issticky); f = f->snext);
+  Client *v = NULL;
+  if (f && !f->issticky){
+    for (; f && (!ISVISIBLE(f) || f->issticky); f = f->snext)
+      if(ISVISIBLE(f))
+        v = f;
+    if (!f)
+      f = v;
+  }
   if (!c || !ISVISIBLE(c) || ( f && f->isfullscreen ) )
     c = f;
   if (selmon->sel && selmon->sel != c)
@@ -1578,8 +1584,8 @@ killclient(const Arg *arg)
     return;
   if (selmon->sel->sp_id){
     hide(selmon->sel);
-    focus(NULL);
     arrange(selmon);
+    focus(NULL);
     return;
   }
   if (!sendevent(selmon->sel->win, wmatom[WMDelete], NoEventMask, wmatom[WMDelete], CurrentTime, 0 , 0, 0)) {
@@ -2751,12 +2757,10 @@ togglesp(const Arg *arg)
       unfocus(selmon->sel, 1);
       selmon = c->mon;
       focus(c);
-      warp(c);
       arrange(selmon);
     } else {
       hide(c);
       focus(c->snext);
-      warp(c->snext);
       arrange(selmon);
     }
   }else{
