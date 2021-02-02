@@ -78,7 +78,7 @@ static const Rule rules[] = {
 	{ "tridactyl_editor"          , NULL     , NULL          , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     0 , -1      },
 	{ "firefox"                   , "Toolkit", NULL          , ~0   , 1          , HINTS           , LR         , 0          , 0         ,     0 , -1      },
 	{ "st-256color"               , NULL     , NULL          , 0    , 0          , CENTER_HINTS    , NN         , 1          , 1         ,     0 , -1      },
-	{ "st-256color-c"             , NULL     , NULL          , ~0   , 1          , 10,10,80,80     , NN         , 1          , 1         ,     0 , -1      },
+	{ "st-256color-c"             , NULL     , NULL          , 0    , 1          , 10,10,80,80     , NN         , 1          , 1         ,     0 , -1      },
 	{ "st-256color-ur"            , NULL     , NULL          , ~0   , 1          , 60,2,40,20      , UR         , 1          , 1         ,     0 , -1      },
 	{ "SpeedCrunch"               , NULL     , NULL          , ~0   , 1          , CENTER          , NN         , 1          , 1         ,     0 , -1      },
 	{ NULL                        , NULL     , "Event Tester", 0    , 0          , HINTS           , NN         , 0          , 1         ,     0 , -1      },
