@@ -2861,32 +2861,35 @@ void freetag(const Arg *arg){
 
 
 void freeview(const Arg *arg){
-  unsigned int rotatetagset,shifttagset, occ;
+  unsigned int rotatetagset,shifttagset, occ, newtagset;
 
   occ = 0;
   for (Client *c = selmon->clients; c; c = c->next)
     if (!c->issticky)
       occ |= (1 << (ffs(c->tags)-1));
 
+  newtagset = selmon->tagset[selmon->seltags];
+
   if (arg->i > 0){
     for (int i = 0; i < LENGTH(tags); i++){
-      shifttagset  = selmon->tagset[selmon->seltags]  << arg->i;
+      shifttagset  = newtagset  << arg->i;
       rotatetagset = shifttagset & (TAGMASK << LENGTH(tags));
-      selmon->tagset[selmon->seltags] = (shifttagset | (rotatetagset >> LENGTH(tags))) & TAGMASK;
-      if (!(selmon->tagset[selmon->seltags] & occ))
+      newtagset = (shifttagset | (rotatetagset >> LENGTH(tags))) & TAGMASK;
+      if (!(newtagset & occ))
         break;
     }
   }else{
     for (int i = 0; i < LENGTH(tags); i++){
-      shifttagset  = selmon->tagset[selmon->seltags] >> (- arg->i);
-      rotatetagset = selmon->tagset[selmon->seltags]<<(LENGTH(tags) + arg->i);
-      selmon->tagset[selmon->seltags] = (rotatetagset | shifttagset) & TAGMASK;
-      if (!(selmon->tagset[selmon->seltags] & occ))
+      shifttagset  = newtagset >> (- arg->i);
+      rotatetagset = newtagset<<(LENGTH(tags) + arg->i);
+      newtagset = (rotatetagset | shifttagset) & TAGMASK;
+      if (!(newtagset & occ))
         break;
     }
   }
-  focus(NULL);
-  arrange(selmon);
+
+  const Arg a = {.ui =  newtagset};
+  view(&a);
 }
 
 void incview(const Arg *arg){
