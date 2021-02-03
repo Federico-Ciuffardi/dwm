@@ -289,7 +289,7 @@ static void toggleview(const Arg *arg);
 static void freeview(const Arg *arg);
 static void freetag(const Arg *arg);
 static void incview(const Arg *arg);
-static void lastview();
+static void lastfreeview();
 static void unfocus(Client *c, int setfocus);
 static void unmanage(Client *c, int destroyed);
 static void unmapnotify(XEvent *e);
@@ -2822,105 +2822,65 @@ toggleview(const Arg *arg)
   }
 }
 
-void freetag(const Arg *arg){
-  unsigned int rotatetagset,shifttagset, newtags, occ;
-
-  if ( selmon->sel->issticky )
-    return;
+// mode = 0 incview
+// mode = 1 freeview
+unsigned int
+moveviewcore(int mode, int prev, int ai, unsigned int newtagset){
+  unsigned int rotatetagset,shifttagset, occ, prevtagset;
 
   occ = 0;
   for (Client *c = selmon->clients; c; c = c->next)
     if (!c->issticky)
       occ |= (1 << (ffs(c->tags)-1));
 
-  newtags = selmon->tagset[selmon->seltags];
+  if (! newtagset)
+    newtagset = selmon->tagset[selmon->seltags];
 
-  if (arg->i > 0){
+  if (ai > 0){
     for (int i = 0; i < LENGTH(tags); i++){
-      shifttagset  = newtags << arg->i;
+      prevtagset = newtagset;
+      shifttagset  = newtagset  << ai;
       rotatetagset = shifttagset & (TAGMASK << LENGTH(tags));
-      newtags = (shifttagset | (rotatetagset >> LENGTH(tags))) & TAGMASK;
-      if (!(newtags & occ))
+      newtagset = (shifttagset | (rotatetagset >> LENGTH(tags))) & TAGMASK;
+      if (!mode != !(newtagset & occ))
         break;
     }
   }else{
     for (int i = 0; i < LENGTH(tags); i++){
-      shifttagset  = newtags >> (- arg->i);
-      rotatetagset = newtags << (LENGTH(tags) + arg->i);
-      newtags = (rotatetagset | shifttagset) & TAGMASK;
-      if (!(newtags & occ))
+      prevtagset = newtagset;
+      shifttagset  = newtagset >> (- ai);
+      rotatetagset = newtagset<<(LENGTH(tags) + ai);
+      newtagset = (rotatetagset | shifttagset) & TAGMASK;
+      if (mode != (newtagset & occ))
         break;
     }
   }
 
-  selmon->sel->tags = newtags;
+  if ( prev )
+    newtagset = prevtagset;
 
+  return newtagset;
+}
+
+void freetag(const Arg *arg){
+  selmon->sel->tags = moveviewcore(1,0,arg->i,0);
   focus(NULL);
   arrange(selmon);
 }
 
-
 void freeview(const Arg *arg){
-  unsigned int rotatetagset,shifttagset, occ, newtagset;
-
-  occ = 0;
-  for (Client *c = selmon->clients; c; c = c->next)
-    if (!c->issticky)
-      occ |= (1 << (ffs(c->tags)-1));
-
-  newtagset = selmon->tagset[selmon->seltags];
-
-  if (arg->i > 0){
-    for (int i = 0; i < LENGTH(tags); i++){
-      shifttagset  = newtagset  << arg->i;
-      rotatetagset = shifttagset & (TAGMASK << LENGTH(tags));
-      newtagset = (shifttagset | (rotatetagset >> LENGTH(tags))) & TAGMASK;
-      if (!(newtagset & occ))
-        break;
-    }
-  }else{
-    for (int i = 0; i < LENGTH(tags); i++){
-      shifttagset  = newtagset >> (- arg->i);
-      rotatetagset = newtagset<<(LENGTH(tags) + arg->i);
-      newtagset = (rotatetagset | shifttagset) & TAGMASK;
-      if (!(newtagset & occ))
-        break;
-    }
-  }
-
-  const Arg a = {.ui =  newtagset};
+  const Arg a = {.ui =  moveviewcore(1,0,arg->i,0)};
   view(&a);
 }
 
 void incview(const Arg *arg){
-  unsigned int rotatetagset,shifttagset, occ, newtagset;
+  const Arg a = {.ui =  moveviewcore(0,0,arg->i,0)};
+  view(&a);
+}
 
-  occ = 0;
-  for (Client *c = selmon->clients; c; c = c->next)
-    if (!c->issticky)
-      occ |= (1 << (ffs(c->tags)-1));
-
-  newtagset = selmon->tagset[selmon->seltags];
-
-  if (arg->i > 0){
-    for (int i = 0; i < LENGTH(tags); i++){
-      shifttagset  = newtagset  << arg->i;
-      rotatetagset = shifttagset & (TAGMASK << LENGTH(tags));
-      newtagset = (shifttagset | (rotatetagset >> LENGTH(tags))) & TAGMASK;
-      if (newtagset & occ)
-        break;
-    }
-  }else{
-    for (int i = 0; i < LENGTH(tags); i++){
-      shifttagset  = newtagset >> (- arg->i);
-      rotatetagset = newtagset << (LENGTH(tags) + arg->i);
-      newtagset = (rotatetagset | shifttagset) & TAGMASK;
-      if (newtagset & occ)
-        break;
-    }
-  }
-
-  const Arg a = {.ui =  newtagset};
+void lastfreeview(const Arg *arg){
+  uint newtagset = moveviewcore(0,0,arg->i,0);
+  const Arg a = {.ui =  moveviewcore(1,1,arg->i,newtagset)};
   view(&a);
 }
 

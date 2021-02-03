@@ -172,6 +172,9 @@ static Key keys[] = {
 	{ MODKEY|ControlMask,           XK_k,      incview,         {.i = -1 } },
 	{ MODKEY,                       XK_grave,  freeview,        {.i =  1 } },
 	{ MODKEY|ShiftMask,             XK_grave,  freetag,         {.i =  1 } },
+
+	{ MODKEY,                       XK_0,      lastfreeview,    {.i =  1 } },
+	/* { MODKEY|ShiftMask,             XK_0,      freetag,         {.i =  1 } }, */
 	//{ MODKEY|ShiftMask,           XK_h,      incnmaster,      {.i = +1 } },
 	//{ MODKEY|ShiftMask,           XK_l,      incnmaster,      {.i = -1 } },
 
