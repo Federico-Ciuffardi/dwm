@@ -286,6 +286,7 @@ static void togglefullscreen(const Arg *arg);
 static void togglesticky(const Arg *arg);
 static void toggletag(const Arg *arg);
 static void toggleview(const Arg *arg);
+static void lastfreetag(const Arg *arg);
 static void freeview(const Arg *arg);
 static void freetag(const Arg *arg);
 static void incview(const Arg *arg);
@@ -2863,9 +2864,14 @@ moveviewcore(int mode, int prev, int ai, unsigned int newtagset){
 }
 
 void freetag(const Arg *arg){
-  selmon->sel->tags = moveviewcore(1,0,arg->i,0);
-  focus(NULL);
-  arrange(selmon);
+  const Arg a = {.ui =  moveviewcore(1,0,arg->i,0)};
+  tag(&a);
+}
+
+void lastfreetag(const Arg *arg){
+  uint newtagset = moveviewcore(0,0,arg->i,0);
+  const Arg a = {.ui =  moveviewcore(1,1,arg->i,newtagset)};
+  tag(&a);
 }
 
 void freeview(const Arg *arg){
