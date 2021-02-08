@@ -134,9 +134,15 @@ static const char *dmenucmd[] = { "rofi", "-show", "drun", NULL };
 static Key keys[] = {
 	/* modifier                     key        function        argument */
 	// Mine
+	{ MODKEY,                       XK_F5,     spawn,          SHCMD("lxsu /bin/sh -c \"cd $HOME/.build/dwm/ && make all && make install\" && pkill dwm") },
+	{ MODKEY,                       XK_p,      spawn,          SHCMD("rofi-pass | xclip -selection clipboard") },
+	{ MODKEY|ShiftMask,             XK_p,      spawn,          SHCMD("rofi-pass --insert") },
+	{ MODKEY,                       XK_i,      spawn,          SHCMD("$DMENU_BIN/pulse_conf source ; pkill -RTMIN+2 dwmblocks") },
+	{ MODKEY,                       XK_o,      spawn,          SHCMD("$DMENU_BIN/pulse_conf sink ; pkill -RTMIN+2 dwmblocks") },
+	{ MODKEY,                       XK_u,      spawn,          SHCMD("$DMENU_BIN/dmenu_unicode") },
 	{ MODKEY|ShiftMask,             XK_q,      spawn,          SHCMD("$DMENU_BIN/dmenu_leave") },
-	{ MODKEY|ShiftMask,             XK_r,      spawn,          SHCMD("lxsu /bin/sh -c \"cd $HOME/.build/dwm/ && make all && make install\" && pkill dwm") },
 	{ MODKEY,                       XK_r,      spawn,          SHCMD("rofi -show drun") },
+	{ MODKEY,                       XK_m,      spawn,          SHCMD("$DMENU_BIN/monitor_layout") },
 	{ MODKEY,                       XK_Tab,    view,           {.ui = ~0 } },
 	{ MODKEY|ShiftMask,             XK_Tab,    spawn,          SHCMD("rofi -show window") },
 	{ 0,                            XK_Print,  spawn,          SHCMD("screengrab") },
@@ -198,7 +204,6 @@ static Key keys[] = {
 	{ MODKEY,                       XK_w,      spawn,          SHCMD("$BROWSER") },
 	{ MODKEY|ShiftMask,             XK_w,      spawn,          SHCMD("whatsapp-nativefier-dark") },
 	{ 0, XF86XK_Calculator,                    spawn,          SHCMD("pkill -TERM speedcrunch || speedcrunch") },
-	{ MODKEY,                       XK_u,      spawn,          SHCMD("$TERMINAL -e $STATUSBAR_AUX_BIN/popupgrade") },
 
 	{ 0, XF86XK_MonBrightnessUp,               spawn,          SHCMD("light -A 15") },
 	{ 0, XF86XK_MonBrightnessDown,             spawn,          SHCMD("light -U 15") },
