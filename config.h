@@ -199,6 +199,7 @@ static Key keys[] = {
 
 	{ MODKEY,                       XK_Return, spawn,          SHCMD("$TERMINAL -e tmux") },
 	{ MODKEY|ShiftMask,             XK_Return, spawn,          SHCMD("$TERMINAL -c st-256color-c -e tmux") },
+	{ MODKEY|ControlMask,           XK_Return, spawn,          SHCMD("$TERMINAL -e tmux new \"$TMUX_BIN/open_and_kill_session)\"") },
 	{ MODKEY,                       XK_e,      spawn,          SHCMD("$TERMINAL -e tmux new ranger-standalone") },
 	{ MODKEY|ShiftMask,             XK_e,      spawn,          SHCMD("$TERMINAL -c st-256color-c -e tmux new ranger-standalone") },
 	{ MODKEY,                       XK_w,      spawn,          SHCMD("$BROWSER") },
