@@ -135,6 +135,7 @@ static Key keys[] = {
 	/* modifier                     key        function        argument */
 	// Mine
 	{ MODKEY,                       XK_F5,     spawn,          SHCMD("lxsu /bin/sh -c \"cd $HOME/.build/dwm/ && make all && make install\" && pkill dwm") },
+	{ MODKEY|ShiftMask,             XK_r,      spawn,          SHCMD("lxsu /bin/sh -c \"cd $HOME/.build/dwm/ && make all && make install\" && pkill dwm") },
 	{ MODKEY,                       XK_p,      spawn,          SHCMD("rofi-pass | xclip -selection clipboard") },
 	{ MODKEY|ShiftMask,             XK_p,      spawn,          SHCMD("rofi-pass --insert") },
 	{ MODKEY,                       XK_i,      spawn,          SHCMD("$DMENU_BIN/pulse_conf source ; pkill -RTMIN+2 dwmblocks") },
@@ -204,6 +205,8 @@ static Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_e,      spawn,          SHCMD("$TERMINAL -c st-256color-c -e tmux new ranger-standalone") },
 	{ MODKEY,                       XK_w,      spawn,          SHCMD("$BROWSER") },
 	{ MODKEY|ShiftMask,             XK_w,      spawn,          SHCMD("whatsapp-nativefier-dark") },
+	{ MODKEY|ShiftMask,             XK_t,      spawn,          SHCMD("pkill picom || picom --experimental-backend") },
+
 	{ 0, XF86XK_Calculator,                    spawn,          SHCMD("pkill -TERM speedcrunch || speedcrunch") },
 
 	{ 0, XF86XK_MonBrightnessUp,               spawn,          SHCMD("light -A 15") },
