@@ -28,7 +28,7 @@
 
 /* autostart */
 static const char *const autostart[] = {
-	"/bin/sh", "-c", "pgrep -x WhatsApp || (sleep 30 && whatsapp-nativefier-dark) &", NULL,
+	"/bin/sh", "-c", "pgrep -x WhatsApp || (sleep 30 && whatsapp-nativefier) &", NULL,
 	/* "/bin/sh", "-c", "(sleep 30 && thunderbird) &", NULL, */
 	"/bin/sh", "-c", "pgrep -x dwmblocks || while true ; do dwmblocks ; done", NULL,
 	NULL /* terminate */
@@ -74,7 +74,6 @@ static const Rule rules[] = {
 	/* tag ~0 means sticky */
 	/* class                      | instance | title         |tags  | isfloating | float x,y,w,h % | float zone | isterminal | noswallow | sp_id | monitor */
 	{ "Thunderbird"               , NULL     , NULL          , 1<<8 , 0          , HINTS           , NN         , 0          , 0         ,     0 ,  0      },
-	{ "whatsapp-nativefier-d52542", NULL     , NULL          , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     0 , -1      },
 	{ "tridactyl_editor"          , NULL     , NULL          , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     0 , -1      },
 	{ "firefox"                   , "Toolkit", NULL          , ~0   , 1          , HINTS           , LR         , 0          , 0         ,     0 , -1      },
 	{ "st-256color"               , NULL     , NULL          , 0    , 0          , CENTER_HINTS    , NN         , 1          , 1         ,     0 , -1      },
@@ -82,16 +81,18 @@ static const Rule rules[] = {
 	{ "st-256color-ur"            , NULL     , NULL          , ~0   , 1          , 60,2,40,20      , UR         , 1          , 1         ,     0 , -1      },
 	{ "SpeedCrunch"               , NULL     , NULL          , ~0   , 1          , CENTER          , NN         , 1          , 1         ,     0 , -1      },
 	{ NULL                        , NULL     , "Event Tester", 0    , 0          , HINTS           , NN         , 0          , 1         ,     0 , -1      },
-	{ "st-256color-docked"        , NULL     , NULL          , ~0   , 1          , 0,80,100,20     , LM         , 0          , 1         ,     1 , -1      },
-	{ "st-256color-notes"         , NULL     , NULL          , ~0   , 1          , CENTER          , NN         , 1          , 1         ,     2 , -1      },
 	{ "Yad"                       , NULL     , NULL          , 0    , 1          , HINTS           , NN         , 0          , 0         ,     0 , -1      },
 	{ "Dragon-drag-and-drop"      , NULL     , NULL          , ~0   , 1          , CENTER_HINTS    , NN         , 0          , 0         ,     0 , -1      },
+	{ "st-256color-docked"        , NULL     , NULL          , ~0   , 1          , 0,80,100,20     , LM         , 0          , 1         ,     1 , -1      },
+	{ "st-256color-notes"         , NULL     , NULL          , ~0   , 1          , CENTER          , NN         , 1          , 1         ,     2 , -1      },
+	{ "whatsapp-nativefier-d40211", NULL     , NULL          , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     3 , -1      },
 };
 
 
 static const char* scratchpads_cmd[] = {
 	"$TERMINAL -c st-256color-docked -e tmux", // "tabbed -r 2 st -w ''",
-  "$TERMINAL -c st-256color-notes -T notes  -e $SHELL -c \"cd \"$HOME\"/.local/share/vimwiki && $EDITOR index.wiki\""
+  "$TERMINAL -c st-256color-notes -T notes  -e $SHELL -c \"cd \"$HOME\"/.local/share/vimwiki && $EDITOR index.wiki\"",
+  "whatsapp-nativefier"
 };
 
 typedef int dims[4];
@@ -197,6 +198,7 @@ static Key keys[] = {
 	//{ MODKEY|ShiftMask,             XK_Return, spawn,          SHCMD("$TERMINAL -c st-256color-docked") },
   { MODKEY,                       XK_space,  togglesp,       {.i = 1} },
   { MODKEY,                       XK_n,      togglesp,       {.i = 2} },
+	{ MODKEY|ShiftMask,             XK_w,      togglesp,       {.i = 3} },
 
 	{ MODKEY,                       XK_Return, spawn,          SHCMD("$TERMINAL -e tmux") },
 	{ MODKEY|ShiftMask,             XK_Return, spawn,          SHCMD("$TERMINAL -c st-256color-c -e tmux") },
@@ -204,7 +206,7 @@ static Key keys[] = {
 	{ MODKEY,                       XK_e,      spawn,          SHCMD("$TERMINAL -e tmux new ranger-standalone") },
 	{ MODKEY|ShiftMask,             XK_e,      spawn,          SHCMD("$TERMINAL -c st-256color-c -e tmux new ranger-standalone") },
 	{ MODKEY,                       XK_w,      spawn,          SHCMD("$BROWSER") },
-	{ MODKEY|ShiftMask,             XK_w,      spawn,          SHCMD("whatsapp-nativefier-dark") },
+
 	{ MODKEY|ShiftMask,             XK_t,      spawn,          SHCMD("pkill picom || picom --experimental-backend") },
 
 	{ 0, XF86XK_Calculator,                    spawn,          SHCMD("pkill -TERM speedcrunch || speedcrunch") },
