@@ -86,13 +86,15 @@ static const Rule rules[] = {
 	{ "st-256color-docked"        , NULL     , NULL          , ~0   , 1          , 0,80,100,20     , LM         , 0          , 1         ,     1 , -1      },
 	{ "st-256color-notes"         , NULL     , NULL          , ~0   , 1          , CENTER          , NN         , 1          , 1         ,     2 , -1      },
 	{ "whatsapp-nativefier-d40211", NULL     , NULL          , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     3 , -1      },
+	{ "st-256color-mail"          , NULL     , NULL          , ~0   , 1          , CENTER          , NN         , 1          , 1         ,     4 , -1      },
 };
 
 
 static const char* scratchpads_cmd[] = {
-	"$TERMINAL -c st-256color-docked -e tmux", // "tabbed -r 2 st -w ''",
-  "$TERMINAL -c st-256color-notes -T notes  -e $SHELL -c \"cd \"$HOME\"/.local/share/vimwiki && $EDITOR index.wiki\"",
-  "whatsapp-nativefier"
+	"$TERMINAL -c st-256color-docked -e tmux",
+  "$TERMINAL -c st-256color-notes -T vimwiki -e $SHELL -c \"cd \"$HOME\"/.local/share/vimwiki && $EDITOR index.wiki\"",
+  "whatsapp-nativefier",
+  "$TERMINAL -c st-256color-mail -T neomutt -e $SHELL -c neomutt"
 };
 
 typedef int dims[4];
@@ -199,6 +201,7 @@ static Key keys[] = {
   { MODKEY,                       XK_space,  togglesp,       {.i = 1} },
   { MODKEY,                       XK_n,      togglesp,       {.i = 2} },
 	{ MODKEY|ShiftMask,             XK_w,      togglesp,       {.i = 3} },
+	{ MODKEY|ShiftMask,             XK_n,      togglesp,       {.i = 4} },
 
 	{ MODKEY,                       XK_Return, spawn,          SHCMD("$TERMINAL -e tmux") },
 	{ MODKEY|ShiftMask,             XK_Return, spawn,          SHCMD("$TERMINAL -c st-256color-c -e tmux") },
