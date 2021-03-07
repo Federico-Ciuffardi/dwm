@@ -87,6 +87,7 @@ static const Rule rules[] = {
   { "st-256color-notes"         , NULL     , NULL          , ~0   , 1          , CENTER          , NN         , 1          , 1         ,     2 , -1      },
   { "whatsapp-nativefier-d40211", NULL     , NULL          , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     3 , -1      },
   { "st-256color-mail"          , NULL     , NULL          , ~0   , 1          , CENTER          , NN         , 1          , 1         ,     4 , -1      },
+  { "st-256color-calendar"      , NULL     , NULL          , ~0   , 1          , CENTER          , NN         , 1          , 1         ,     5 , -1      },
 };
 
 
@@ -94,7 +95,8 @@ static const char* scratchpads_cmd[] = {
   "$TERMINAL -c st-256color-docked -e tmux",
   "$TERMINAL -c st-256color-notes -T vimwiki -e $SHELL -c \"cd \"$HOME\"/.local/share/vimwiki && $EDITOR index.wiki\"",
   "whatsapp-nativefier",
-  "$TERMINAL -c st-256color-mail -T neomutt -e $SHELL -c neomutt"
+  "$TERMINAL -c st-256color-mail -T neomutt -e $SHELL -c neomutt",
+  "$TERMINAL -c st-256color-calendar -T calcurse -e $SHELL -c calcurse"
 };
 
 typedef int dims[4];
@@ -146,7 +148,7 @@ static Key keys[] = {
   { MODKEY,                       XK_u,      spawn,          SHCMD("$DMENU_BIN/dmenu_unicode") },
   { MODKEY|ShiftMask,             XK_q,      spawn,          SHCMD("$DMENU_BIN/dmenu_leave") },
   { MODKEY,                       XK_r,      spawn,          SHCMD("rofi -show drun") },
-  { MODKEY,                       XK_m,      spawn,          SHCMD("$DMENU_BIN/monitor_layout") },
+  { MODKEY|ShiftMask,             XK_m,      spawn,          SHCMD("$DMENU_BIN/monitor_layout") },
   { MODKEY,                       XK_Tab,    view,           {.ui = ~0 } },
   { MODKEY|ShiftMask,             XK_Tab,    spawn,          SHCMD("rofi -show window") },
   { 0,                            XK_Print,  spawn,          SHCMD("screengrab") },
@@ -201,7 +203,8 @@ static Key keys[] = {
   { MODKEY,                       XK_space,  togglesp,       {.i = 1} },
   { MODKEY,                       XK_n,      togglesp,       {.i = 2} },
   { MODKEY|ShiftMask,             XK_w,      togglesp,       {.i = 3} },
-  { MODKEY|ShiftMask,             XK_n,      togglesp,       {.i = 4} },
+  { MODKEY,                       XK_m,      togglesp,       {.i = 4} },
+  { MODKEY,                       XK_c,      togglesp,       {.i = 5} },
 
   { MODKEY,                       XK_Return, spawn,          SHCMD("$TERMINAL -e tmux") },
   { MODKEY|ShiftMask,             XK_Return, spawn,          SHCMD("$TERMINAL -c st-256color-c -e tmux") },
