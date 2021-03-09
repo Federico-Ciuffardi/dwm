@@ -141,7 +141,7 @@ static Key keys[] = {
   // Mine
   { MODKEY,                       XK_F5,     spawn,          SHCMD("lxsu /bin/sh -c \"cd $HOME/.build/dwm/ && make all && make install\" && pkill dwm") },
   { MODKEY|ShiftMask,             XK_r,      spawn,          SHCMD("lxsu /bin/sh -c \"cd $HOME/.build/dwm/ && make all && make install\" && pkill dwm") },
-  { MODKEY,                       XK_p,      spawn,          SHCMD("rofi-pass | xclip -selection clipboard") },
+  { MODKEY,                       XK_p,      spawn,          SHCMD("passotpmenu") },
   { MODKEY|ShiftMask,             XK_p,      spawn,          SHCMD("rofi-pass --insert") },
   { MODKEY,                       XK_i,      spawn,          SHCMD("$DMENU_BIN/pulse_conf source ; pkill -RTMIN+2 dwmblocks") },
   { MODKEY,                       XK_o,      spawn,          SHCMD("$DMENU_BIN/pulse_conf sink ; pkill -RTMIN+2 dwmblocks") },
