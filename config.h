@@ -83,7 +83,7 @@ static const Rule rules[] = {
   { NULL                        , NULL     , "Event Tester", 0    , 0          , HINTS           , NN         , 0          , 1         ,     0 , -1      },
   { "Yad"                       , NULL     , NULL          , 0    , 1          , HINTS           , NN         , 0          , 0         ,     0 , -1      },
   { "Dragon-drag-and-drop"      , NULL     , NULL          , ~0   , 1          , CENTER_HINTS    , NN         , 0          , 0         ,     0 , -1      },
-  { "st-256color-docked"        , NULL     , NULL          , ~0   , 1          , 0,80,100,20     , LM         , 1          , 1         ,     1 , -1      },
+  { "st-256color-docked"        , NULL     , NULL          , ~0   , 1          , CENTER          , MM         , 1          , 1         ,     1 , -1      },
   { "st-256color-notes"         , NULL     , NULL          , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     2 , -1      },
   { "whatsapp-nativefier-d40211", NULL     , NULL          , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     3 , -1      },
   { "st-256color-mail"          , NULL     , NULL          , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     4 , -1      },
