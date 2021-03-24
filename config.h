@@ -152,7 +152,7 @@ static Key keys[] = {
   { MODKEY|ShiftMask,             XK_m,      spawn,          SHCMD("$DMENU_BIN/monitor_layout") },
   { MODKEY,                       XK_Tab,    view,           {.ui = ~0 } },
   { MODKEY|ShiftMask,             XK_Tab,    spawn,          SHCMD("rofi -show window") },
-  { 0,                            XK_Print,  spawn,          SHCMD("screengrab") },
+  { 0,                            XK_Print,  spawn,          SHCMD("flameshot gui") },
 
   { MODKEY,                       XK_q,      killclient,      {0} },
   { MODKEY,                       XK_a,      togglefloating,  {.i = 1} },
