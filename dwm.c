@@ -1575,6 +1575,7 @@ keypress(XEvent *e)
 }
 
 void hide(Client* c){
+  c->tags=0;
   c->issticky = 0;
 }
 
@@ -2750,13 +2751,20 @@ togglesp(const Arg *arg)
     for (c = m->clients; c && c->sp_id != arg->i; c = c->next);
   if (c) {
     if(c != selmon->sel){
-      if (!c->issticky){
+      if (!c->issticky && !c->tags){
         c->issticky = 1;
         if(c->mon != selmon)
           sendtomon(c, selmon, 1, 1);
       }
       unfocus(selmon->sel, 1);
       selmon = c->mon;
+      if(!c->issticky){
+        int i;
+        for (i = 0; i < LENGTH(tags) && !((1 << i) & c->tags); i++);
+        if (i >= LENGTH(tags)) return;
+        const Arg a = {.ui = 1 << i};
+        view(&a);
+      }
       focus(c);
       arrange(selmon);
     } else {
