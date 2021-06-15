@@ -53,7 +53,6 @@ static const int toptab				= True;
 static const char *fonts[]          = { "Roboto Mono:size=10",
   "monospace:size=10",
   "Noto Color Emoji:pixelsize=12:antialias=true:autohint=true"};
-static const char dmenufont[]       = "monospace:size=10";
 static const char *colors[][4]      = {
   /*                  fg         bg         border   */
   [SchemeNorm]    = { "#ffffff", "#1d2021", "#222222"},
@@ -133,6 +132,7 @@ static const Layout layouts[] = {
 { MODKEY|ControlMask|ShiftMask, KEY,      toggletag,      {.ui = 1 << TAG} },
 
 /* commands */
+static char drun[] = "rofi -show drun";
 
 static Key keys[] = {
   /* modifier                     key        function        argument */
@@ -146,7 +146,7 @@ static Key keys[] = {
   { MODKEY,                       XK_o,      spawn,          SHCMD("$DMENU_BIN/pulse_conf sink ; pkill -RTMIN+2 dwmblocks") },
   { MODKEY,                       XK_u,      spawn,          SHCMD("$DMENU_BIN/dmenu_unicode") },
   { MODKEY|ShiftMask,             XK_q,      spawn,          SHCMD("$DMENU_BIN/dmenu_leave") },
-  { MODKEY,                       XK_r,      spawn,          SHCMD("rofi -show drun") },
+  { MODKEY,                       XK_r,      spawn,          SHCMD(drun) },
   { MODKEY|ShiftMask,             XK_m,      spawn,          SHCMD("$DMENU_BIN/monitor_layout") },
   { MODKEY,                       XK_Tab,    view,           {.ui = ~0 } },
   { MODKEY|ShiftMask,             XK_Tab,    spawn,          SHCMD("rofi -show window") },
@@ -273,5 +273,6 @@ static Button buttons[] = {
   { ClkWinTitle,          0,              Button4,        focusstack,     {.i = -1} },
   { ClkWinTitle,          0,              Button9,        killclient,     {0} },
   { ClkWinTitle,          0,              Button8,        tagmon,         {.i=1} },
+  { ClkRootWin,           0,              Button3,        spawn,          SHCMD(drun) },
 };
 

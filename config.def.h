@@ -53,7 +53,6 @@ static const int toptab				= True;
 static const char *fonts[]          = { "Roboto Mono:size=10",
   "monospace:size=10",
   "Noto Color Emoji:pixelsize=12:antialias=true:autohint=true"};
-static const char dmenufont[]       = "monospace:size=10";
 static const char *colors[][4]      = {
   /*                  fg         bg         border   */
   [SchemeNorm]    = { "#ffffff", "#1d2021", "#222222"},
