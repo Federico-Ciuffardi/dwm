@@ -50,7 +50,7 @@ enum showtab_modes { showtab_never, showtab_auto, showtab_nmodes, showtab_always
 static const int showtab			= showtab_auto;        /* Default tab bar show mode */
 static const int toptab				= True;  
 
-static const char *fonts[]          = { "Roboto Mono:size=10",
+static const char *fonts[]          = { " Ubuntu Mono:style=Regular:size=12",
   "monospace:size=10",
   "Noto Color Emoji:pixelsize=12:antialias=true:autohint=true"};
 static const char *colors[][4]      = {
