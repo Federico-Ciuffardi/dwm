@@ -71,22 +71,22 @@ static const Rule rules[] = {
    *	WM_NAME(STRING) = title
    */
   /* tag ~0 means sticky */
-  /* class                      | instance | title         |tags  | isfloating | float x,y,w,h % | float zone | isterminal | noswallow | sp_id | monitor */
-  { "Thunderbird"               , NULL     , NULL          , 1<<8 , 0          , HINTS           , NN         , 0          , 0         ,     0 ,  0      },
-  { "tridactyl_editor"          , NULL     , NULL          , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     0 , -1      },
-  { "firefox"                   , "Toolkit", NULL          , ~0   , 1          , HINTS           , LR         , 0          , 0         ,     0 , -1      },
-  { "st-256color"               , NULL     , NULL          , 0    , 0          , CENTER_HINTS    , NN         , 1          , 1         ,     0 , -1      },
-  { "st-256color-c"             , NULL     , NULL          , 0    , 1          , 10,10,80,80     , NN         , 1          , 1         ,     0 , -1      },
-  { "st-256color-ur"            , NULL     , NULL          , ~0   , 1          , 60,2,40,20      , UR         , 1          , 1         ,     0 , -1      },
-  { "SpeedCrunch"               , NULL     , NULL          , ~0   , 1          , CENTER          , NN         , 1          , 1         ,     0 , -1      },
-  { NULL                        , NULL     , "Event Tester", 0    , 0          , HINTS           , NN         , 0          , 1         ,     0 , -1      },
-  { "Yad"                       , NULL     , NULL          , 0    , 1          , HINTS           , NN         , 0          , 0         ,     0 , -1      },
-  { "Dragon-drag-and-drop"      , NULL     , NULL          , ~0   , 1          , CENTER_HINTS    , NN         , 0          , 0         ,     0 , -1      },
-  { "st-256color-docked"        , NULL     , NULL          , ~0   , 1          , CENTER          , MM         , 1          , 1         ,     1 , -1      },
-  { "st-256color-notes"         , NULL     , NULL          , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     2 , -1      },
-  { "whatsapp-nativefier-d40211", NULL     , NULL          , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     3 , -1      },
-  { "st-256color-mail"          , NULL     , NULL          , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     4 , -1      },
-  { "st-256color-calendar"      , NULL     , NULL          , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     5 , -1      },
+  /* class                      | instance | title               |tags  | isfloating | float x,y,w,h % | float zone | isterminal | noswallow | sp_id | monitor */
+  { "Thunderbird"               , NULL     , NULL                , 1<<8 , 0          , HINTS           , NN         , 0          , 0         ,     0 ,  0      },
+  { "tridactyl_editor"          , NULL     , NULL                , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     0 , -1      },
+  { NULL                        , NULL     , "Picture-in-Picture", ~0   , 1          , 70,70,30,30     , LR         , 0          , 0         ,     0 , -1      },
+  { "st-256color"               , NULL     , NULL                , 0    , 0          , CENTER_HINTS    , NN         , 1          , 1         ,     0 , -1      },
+  { "st-256color-c"             , NULL     , NULL                , 0    , 1          , 10,10,80,80     , NN         , 1          , 1         ,     0 , -1      },
+  { "st-256color-ur"            , NULL     , NULL                , ~0   , 1          , 60,2,40,20      , UR         , 1          , 1         ,     0 , -1      },
+  { "SpeedCrunch"               , NULL     , NULL                , ~0   , 1          , CENTER          , NN         , 1          , 1         ,     0 , -1      },
+  { NULL                        , NULL     , "Event Tester"      , 0    , 0          , HINTS           , NN         , 0          , 1         ,     0 , -1      },
+  { "Yad"                       , NULL     , NULL                , 0    , 1          , HINTS           , NN         , 0          , 0         ,     0 , -1      },
+  { "Dragon-drag-and-drop"      , NULL     , NULL                , ~0   , 1          , CENTER_HINTS    , NN         , 0          , 0         ,     0 , -1      },
+  { "st-256color-docked"        , NULL     , NULL                , ~0   , 1          , CENTER          , MM         , 1          , 1         ,     1 , -1      },
+  { "st-256color-notes"         , NULL     , NULL                , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     2 , -1      },
+  { "whatsapp-nativefier-d40211", NULL     , NULL                , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     3 , -1      },
+  { "st-256color-mail"          , NULL     , NULL                , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     4 , -1      },
+  { "st-256color-calendar"      , NULL     , NULL                , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     5 , -1      },
 };
 
 
@@ -137,8 +137,8 @@ static char drun[] = "rofi -show drun";
 static Key keys[] = {
   /* modifier                     key        function        argument */
   // Mine
-  { MODKEY,                       XK_F5,     spawn,          SHCMD("lxsu /bin/sh -c \"cd $HOME/.build/dwm/ && make all && make install\" && pkill dwm") },
-  { MODKEY|ShiftMask,             XK_r,      spawn,          SHCMD("lxsu /bin/sh -c \"cd $HOME/.build/dwm/ && make all && make install\" && pkill dwm") },
+  { MODKEY,                       XK_F5,     spawn,          SHCMD("lxsudo /bin/sh -c \"cd $HOME/.local/share/uur/dwm/dwm && make all && make install\" && pkill dwm") },
+  { MODKEY|ShiftMask,             XK_r,      spawn,          SHCMD("lxsudo /bin/sh -c \"cd $HOME/.local/share/uur/dwm/dwm && make all && make install\" && pkill dwm") },
   { MODKEY,                       XK_p,      spawn,          SHCMD("dmenu-pass") },
   { MODKEY|ShiftMask,             XK_p,      spawn,          SHCMD("dmenu-passotp") },
   { MODKEY|ShiftMask|ControlMask, XK_p,      spawn,          SHCMD("passmenu --type") },
