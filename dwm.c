@@ -3647,6 +3647,7 @@ zoom(const Arg *arg)
       return;
   pop(c);
   focus(o);
+  warp(o);
 }
 
   void
