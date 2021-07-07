@@ -221,6 +221,8 @@ static Key keys[] = {
   { 0, XF86XK_AudioMute,                     spawn,          SHCMD("amixer -q -D pulse sset Master toggle && pkill -RTMIN+2 dwmblocks") },
   { 0, XF86XK_AudioRaiseVolume,              spawn,          SHCMD("pactl set-sink-volume @DEFAULT_SINK@ +5% && pkill -RTMIN+2 dwmblocks") },
   { 0, XF86XK_AudioLowerVolume,              spawn,          SHCMD("pactl set-sink-volume @DEFAULT_SINK@ -5% && pkill -RTMIN+2 dwmblocks") },
+  { MODKEY, XK_bracketright,                 spawn,          SHCMD("pactl set-sink-volume @DEFAULT_SINK@ +5% && pkill -RTMIN+2 dwmblocks") },
+  { MODKEY, XK_bracketleft,                  spawn,          SHCMD("pactl set-sink-volume @DEFAULT_SINK@ -5% && pkill -RTMIN+2 dwmblocks") },
   { 0, XF86XK_AudioPlay,                     spawn,          SHCMD("playerctl play-pause") },
   { 0, XF86XK_AudioNext,                     spawn,          SHCMD("playerctl next") },
   { 0, XF86XK_AudioPrev,                     spawn,          SHCMD("playerctl previous") },
