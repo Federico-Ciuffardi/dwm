@@ -84,9 +84,15 @@ static const Rule rules[] = {
   { "Dragon-drag-and-drop"      , NULL     , NULL                , ~0   , 1          , CENTER_HINTS    , NN         , 0          , 0         ,     0 , -1      },
   { "st-256color-docked"        , NULL     , NULL                , ~0   , 1          , CENTER          , MM         , 1          , 1         ,     1 , -1      },
   { "st-256color-notes"         , NULL     , NULL                , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     2 , -1      },
-  { "whatsapp-nativefier-d40211", NULL     , NULL                , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     3 , -1      },
   { "st-256color-mail"          , NULL     , NULL                , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     4 , -1      },
   { "st-256color-calendar"      , NULL     , NULL                , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     5 , -1      },
+  { "gazebo"                    , NULL     , NULL                , 1<<8 , 0          , HINTS           , NN         , 0          , 0         ,     0 ,  0      },
+  { "rviz"                      , NULL     , NULL                , 1<<8 , 0          , HINTS           , NN         , 0          , 0         ,     0 ,  0      },
+  { "rqt_console"               , NULL     , NULL                , 1<<8 , 0          , HINTS           , NN         , 0          , 0         ,     0 ,  0      },
+
+  { "whatsapp-nativefier-d40211" , NULL     , NULL                , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     3 , -1      },
+  { "YouTube Music"              , NULL     , NULL                , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     6 , -1      },
+
 };
 
 
@@ -95,7 +101,8 @@ static const char* scratchpads_cmd[] = {
   "$TERMINAL -c st-256color-notes -T vimwiki -e $SHELL -c \"cd \"$HOME\"/.local/share/vimwiki && $EDITOR index.wiki\"",
   "whatsapp-nativefier",
   "$TERMINAL -c st-256color-mail -T neomutt -e $SHELL -c neomutt",
-  "$TERMINAL -c st-256color-calendar -T calcurse -e $SHELL -c calcurse"
+  "$TERMINAL -c st-256color-calendar -T calcurse -e $SHELL -c calcurse",
+  "youtube-music",
 };
 
 typedef int dims[4];
@@ -151,7 +158,7 @@ static Key keys[] = {
   { MODKEY,                       XK_Tab,    view,           {.ui = ~0 } },
   { MODKEY|ShiftMask,             XK_Tab,    spawn,          SHCMD("rofi -show window") },
   { 0,                            XK_Print,  spawn,          SHCMD("flameshot gui") },
-  { MODKEY,                       XK_x,      spawn,          SHCMD("xkill") },
+  { MODKEY|ShiftMask|ControlMask, XK_x,      spawn,          SHCMD("xkill") },
 
   { MODKEY,                       XK_q,      killclient,      {0} },
   { MODKEY,                       XK_a,      togglefloating,  {.i = 1} },
@@ -205,6 +212,7 @@ static Key keys[] = {
   { MODKEY|ShiftMask,             XK_w,      togglesp,       {.i = 3} },
   { MODKEY,                       XK_m,      togglesp,       {.i = 4} },
   { MODKEY,                       XK_c,      togglesp,       {.i = 5} },
+  { MODKEY,                       XK_y,      togglesp,       {.i = 6} },
 
   { MODKEY,                       XK_Return, spawn,          SHCMD("$TERMINAL -e tmux") },
   { MODKEY|ShiftMask,             XK_Return, spawn,          SHCMD("$TERMINAL -c st-256color-c -e tmux") },
@@ -222,16 +230,20 @@ static Key keys[] = {
   { 0, XF86XK_AudioMute,                     spawn,          SHCMD("amixer -q -D pulse sset Master toggle && pkill -RTMIN+2 dwmblocks") },
   { 0, XF86XK_AudioRaiseVolume,              spawn,          SHCMD("pactl set-sink-volume @DEFAULT_SINK@ +5% && pkill -RTMIN+2 dwmblocks") },
   { 0, XF86XK_AudioLowerVolume,              spawn,          SHCMD("pactl set-sink-volume @DEFAULT_SINK@ -5% && pkill -RTMIN+2 dwmblocks") },
-  { MODKEY, XK_bracketright,                 spawn,          SHCMD("pactl set-sink-volume @DEFAULT_SINK@ +5% && pkill -RTMIN+2 dwmblocks") },
-  { MODKEY, XK_bracketleft,                  spawn,          SHCMD("pactl set-sink-volume @DEFAULT_SINK@ -5% && pkill -RTMIN+2 dwmblocks") },
   { 0, XF86XK_AudioPlay,                     spawn,          SHCMD("playerctl play-pause") },
   { 0, XF86XK_AudioNext,                     spawn,          SHCMD("playerctl next") },
   { 0, XF86XK_AudioPrev,                     spawn,          SHCMD("playerctl previous") },
+  { MODKEY, XK_bracketright,                 spawn,          SHCMD("pactl set-sink-volume @DEFAULT_SINK@ +5% && pkill -RTMIN+2 dwmblocks") },
+  { MODKEY, XK_bracketleft,                  spawn,          SHCMD("pactl set-sink-volume @DEFAULT_SINK@ -5% && pkill -RTMIN+2 dwmblocks") },
+  { MODKEY, XK_backslash,                    spawn,          SHCMD("amixer -q -D pulse sset Master toggle && pkill -RTMIN+2 dwmblocks") },
+  { MODKEY|ShiftMask, XK_bracketright,       spawn,          SHCMD("playerctl next") },
+  { MODKEY|ShiftMask, XK_bracketleft,        spawn,          SHCMD("playerctl previous") },
+  { MODKEY|ShiftMask, XK_backslash,          spawn,          SHCMD("playerctl play-pause") },
 
 
   // Default
-  { MODKEY,                       XK_b,      togglebar,      {0} },
-  TAGKEYS(                        XK_1,                      0)
+  { MODKEY,                         XK_b,      togglebar,      {0} },
+    TAGKEYS(                        XK_1,                      0)
     TAGKEYS(                        XK_2,                      1)
     TAGKEYS(                        XK_3,                      2)
     TAGKEYS(                        XK_4,                      3)
