@@ -1125,7 +1125,9 @@ drawbar(Monitor *m)
     stw = getsystraywidth();
 
   /* draw status first so it can be overdrawn by tags later */
-  if (m == selmon || 1) { /* status is only drawn on selected monitor */
+  if ((statusmon == 0 && (m == systraytomon(m))) ||
+      (statusmon == 1 && (m == selmon || 1))     ||
+      (statusmon == 2)) {
     drw_setscheme(drw, scheme[SchemeNorm]);
  		sw = TEXTW(stext) - lrpad / 2;
  		drw_text(drw, m->ww - sw - stw, 0, sw, bh, lrpad / 2, stext, 0);

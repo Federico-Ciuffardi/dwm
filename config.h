@@ -43,6 +43,8 @@ static const unsigned int systrayspacing = 2;   /* systray spacing */
 static const int systraypinningfailfirst = 0;   /* 1: if pinning fails, display systray on the first monitor, False: display systray on the last monitor*/
 static const int showsystray        = 1;     /* 0 means no systray */
 
+static const int statusmon = 2; // 1: follow focus | 2: status on all mons | 0 status only on tray mon
+
 static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
 static const int vertpadbar         = 5;        /* vertical padding for all the statusbar */
