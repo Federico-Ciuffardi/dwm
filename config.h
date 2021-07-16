@@ -47,6 +47,7 @@ static const int showsystray        = 1;     /* 0 means no systray */
 
 static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
+static const int vertpadbar         = 5;        /* vertical padding for statusbar */
 
 enum showtab_modes { showtab_never, showtab_auto, showtab_nmodes, showtab_always};
 static const int showtab			= showtab_auto;        /* Default tab bar show mode */
@@ -168,6 +169,7 @@ static Key keys[] = {
 
   { MODKEY,                       XK_semicolon,  zoom, {.i = 0} },
   { MODKEY,                       XK_apostrophe, togglefocustype, {0} },
+  { MODKEY,                       XK_f,          togglefocustype, {0} },
 
   { MODKEY,                       XK_comma,     rotate, {.i = -1 } },
   { MODKEY,                       XK_period,    rotate, {.i = +1 } },
@@ -202,11 +204,10 @@ static Key keys[] = {
   //{ MODKEY|ShiftMask,           XK_l,      incnmaster,      {.i = -1 } },
 
   { MODKEY,                       XK_d,      setlayout,        {.v = &layouts[0]} },
-  { MODKEY|ShiftMask,             XK_f,      setlayout,        {.v = &layouts[1]} },
   { MODKEY,                       XK_g,      setlayout,        {.v = &layouts[2]} },
   { MODKEY,                       XK_t,      setlayout,        {.v = &layouts[1]} },
   /* { MODKEY,                       XK_Tab,    setlayout,        {.v = &layouts[2]} }, */
-  { MODKEY,                       XK_f,      togglefullscreen,     {0} },
+  { MODKEY|ShiftMask,             XK_f,      togglefullscreen,     {0} },
   { MODKEY|ShiftMask|ControlMask, XK_f,      togglefullfullscreen, {0} },
   { 0,                            XK_F11,    togglefullscreen,     {0} },
 
