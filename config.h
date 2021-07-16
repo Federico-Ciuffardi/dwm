@@ -117,7 +117,7 @@ static dims floatzones[][3] = {
 static const int floatingdims[] = { CENTER };
 
 /* layout(s) */
-static const float mfact     = 0.55; /* factor of master area size [0.05..0.95] */
+static const float mfact     = 0.85; /* factor of master area size [0.05..0.95] */
 static const int nmaster     = 1;    /* number of clients in master area */
 static const int resizehints = 0;    /* 1 means respect size hints in tiled resizals */
 
@@ -164,17 +164,19 @@ static Key keys[] = {
   { MODKEY,                       XK_a,      togglefloating,  {.i = 1} },
   { MODKEY,                       XK_s,      togglesticky,    {0} },
 
-  { MODKEY,                       XK_semicolon, togglefocustype, {0} },
+  { MODKEY,                       XK_semicolon,  zoom, {.i = 0} },
+  { MODKEY,                       XK_apostrophe, togglefocustype, {0} },
 
-  { MODKEY,                       XK_comma,  swappos,      {.i = -1 } },
-  { MODKEY,                       XK_period, swappos,      {.i = +1 } },
+  { MODKEY,                       XK_comma,     rotate, {.i = -1 } },
+  { MODKEY,                       XK_period,    rotate, {.i = +1 } },
+  { MODKEY|ShiftMask,             XK_semicolon, hardresizehorizontal, {.i = 0 } },
 
   { MODKEY,                       XK_h,      horizontalfocus, {.i = -1 } },
   { MODKEY,                       XK_l,      horizontalfocus, {.i = +1 } },
   { MODKEY|ShiftMask,             XK_h,      movehorizontal,  {.i = -1} },
   { MODKEY|ShiftMask,             XK_l,      movehorizontal,  {.i = +1} },
-  { MODKEY|ShiftMask|ControlMask, XK_h,      resizehorizontal,{.i = -1} },
-  { MODKEY|ShiftMask|ControlMask, XK_l,      resizehorizontal,{.i = +1} },
+  { MODKEY|ShiftMask|ControlMask, XK_h,      hardresizehorizontal,{.i = -1} },
+  { MODKEY|ShiftMask|ControlMask, XK_l,      hardresizehorizontal,{.i = +1} },
   /* { MODKEY|ShiftMask|ControlMask, XK_h,      setmfact,        {.f = -0.05} }, */
   /* { MODKEY|ShiftMask|ControlMask, XK_l,      setmfact,        {.f = +0.05} }, */
   { MODKEY,                       XK_j,      focusstack,      {.i = +1 } },

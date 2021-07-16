@@ -214,6 +214,8 @@ static void drawbar(Monitor *m);
 static void drawbars(void);
 static void drawtab(Monitor *m);
 static void drawtabs(void);
+static void enqueue(Client *c);
+static void enqueuestack(Client *c);
 static void enternotify(XEvent *e);
 static void expose(XEvent *e);
 static void focus(Client *c);
@@ -257,6 +259,8 @@ static void resizeclient(Client *c, int x, int y, int w, int h);
 static void resizemouse(const Arg *arg);
 static void resizerequest(XEvent *e);
 static void restack(Monitor *m);
+static void rotatestack(const Arg *arg);
+static void rotate(const Arg *arg);
 static void run(void);
 static void scan(void);
 static int sendevent(Window w, Atom proto, int m, long d0, long d1, long d2, long d3, long d4);
@@ -323,6 +327,7 @@ static void movevertical(const Arg* arg);
 static void movehorizontal(const Arg* arg);
 static void resizevertical(const Arg* arg);
 static void resizehorizontal(const Arg* arg);
+static void hardresizehorizontal(const Arg* arg);
 
 static pid_t getparentprocess(pid_t p);
 static int isdescprocess(pid_t p, pid_t c);
@@ -1160,6 +1165,72 @@ drawtab(Monitor *m) {
   drw_text(drw, x, 0, m->ww - x, th, 0, "", 0);
 
   drw_map(drw, m->tabwin, 0, 0, m->ww, th);
+}
+
+void
+rotate(const Arg *arg){
+  Client *c = selmon->sel;
+	if (c){
+    if (c->isfloating){
+      swappos(arg);
+    }else{
+      rotatestack(arg);
+    }
+  }
+}
+
+void
+enqueue(Client *c)
+{
+	Client *l;
+	for (l = c->mon->clients; l && l->next; l = l->next);
+	if (l) {
+		l->next = c;
+		c->next = NULL;
+	}
+}
+
+void
+enqueuestack(Client *c)
+{
+	Client *l;
+	for (l = c->mon->stack; l && l->snext; l = l->snext);
+	if (l) {
+		l->snext = c;
+		c->snext = NULL;
+	}
+}
+
+void
+rotatestack(const Arg *arg)
+{
+	Client *c = NULL, *f;
+
+	if (!selmon->sel)
+		return;
+	f = selmon->sel;
+	if (arg->i > 0) {
+		for (c = nexttiled(selmon->clients); c && nexttiled(c->next); c = nexttiled(c->next));
+		if (c){
+			detach(c);
+			attach(c);
+			detachstack(c);
+			attachstack(c);
+		}
+	} else {
+		if ((c = nexttiled(selmon->clients))){
+			detach(c);
+			enqueue(c);
+			detachstack(c);
+			enqueuestack(c);
+		}
+	}
+	if ((c = nexttiled(selmon->clients))){
+		unfocus(f, 1);
+		arrange(selmon);
+		focus(c);
+		/* restack(selmon); */
+	}
 }
 
   void
@@ -3631,7 +3702,7 @@ zoom(const Arg *arg)
         || !selmon->lt[selmon->sellt]->arrange
         || selmon->sel->isfloating || selmon->sel->isfullscreen
         || selmon->lt[selmon->sellt] != &layouts[0] 
-        || ((arg->i<0) == (nexttiled(selmon->clients) == c )))){
+        || ((arg->i<=0) == (nexttiled(selmon->clients) == c )))){
     const Arg a = {.i = arg->i, .ui = (arg->i==1)};
     tagmon(&a);
     focus(c);
@@ -3717,6 +3788,28 @@ resizehorizontal(const Arg* arg){
         a.f = -0.05;
       else
         a.f =  0.05;
+      setmfact(&a);
+    }
+  }
+}
+
+void
+hardresizehorizontal(const Arg* arg){
+  if(selmon->sel){
+    if(selmon->sel->isfloating)
+      changefloatzonex(arg);
+    else{
+      Arg a;
+      if(arg->i<0)
+        a.f =  1.5;
+      else if(arg->i>0){
+        a.f =  1.85;
+      }else{
+        if(selmon->mfact>0.675)
+          a.f = 1.5;
+        else
+          a.f = 1.85;
+      }
       setmfact(&a);
     }
   }
