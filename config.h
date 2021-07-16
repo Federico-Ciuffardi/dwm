@@ -35,6 +35,8 @@ static const char *const autostart[] = {
 };
 
 /* appearance */
+static const unsigned int hidevacant  = 1;      /* 0: default | 1: hide unused tags | 2: 1 and do now draw squares */
+
 static const unsigned int borderpx  = 1;        /* border pixel of windows */
 static const unsigned int snap      = 32;       /* snap pixel */
 
