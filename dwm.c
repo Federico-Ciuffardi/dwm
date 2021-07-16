@@ -1118,6 +1118,8 @@ drawbar(Monitor *m)
   int x, w, sw = 0, stw = 0;
   int boxs = drw->fonts->h / 9;
   int boxw = drw->fonts->h / 6 + 2;
+	int tlpad;
+
   unsigned int i, occ = 0, urg = 0;
   Client *c;
 
@@ -1163,9 +1165,19 @@ drawbar(Monitor *m)
   if ((w = m->ww - sw - stw - x) > bh) {
     if (m->sel) {
       drw_setscheme(drw, scheme[SchemeNorm]);
-      drw_text(drw, x, 0, w, bh, lrpad / 2, m->sel->name, 0);
-      if (m->sel->isfloating)
-        drw_rect(drw, x + boxs, boxs, boxw, boxw, m->sel->isfixed, 0);
+      if(centertitle){
+        tlpad = MAX((m->ww - ((int)TEXTW(m->sel->name) - lrpad + sw + stw)) / 2 - x, lrpad / 2);
+        drw_text(drw, x, 0, w, bh, tlpad, m->sel->name, 0);
+      }else{
+        drw_text(drw, x, 0, w, bh, lrpad / 2, m->sel->name, 0);
+      }
+      if (m->sel->issticky){
+        if(centertitle){
+          drw_rect(drw, x + boxs + tlpad - lrpad / 2, boxs+2, boxw , boxw, 1||m->sel->isfixed, 0);
+        }else{
+          drw_rect(drw, x + boxs, boxs, boxw, boxw, m->sel->isfixed, 0);
+        }
+      }
     } else {
       drw_setscheme(drw, scheme[SchemeNorm]);
       drw_rect(drw, x, 0, w, bh, 1, 1);
