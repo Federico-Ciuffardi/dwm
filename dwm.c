@@ -3726,8 +3726,8 @@ zoom(const Arg *arg)
 {
   Client *cm = nexttiled(selmon->clients);
   Client *c = selmon->sel;
-  if ( c == cm && arg->i == 0){
-    rotatestack(&((Arg){.i=1}));
+  if (arg->i == 0 && (selmon->lt[selmon->sellt] != &layouts[TALL] || c->isfloating || c == cm)){
+    rotate(&((Arg){.i=-1}));
     return;
   }
 
