@@ -131,6 +131,7 @@ static const Layout layouts[] = {
   { "[Tabs]",     monocle },
   { "[Grid]",     grid },
   { "[Floating]", NULL },    /* no layout function means floating behavior */
+ 	{ NULL,       NULL },
 };
 
 /* key definitions */
@@ -203,7 +204,9 @@ static Key keys[] = {
   { MODKEY|ShiftMask,             XK_0,      lastfreetag,     {.i =  1 } },
   //{ MODKEY|ShiftMask,           XK_h,      incnmaster,      {.i = +1 } },
   //{ MODKEY|ShiftMask,           XK_l,      incnmaster,      {.i = -1 } },
-
+ 	{ MODKEY|ControlMask,		        XK_comma,  cyclelayout,    {.i = -1 } },
+ 	{ MODKEY|ControlMask,           XK_period, cyclelayout,    {.i = +1 } },
+ 	{ MODKEY|ControlMask,           XK_Tab,    cyclelayout,    {.i = +1 } },
   { MODKEY,                       XK_d,      setlayout,        {.v = &layouts[0]} },
   { MODKEY,                       XK_g,      setlayout,        {.v = &layouts[2]} },
   { MODKEY,                       XK_t,      setlayout,        {.v = &layouts[1]} },
@@ -274,7 +277,7 @@ static Button buttons[] = {
   { ClkStatusText,        0,              Button4,        sigdwmblocks,   {.i = 4} },
   { ClkStatusText,        0,              Button5,        sigdwmblocks,   {.i = 5} },
   { ClkStatusText,        ShiftMask,      Button1,        sigdwmblocks,   {.i = 6} },
-  { ClkLtSymbol,          0,              Button1,        setlayout,      {0} },
+  { ClkLtSymbol,          0,              Button1,        cyclelayout,    {.i = 1} },
   { ClkLtSymbol,          0,              Button2,        view,           {.ui = ~0 }  },
   { ClkLtSymbol,          0,              Button3,        setlayout,      {.v = &layouts[1]} },
   { ClkClientWin,         MODKEY,         Button1,        movemouse,      {.i=0} },
