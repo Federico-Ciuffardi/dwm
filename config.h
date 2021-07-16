@@ -35,8 +35,6 @@ static const char *const autostart[] = {
 };
 
 /* appearance */
-static const unsigned int hidevacant  = 1;      /* 0: default | 1: hide unused tags | 2: 1 and do now draw squares */
-
 static const unsigned int borderpx  = 1;        /* border pixel of windows */
 static const unsigned int snap      = 32;       /* snap pixel */
 
@@ -60,14 +58,26 @@ static const char *fonts[]          = { " Ubuntu Mono:style=Regular:size=12",
 static const char *colors[][4]      = {
   /*                  fg         bg         border   */
   [SchemeNorm]    = { "#ffffff", "#1d2021", "#222222"},
-  [SchemeSel]     = { "#ffffff", "#0058a0", "#D3D3D3"},
+  // No color 
+  [SchemeSel]     = { "#ffffff", "#1d2021", "#D3D3D3"},
+  [SchemeSelAlt]    = { "#ffffff", "#1d2021", "#D3D3D3"},
+  // colorfull
+  /* [SchemeSel]     = { "#ffffff", "#0058a0", "#D3D3D3"}, */
+  /* [SchemeSelAlt]  = { "#ffffff", "#3d4041", "#D3D3D3"}, */
   [SchemeNormTab] = { "#ffffff", "#2d3031", "#222222"},
   [SchemeSelTab]  = { "#ffffff", "#1068b0", "#D3D3D3"},
-  [SchemeSelAlt]  = { "#ffffff", "#3d4041", "#D3D3D3"},
 };
 
 /* tagging */
 static const char *tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
+
+static const int uline                 = 1;	/* 1 enable uline, 0 disable unline */
+static const unsigned int ulinepad	   = 5;	/* horizontal padding between the underline and tag */
+static const unsigned int ulinestroke  = 2;	/* thickness / height of the underline */
+static const unsigned int ulinevoffset = 2;	/* how far above the bottom of the bar the line should appear */
+static const int ulineall              = 0;	/* 1 to show underline on all tags, 0 for just the active ones */
+
+static const unsigned int hidevacant  = 2;      /* 0: default | 1: hide unused tags | 2: 1 and do now draw squares */
 
 static const Rule rules[] = {
   /* xprop(1):
