@@ -1031,15 +1031,22 @@ deck(Monitor *m) {
 	unsigned int i, n, h, mw, my;
 	Client *c;
 
-	for(n = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), n++);
+  int selected = -1;
+	for(n = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), n++){
+    if(c == selmon->sel) selected = n;
+  }
+
 	if(n == 0)
 		return;
 
 	if(n > m->nmaster) {
 		mw = m->nmaster ? m->ww * m->mfact : 0;
-    int hidden = n - m->nmaster - 1;
-    if( hidden>0)
-      snprintf(m->ltsymbol, sizeof m->ltsymbol, "| Deck (%d) |", n - m->nmaster - 1);
+    int stackcli = n - 1;
+    if( stackcli > 1 )
+      if(selected >= 0)
+        snprintf(m->ltsymbol, sizeof m->ltsymbol, "| Deck (%d/%d) |", selected, stackcli);
+      else
+        snprintf(m->ltsymbol, sizeof m->ltsymbol, "| Deck (-/%d) |", stackcli);
     else
       snprintf(m->ltsymbol, sizeof m->ltsymbol, "| Deck |");
 	}
@@ -1375,7 +1382,14 @@ focus(Client *c)
     XSetInputFocus(dpy, root, RevertToPointerRoot, CurrentTime);
     XDeleteProperty(dpy, root, netatom[NetActiveWindow]);
   }
+
   selmon->sel = c;
+
+  // update deck indicator on statubar
+  if(selmon->lt[selmon->sellt] == &layouts[DECK]){
+    deck(selmon);
+  }
+
   drawbars();
   drawtabs();
 }
@@ -2570,6 +2584,12 @@ setlayout(const Arg *arg)
     arrange(selmon);
   else
     drawbar(selmon);
+
+  if(selmon->lt[selmon->sellt] == &layouts[DECK]){
+    setmfact(&(const Arg) {.f = 1.5});
+  }else if (selmon->lt[selmon->sellt] == &layouts[TALL]){
+    setmfact(&(const Arg) {.f = 1.85});
+  }
 }
 
 /* arg > 1.0 will set mfact absolutely */
