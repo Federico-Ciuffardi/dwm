@@ -136,17 +136,19 @@ static const int nmaster     = 1;    /* number of clients in master area */
 static const int resizehints = 0;    /* 1 means respect size hints in tiled resizals */
 
 #define TALL     0
-#define TABS     1
-#define GRID     2
-#define FLOATING 3
+#define DECK     1
+#define TABS     2
+#define GRID     3
+#define FLOATING 4
 
 static const Layout layouts[] = {
   /* symbol     arrange function */
-  { "[Tall]",     tile },    /* first entry is default */
-  { "[Tabs]",     monocle },
-  { "[Grid]",     grid },
-  { "[Floating]", NULL },    /* no layout function means floating behavior */
- 	{ NULL,         NULL },
+  { "| Tall |",     tile },    /* first entry is default */
+	{ "| Deck |",     deck },
+  { "| Tabs |",     monocle },
+  { "| Grid |",     grid },
+  { "| Floating |", NULL },    /* no layout function means floating behavior */
+ 	{ NULL,           NULL },
 };
 
 /* key definitions */
@@ -222,9 +224,10 @@ static Key keys[] = {
  	{ MODKEY|ControlMask,		        XK_comma,  cyclelayout,    {.i = -1 } },
  	{ MODKEY|ControlMask,           XK_period, cyclelayout,    {.i = +1 } },
  	{ MODKEY|ControlMask,           XK_Tab,    cyclelayout,    {.i = +1 } },
-  { MODKEY,                       XK_d,      setlayout,        {.v = &layouts[0]} },
-  { MODKEY,                       XK_g,      setlayout,        {.v = &layouts[2]} },
-  { MODKEY,                       XK_t,      setlayout,        {.v = &layouts[1]} },
+  { MODKEY,                       XK_d,      setlayout,        {.v = &layouts[DECK]} },
+  { MODKEY,                       XK_g,      setlayout,        {.v = &layouts[GRID]} },
+  { MODKEY,                       XK_t,      setlayout,        {.v = &layouts[TABS]} },
+  { MODKEY|ShiftMask,             XK_d,      setlayout,        {.v = &layouts[TALL]} },
   /* { MODKEY,                       XK_Tab,    setlayout,        {.v = &layouts[2]} }, */
   { MODKEY|ShiftMask,             XK_f,      togglefullscreen,     {0} },
   { MODKEY|ShiftMask|ControlMask, XK_f,      togglefullfullscreen, {0} },

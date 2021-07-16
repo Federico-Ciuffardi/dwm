@@ -206,6 +206,7 @@ static void configurenotify(XEvent *e);
 static void configurerequest(XEvent *e);
 static void copyvalidchars(char *text, char *rawtext);
 static Monitor *createmon(void);
+static void deck(Monitor *m);
 static void destroynotify(XEvent *e);
 static void detach(Client *c);
 static void detachstack(Client *c);
@@ -1025,6 +1026,35 @@ destroynotify(XEvent *e)
   }
 }
 
+void
+deck(Monitor *m) {
+	unsigned int i, n, h, mw, my;
+	Client *c;
+
+	for(n = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), n++);
+	if(n == 0)
+		return;
+
+	if(n > m->nmaster) {
+		mw = m->nmaster ? m->ww * m->mfact : 0;
+    int hidden = n - m->nmaster - 1;
+    if( hidden>0)
+      snprintf(m->ltsymbol, sizeof m->ltsymbol, "| Deck (%d) |", n - m->nmaster - 1);
+    else
+      snprintf(m->ltsymbol, sizeof m->ltsymbol, "| Deck |");
+	}
+	else
+		mw = m->ww;
+	for(i = my = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), i++)
+		if(i < m->nmaster) {
+			h = (m->wh - my) / (MIN(n, m->nmaster) - i);
+			resize(c, m->wx, m->wy + my, mw - (2*c->bw), h - (2*c->bw), False);
+			my += HEIGHT(c);
+		}
+		else
+			resize(c, m->wx + mw, m->wy, m->ww - mw - (2*c->bw), m->wh - (2*c->bw), False);
+}
+
   void
 detach(Client *c)
 {
@@ -1381,10 +1411,10 @@ focusmon(const Arg *arg)
   selmon = m;
 
   if ((c = nexttiled(selmon->clients))){
-    if (selmon->lt[selmon->sellt] == &layouts[0] && !selmon->sel->isfloating){
+    if ((selmon->lt[selmon->sellt] == &layouts[TALL] || selmon->lt[selmon->sellt] == &layouts[DECK]) && !selmon->sel->isfloating){
       if (arg->ui == -1)
         c = nexttiled(c->next);
-    }else if ( selmon->lt[selmon->sellt] == &layouts[2] ){
+    }else if ( selmon->lt[selmon->sellt] == &layouts[GRID] ){
       if (arg->ui == -1)
         c = focustiled(c,rows*(cols -1));
     }else{
@@ -2329,7 +2359,7 @@ restack(Monitor *m)
   }
   XSync(dpy, False);
   while (XCheckMaskEvent(dpy, EnterWindowMask, &ev));
-  if (m == selmon && ((m->tagset[m->seltags] & m->sel->tags) || m->sel->issticky )  && selmon->lt[selmon->sellt] != &layouts[1])
+  if (m == selmon && ((m->tagset[m->seltags] & m->sel->tags) || m->sel->issticky )  && selmon->lt[selmon->sellt] != &layouts[TABS])
     warp(m->sel);
 }
 
@@ -3502,9 +3532,9 @@ view(const Arg *arg)
   if (selmon->showbar != selmon->pertag->showbars[selmon->pertag->curtag])
     togglebar(NULL);
 
-  if((selmon->tagset[selmon->seltags] == (~0 & TAGMASK))  && (selmon->lt[selmon->sellt] != &layouts[2]) ){
+  if((selmon->tagset[selmon->seltags] == (~0 & TAGMASK))  && (selmon->lt[selmon->sellt] != &layouts[GRID]) ){
     Arg a;
-    a.v = &layouts[2];
+    a.v = &layouts[GRID];
     setlayout(&a);
   }
 
@@ -3728,7 +3758,7 @@ zoom(const Arg *arg)
 {
   Client *cm = nexttiled(selmon->clients);
   Client *c = selmon->sel;
-  if (arg->i == 0 && (selmon->lt[selmon->sellt] != &layouts[TALL] || c->isfloating || c == cm)){
+  if (arg->i == 0 && ((selmon->lt[selmon->sellt] != &layouts[TALL] && selmon->lt[selmon->sellt] != &layouts[DECK]) || c->isfloating || c == cm)){
     rotate(&((Arg){.i=-1}));
     return;
   }
@@ -3736,7 +3766,7 @@ zoom(const Arg *arg)
   if (arg && (!cm || !nexttiled(cm->next)
         || !selmon->lt[selmon->sellt]->arrange
         || selmon->sel->isfloating || selmon->sel->isfullscreen
-        || selmon->lt[selmon->sellt] != &layouts[0] 
+        || (selmon->lt[selmon->sellt] != &layouts[TALL] && selmon->lt[selmon->sellt] != &layouts[DECK])
         || ((arg->i<=0) == (nexttiled(selmon->clients) == c )))){
     const Arg a = {.i = arg->i, .ui = (arg->i==1)};
     tagmon(&a);
@@ -3762,7 +3792,7 @@ horizontalfocus(const Arg *arg)
   Client *c = nexttiled(selmon->clients) ;
 
   if (c && nexttiled(c->next)	&& !selmon->sel->isfloating && !selmon->sel->isfullscreen){
-    if ( selmon->lt[selmon->sellt] == &layouts[0] ){
+    if ( selmon->lt[selmon->sellt] == &layouts[TALL] || selmon->lt[selmon->sellt] == &layouts[DECK] ){
       if ( (c == selmon->sel) == (arg->i > 0) ){
         if (arg->i > 0)
           c = nexttiled(c->next);
@@ -3770,7 +3800,7 @@ horizontalfocus(const Arg *arg)
         warp(c);
         return;
       }
-    }else if ( selmon->lt[selmon->sellt] == &layouts[2] ){
+    }else if ( selmon->lt[selmon->sellt] == &layouts[GRID] ){
       c = focustiled(selmon->sel,arg->i*rows);
       if (c){
         focus(c);
