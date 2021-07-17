@@ -1173,7 +1173,7 @@ drawbar(Monitor *m)
     if (m->sel) {
       drw_setscheme(drw, scheme[SchemeNorm]);
       if(centertitle){
-        tlpad = MAX((m->ww - ((int)TEXTW(m->sel->name) - lrpad + sw + stw)) / 2 - x, lrpad / 2);
+        tlpad = MAX((w - (int)TEXTW(m->sel->name))/2 , lrpad / 2);
         drw_text(drw, x, 0, w, bh, tlpad, m->sel->name, 0);
       }else{
         drw_text(drw, x, 0, w, bh, lrpad / 2, m->sel->name, 0);
