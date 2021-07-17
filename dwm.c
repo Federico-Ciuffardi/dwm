@@ -426,6 +426,29 @@ autostart_exec() {
 }
 
 /* function implementations */
+Client *
+getclientundermouse(void)
+{
+	int ret, di;
+	unsigned int dui;
+	Window child, dummy;
+
+	ret = XQueryPointer(dpy, root, &dummy, &child, &di, &di, &di, &di, &dui);
+	if (!ret)
+		return NULL;
+
+	return wintoclient(child);
+}
+
+void
+killfocus(int floating){
+  if(floating){
+    focus(getclientundermouse()); // NULL for default reselect
+  }else{
+    focus(NULL);
+  }
+}
+
 
 void
 setsticky(Client *c, int sticky){
@@ -1737,6 +1760,9 @@ keypress(XEvent *e)
 void hide(Client* c){
   c->tags=0;
   c->issticky = 0;
+  int floating = c->isfloating;
+  arrange(selmon);
+  killfocus(floating);
 }
 
   void
@@ -1746,8 +1772,6 @@ killclient(const Arg *arg)
     return;
   if (selmon->sel->sp_id){
     hide(selmon->sel);
-    arrange(selmon);
-    focus(NULL);
     return;
   }
   if (!sendevent(selmon->sel->win, wmatom[WMDelete], NoEventMask, wmatom[WMDelete], CurrentTime, 0 , 0, 0)) {
@@ -2933,8 +2957,7 @@ togglesp(const Arg *arg)
       arrange(selmon);
     } else {
       hide(c);
-      focus(c->snext);
-      arrange(selmon);
+      /* focus(c->snext); */
     }
   }else{
     Arg a;
@@ -3086,6 +3109,8 @@ unmanage(Client *c, int destroyed)
   Monitor *m = c->mon;
   XWindowChanges wc;
 
+  int floating = c->isfloating; 
+
   if (c->swallowing) {
     unswallow(c);
     return;
@@ -3096,7 +3121,7 @@ unmanage(Client *c, int destroyed)
     free(s->swallowing);
     s->swallowing = NULL;
     arrange(m);
-    focus(NULL);
+    killfocus(floating);
     return;
   }
 
@@ -3116,8 +3141,8 @@ unmanage(Client *c, int destroyed)
   free(c);
 
   if (!s) {
+    killfocus(floating);
     arrange(m);
-    focus(NULL);
     updateclientlist();
   }
 }
