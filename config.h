@@ -49,8 +49,8 @@ static const int centertitle        = 1;        /* 0 means no center */
 
 static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
-static const int vertpadbar         = 5;        /* vertical padding for all the statusbar */
-static const int horizpadbar        = 2;        /* horizontal padding for statusbar tags indicators */
+static const int vertpadbar         = 10;        /* vertical padding for all the statusbar */
+static const int horizpadbar        = 4;        /* horizontal padding for statusbar tags indicators */
 
 enum showtab_modes { showtab_never, showtab_auto, showtab_nmodes, showtab_always};
 static const int showtab			= showtab_auto;        /* Default tab bar show mode */
@@ -78,7 +78,7 @@ static const char *tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
 static const int uline                 = 1;	/* 1 enable uline, 0 disable unline */
 static const unsigned int ulinepad	   = 5;	/* horizontal padding between the underline and tag */
 static const unsigned int ulinestroke  = 2;	/* thickness / height of the underline */
-static const unsigned int ulinevoffset = 2;	/* how far above the bottom of the bar the line should appear */
+static const unsigned int ulinevoffset = 3;	/* how far above the bottom of the bar the line should appear */
 static const int ulineall              = 0;	/* 1 to show underline on all tags, 0 for just the active ones */
 
 static const unsigned int hidevacant  = 2;      /* 0: default | 1: hide unused tags | 2: 1 and do now draw squares */

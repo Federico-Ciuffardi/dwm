@@ -667,7 +667,7 @@ buttonpress(XEvent *e)
     if (i < LENGTH(tags)) {
       click = ClkTagBar;
       arg.ui = 1 << i;
-    } else if (ev->x < x + blw)
+    } else if (ev->x < x + blw - lrpad)
       click = ClkLtSymbol;
     else if (ev->x > (x = selmon->ww - TEXTW(stext) - stw + lrpad)){
       click = ClkStatusText;
@@ -1167,7 +1167,7 @@ drawbar(Monitor *m)
   }
   w = blw = TEXTW(m->ltsymbol);
   drw_setscheme(drw, scheme[SchemeNorm]);
-  x = drw_text(drw, x, 0, w, bh, lrpad / 2, m->ltsymbol, 0);
+  x = drw_text(drw, x, 0, w, bh, 0/*lrpad / 2*/, m->ltsymbol, 0);
 
   if ((w = m->ww - sw - stw - x) > bh) {
     if (m->sel) {
@@ -3792,6 +3792,7 @@ zoom(const Arg *arg)
 {
   Client *cm = nexttiled(selmon->clients);
   Client *c = selmon->sel;
+  if(!c) return;
   if (arg->i == 0 && ((selmon->lt[selmon->sellt] != &layouts[TALL] && selmon->lt[selmon->sellt] != &layouts[DECK]) || c->isfloating || c == cm)){
     rotate(&((Arg){.i=-1}));
     return;
