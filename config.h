@@ -35,30 +35,29 @@ static const char *const autostart[] = {
 };
 
 /* appearance */
-static const unsigned int borderpx  = 1;        /* border pixel of windows */
-static const unsigned int snap      = 32;       /* snap pixel */
+static const unsigned int borderpx       = 1;  /* border pixel of windows */
+static const unsigned int snap           = 32; /* snap pixel */
 
-static const unsigned int systraypinning = 2;   /* 0: sloppy systray follows selected monitor, >0: pin systray to monitor X */
-static const unsigned int systrayspacing = 2;   /* systray spacing */
-static const int systraypinningfailfirst = 0;   /* 1: if pinning fails, display systray on the first monitor, False: display systray on the last monitor*/
-static const int showsystray        = 1;     /* 0 means no systray */
-
-static const int statusmon = 2; // 1: follow focus | 2: status on all mons | 0 status only on tray mon
-
-static const int centertitle        = 1;        /* 0 means no center */
-
-static const int showbar            = 1;        /* 0 means no bar */
-static const int topbar             = 1;        /* 0 means bottom bar */
-static const int vertpadbar         = 10;        /* vertical padding for all the statusbar */
-static const int horizpadbar        = 4;        /* horizontal padding for statusbar tags indicators */
+static const unsigned int systraypinning = 2;  /* 0: sloppy systray follows selected monitor, >0: pin systray to monitor X */
+static const unsigned int systrayspacing = 2;  /* systray spacing */
+static const int systraypinningfailfirst = 0;  /* 1: if pinning fails, display systray on the first monitor, False: display systray on the last monitor*/
+static const int showsystray             = 1;  /* 0 means no systray */
+                                         
+static const int statusmon               = 2;  // 1: follow focus | 2: status on all mons | 0 status only on tray mon
+                                         
+static const int centertitle             = 1;  /* 0 means no center */
+                                         
+static const int showbar                 = 1;  /* 0 means no bar */
+static const int topbar                  = 1;  /* 0 means bottom bar */
+static const int vertpadbar              = 10; /* vertical padding for all the statusbar */
+static const int horizpadbar             = 4;  /* horizontal padding for statusbar tags indicators */
 
 enum showtab_modes { showtab_never, showtab_auto, showtab_nmodes, showtab_always};
 static const int showtab			= showtab_auto;        /* Default tab bar show mode */
 static const int toptab				= True;  
 
 static const char *fonts[]          = { " Ubuntu Mono:style=Regular:size=12",
-  "monospace:size=10",
-  "Noto Color Emoji:pixelsize=12:antialias=true:autohint=true"};
+                                        "Noto Color Emoji:pixelsize=14:antialias=true:autohint=true"};
 static const char *colors[][4]      = {
   /*                  fg         bg         border   */
   [SchemeNorm]    = { "#ffffff", "#1d2021", "#222222"},
@@ -98,7 +97,7 @@ static const Rule rules[] = {
   { "st-256color-ur"            , NULL     , NULL                , ~0   , 1          , 60,2,40,20      , UR         , 1          , 1         ,     0 , -1      },
   { "SpeedCrunch"               , NULL     , NULL                , ~0   , 1          , CENTER          , NN         , 1          , 1         ,     0 , -1      },
   { NULL                        , NULL     , "Event Tester"      , 0    , 0          , HINTS           , NN         , 0          , 1         ,     0 , -1      },
-  { "Yad"                       , NULL     , NULL                , 0    , 1          , HINTS           , NN         , 0          , 0         ,     0 , -1      },
+  { "Yad"                       , NULL     , NULL                , 0    , 1          , 60,2,40,20      , UR         , 0          , 0         ,     0 , -1      },
   { "Dragon-drag-and-drop"      , NULL     , NULL                , ~0   , 1          , CENTER_HINTS    , NN         , 0          , 0         ,     0 , -1      },
   { "st-256color-docked"        , NULL     , NULL                , ~0   , 1          , CENTER          , MM         , 1          , 1         ,     1 , -1      },
   { "st-256color-notes"         , NULL     , NULL                , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     2 , -1      },
@@ -108,8 +107,8 @@ static const Rule rules[] = {
   { "rviz"                      , NULL     , NULL                , 1<<8 , 0          , HINTS           , NN         , 0          , 0         ,     0 ,  0      },
   { "rqt_console"               , NULL     , NULL                , 1<<8 , 0          , HINTS           , NN         , 0          , 0         ,     0 ,  0      },
 
-  { "whatsapp-nativefier-d40211" , NULL     , NULL                , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     3 , -1      },
-  { "YouTube Music"              , NULL     , NULL                , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     6 , -1      },
+  { "whatsapp-nativefier-d40211" , NULL     , NULL               , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     3 , -1      },
+  { "YouTube Music"              , NULL     , NULL               , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     6 , -1      },
 
 };
 
@@ -118,7 +117,7 @@ static const char* scratchpads_cmd[] = {
   "$TERMINAL -c st-256color-docked -e tmux",
   "$TERMINAL -c st-256color-notes -T vimwiki -e $SHELL -c \"cd \"$HOME\"/.local/share/vimwiki && $EDITOR index.wiki\"",
   "whatsapp-nativefier",
-  "$TERMINAL -c st-256color-mail -T neomutt -e $SHELL -c neomutt",
+  "$TERMINAL -c st-256color-mail -T neomutt -e $SHELL -c \"neomutt ; pkill -RTMIN+17 dwmblocks \"",
   "$TERMINAL -c st-256color-calendar -T calcurse -e $SHELL -c calcurse",
   "youtube-music",
 };
@@ -135,9 +134,10 @@ static dims floatzones[][3] = {
 static const int floatingdims[] = { CENTER };
 
 /* layout(s) */
-static const float mfact     = 0.85; /* factor of master area size [0.05..0.95] */
-static const int nmaster     = 1;    /* number of clients in master area */
-static const int resizehints = 0;    /* 1 means respect size hints in tiled resizals */
+static const float largemfact   = 0.75;       /* uncollapsed */
+static const float mfact        = largemfact; /* factor of master area size [0.05..0.95] */
+static const int   nmaster      = 1;          /* number of clients in master area */
+static const int   resizehints  = 0;          /* 1 means respect size hints in tiled resizals */
 
 #define TALL     0
 #define DECK     1
@@ -202,8 +202,8 @@ static Key keys[] = {
   { MODKEY,                       XK_l,      horizontalfocus, {.i = +1 } },
   { MODKEY|ShiftMask,             XK_h,      movehorizontal,  {.i = -1} },
   { MODKEY|ShiftMask,             XK_l,      movehorizontal,  {.i = +1} },
-  { MODKEY|ShiftMask|ControlMask, XK_h,      hardresizehorizontal,{.i = -1} },
-  { MODKEY|ShiftMask|ControlMask, XK_l,      hardresizehorizontal,{.i = +1} },
+  { MODKEY|ShiftMask|ControlMask, XK_h,      resizehorizontal,{.i = -1} },
+  { MODKEY|ShiftMask|ControlMask, XK_l,      resizehorizontal,{.i = +1} },
   /* { MODKEY|ShiftMask|ControlMask, XK_h,      setmfact,        {.f = -0.05} }, */
   /* { MODKEY|ShiftMask|ControlMask, XK_l,      setmfact,        {.f = +0.05} }, */
   { MODKEY,                       XK_j,      focusstack,      {.i = +1 } },
@@ -214,20 +214,20 @@ static Key keys[] = {
   { MODKEY|ShiftMask|ControlMask, XK_k,      resizevertical,  {.i = -1 } },
   { MODKEY|ControlMask,           XK_h,      reorganizetags,  {.i =  1 } },
   { MODKEY|ControlMask,           XK_l,      reorganizetags,  {.i = -1 } },
-  { MODKEY,                       XK_Escape, focusmon,        {.i =  1 } },
-  { MODKEY|ShiftMask,             XK_Escape, tagmon,          {.i =  1 } },
+  { MODKEY,                       XK_grave, focusmon,        {.i =  1 } },
+  { MODKEY|ShiftMask,             XK_grave, tagmon,          {.i =  1 } },
   { MODKEY|ControlMask,           XK_j,      incview,         {.i =  1 } },
   { MODKEY|ControlMask,           XK_k,      incview,         {.i = -1 } },
-  { MODKEY,                       XK_grave,  freeview,        {.i =  1 } },
-  { MODKEY|ShiftMask,             XK_grave,  freetag,         {.i =  1 } },
 
-  { MODKEY,                       XK_0,      lastfreeview,    {.i =  1 } },
-  { MODKEY|ShiftMask,             XK_0,      lastfreetag,     {.i =  1 } },
-  //{ MODKEY|ShiftMask,           XK_h,      incnmaster,      {.i = +1 } },
-  //{ MODKEY|ShiftMask,           XK_l,      incnmaster,      {.i = -1 } },
- 	{ MODKEY|ControlMask,		        XK_comma,  cyclelayout,    {.i = -1 } },
- 	{ MODKEY|ControlMask,           XK_period, cyclelayout,    {.i = +1 } },
- 	{ MODKEY|ControlMask,           XK_Tab,    cyclelayout,    {.i = +1 } },
+  { MODKEY,                       XK_0,      lastfreeviewwrap, {.i =  1 } },
+  { MODKEY|ShiftMask,             XK_0,      lastfreetagwrap,  {.i =  1 } },
+  { MODKEY|ControlMask,           XK_0,      freeview,         {.i =  1 } },
+  { MODKEY|ShiftMask|ControlMask, XK_0,      freetag,          {.i =  1 } },
+  //{ MODKEY|ShiftMask,           XK_h,      incnmaster,       {.i = +1 } },
+  //{ MODKEY|ShiftMask,           XK_l,      incnmaster,       {.i = -1 } },
+ 	{ MODKEY|ControlMask,		        XK_comma,  cyclelayout,      {.i = -1 } },
+ 	{ MODKEY|ControlMask,           XK_period, cyclelayout,      {.i = +1 } },
+ 	{ MODKEY|ControlMask,           XK_Tab,    cyclelayout,      {.i = +1 } },
   { MODKEY,                       XK_d,      setlayout,        {.v = &layouts[DECK]} },
   { MODKEY,                       XK_g,      setlayout,        {.v = &layouts[GRID]} },
   { MODKEY,                       XK_t,      setlayout,        {.v = &layouts[TABS]} },
@@ -308,7 +308,8 @@ static Button buttons[] = {
   { ClkClientWin,         0,              Button8,        movemouse,      {.i=1} },
   { ClkClientWin,         0,              Button9,        killclient,     {0} },
   { ClkTagBar,            0,              Button1,        view,           {0} },
-  { ClkTagBar,            0,              Button3,        toggleview,     {0} },
+  { ClkTagBar,            0,              Button2,        freeview,       {0} },
+  { ClkTagBar,            0,              Button3,        freeview,       {0} },
   { ClkTagBar,            0,              Button8,        tag,            {0} },
   { ClkTagBar,            MODKEY,         Button3,        toggletag,      {0} },
   { ClkTabBar,            0,              Button1,        focuswin,       {0} },

@@ -293,10 +293,12 @@ static void togglesticky(const Arg *arg);
 static void toggletag(const Arg *arg);
 static void toggleview(const Arg *arg);
 static void lastfreetag(const Arg *arg);
+static void lastfreetagwrap(const Arg *arg);
 static void freeview(const Arg *arg);
 static void freetag(const Arg *arg);
 static void incview(const Arg *arg);
-static void lastfreeview();
+static void lastfreeview(const Arg *arg);
+static void lastfreeviewwrap(const Arg *arg);
 static void unfocus(Client *c, int setfocus);
 static void unmanage(Client *c, int destroyed);
 static void unmapnotify(XEvent *e);
@@ -2612,7 +2614,7 @@ setlayout(const Arg *arg)
   if(selmon->lt[selmon->sellt] == &layouts[DECK]){
     setmfact(&(const Arg) {.f = 1.5});
   }else if (selmon->lt[selmon->sellt] == &layouts[TALL]){
-    setmfact(&(const Arg) {.f = 1.85});
+    setmfact(&(const Arg) {.f = 1+largemfact});
   }
 }
 
@@ -3056,6 +3058,28 @@ moveviewcore(int mode, int prev, int ai, unsigned int newtagset){
     newtagset = prevtagset;
 
   return newtagset;
+}
+
+void lastfreetagwrap(const Arg *arg){
+  uint newtagset = moveviewcore(0,0,arg->i,0);
+  newtagset = moveviewcore(1,1,arg->i,newtagset);
+  if (newtagset == selmon->tagset[selmon->seltags]){
+    freetag(arg);
+    return;
+  }
+  const Arg a = {.ui = newtagset };
+  tag(&a);
+}
+
+void lastfreeviewwrap(const Arg *arg){
+  uint newtagset = moveviewcore(0,0,arg->i,0);
+  newtagset = moveviewcore(1,1,arg->i,newtagset);
+  if (newtagset == selmon->tagset[selmon->seltags]){
+    freeview(arg);
+    return;
+  }
+  const Arg a = {.ui = newtagset };
+  view(&a);
 }
 
 void freetag(const Arg *arg){
@@ -3928,12 +3952,12 @@ hardresizehorizontal(const Arg* arg){
       if(arg->i<0)
         a.f =  1.5;
       else if(arg->i>0){
-        a.f =  1.85;
+        a.f =  1+largemfact;
       }else{
         if(selmon->mfact>0.675)
           a.f = 1.5;
         else
-          a.f = 1.85;
+          a.f = 1+largemfact;
       }
       setmfact(&a);
     }
