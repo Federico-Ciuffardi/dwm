@@ -80,7 +80,7 @@ static const unsigned int ulinestroke  = 2;	/* thickness / height of the underli
 static const unsigned int ulinevoffset = 3;	/* how far above the bottom of the bar the line should appear */
 static const int ulineall              = 0;	/* 1 to show underline on all tags, 0 for just the active ones */
 
-static const unsigned int hidevacant  = 2;      /* 0: default | 1: hide unused tags | 2: 1 and do now draw squares */
+static unsigned int hidevacant  = 2;      /* 0: default | 1: hide unused tags | 2: 1 and do now draw squares */
 
 static const Rule rules[] = {
   /* xprop(1):
@@ -272,17 +272,17 @@ static Key keys[] = {
   { MODKEY|ShiftMask, XK_backslash,          spawn,          SHCMD("playerctl play-pause") },
 
 
-  // Default
-  { MODKEY,                         XK_b,      togglebar,      {0} },
-    TAGKEYS(                        XK_1,                      0)
-    TAGKEYS(                        XK_2,                      1)
-    TAGKEYS(                        XK_3,                      2)
-    TAGKEYS(                        XK_4,                      3)
-    TAGKEYS(                        XK_5,                      4)
-    TAGKEYS(                        XK_6,                      5)
-    TAGKEYS(                        XK_7,                      6)
-    TAGKEYS(                        XK_8,                      7)
-    TAGKEYS(                        XK_9,                      8)
+  { MODKEY,                         XK_b,      togglebar,         {0} },
+  { MODKEY| ShiftMask,              XK_b,      togglehidevaccant, {0} },
+    TAGKEYS(                        XK_1,                          0)
+    TAGKEYS(                        XK_2,                          1)
+    TAGKEYS(                        XK_3,                          2)
+    TAGKEYS(                        XK_4,                          3)
+    TAGKEYS(                        XK_5,                          4)
+    TAGKEYS(                        XK_6,                          5)
+    TAGKEYS(                        XK_7,                          6)
+    TAGKEYS(                        XK_8,                          7)
+    TAGKEYS(                        XK_9,                          8)
     /* { MODKEY,                       XK_comma,  focusmon,       {.i = -1 } },
      * { MODKEY,                       XK_period, focusmon,       {.i = +1 } },
      * { MODKEY|ShiftMask,             XK_comma,  tagmon,         {.i = -1 } },
@@ -293,33 +293,32 @@ static Key keys[] = {
 /* click can be ClkTagBar, ClkLtSymbol, ClkStatusText, ClkWinTitle, ClkClientWin, or ClkRootWin */
 static Button buttons[] = {
   /* click                event mask      button          function        argument */
-  { ClkStatusText,        0,              Button1,        sigdwmblocks,   {.i = 1} },
-  { ClkStatusText,        0,              Button2,        sigdwmblocks,   {.i = 2} },
-  { ClkStatusText,        0,              Button3,        sigdwmblocks,   {.i = 3} },
-  { ClkStatusText,        0,              Button4,        sigdwmblocks,   {.i = 4} },
-  { ClkStatusText,        0,              Button5,        sigdwmblocks,   {.i = 5} },
-  { ClkStatusText,        ShiftMask,      Button1,        sigdwmblocks,   {.i = 6} },
-  { ClkLtSymbol,          0,              Button1,        cyclelayout,    {.i = 1} },
-  { ClkLtSymbol,          0,              Button2,        view,           {.ui = ~0 }  },
-  { ClkLtSymbol,          0,              Button3,        setlayout,      {.v = &layouts[1]} },
-  { ClkClientWin,         MODKEY,         Button1,        movemouse,      {.i=0} },
-  { ClkClientWin,         MODKEY,         Button2,        killclient,     {0} },
-  { ClkClientWin,         MODKEY,         Button3,        resizemouse,    {0} },
-  { ClkClientWin,         0,              Button8,        movemouse,      {.i=1} },
-  { ClkClientWin,         0,              Button9,        killclient,     {0} },
-  { ClkTagBar,            0,              Button1,        view,           {0} },
-  { ClkTagBar,            0,              Button2,        freeview,       {0} },
-  { ClkTagBar,            0,              Button3,        freeview,       {0} },
-  { ClkTagBar,            0,              Button8,        tag,            {0} },
-  { ClkTagBar,            MODKEY,         Button3,        toggletag,      {0} },
-  { ClkTabBar,            0,              Button1,        focuswin,       {0} },
-  { ClkTabBar,            0,              Button2,        killwin ,       {0} },
-  { ClkTagBar,            0,              Button4,        incview,        {.i = -1} },
-  { ClkTagBar,            0,              Button5,        incview,        {.i =  1} },
-  { ClkWinTitle,          0,              Button5,        focusstack,     {.i =  1} },
-  { ClkWinTitle,          0,              Button4,        focusstack,     {.i = -1} },
-  { ClkWinTitle,          0,              Button9,        killclient,     {0} },
-  { ClkWinTitle,          0,              Button8,        tagmon,         {.i=1} },
-  { ClkRootWin,           0,              Button3,        spawn,          SHCMD(drun) },
-};
-
+  { ClkStatusText,        0,              Button1,        sigdwmblocks,      {.i = 1} },
+  { ClkStatusText,        0,              Button2,        sigdwmblocks,      {.i = 2} },
+  { ClkStatusText,        0,              Button3,        sigdwmblocks,      {.i = 3} },
+  { ClkStatusText,        0,              Button4,        sigdwmblocks,      {.i = 4} },
+  { ClkStatusText,        0,              Button5,        sigdwmblocks,      {.i = 5} },
+  { ClkStatusText,        ShiftMask,      Button1,        sigdwmblocks,      {.i = 6} },
+  { ClkLtSymbol,          0,              Button1,        cyclelayout,       {.i = 1} },
+  { ClkLtSymbol,          0,              Button2,        view,              {.ui = ~0 }  },
+  { ClkLtSymbol,          0,              Button3,        setlayout,         {.v = &layouts[1]} },
+  { ClkClientWin,         MODKEY,         Button1,        movemouse,         {.i=0} },
+  { ClkClientWin,         MODKEY,         Button2,        killclient,        {0} },
+  { ClkClientWin,         MODKEY,         Button3,        resizemouse,       {0} },
+  { ClkClientWin,         0,              Button8,        movemouse,         {.i=1} },
+  { ClkClientWin,         0,              Button9,        killclient,        {0} },
+  { ClkTagBar,            0,              Button1,        view,              {0} },
+  { ClkTagBar,            0,              Button2,        togglehidevaccant, {0} },
+  { ClkTagBar,            0,              Button3,        freeview,          {0} },
+  { ClkTagBar,            0,              Button8,        tag,               {0} },
+  { ClkTagBar,            MODKEY,         Button3,        toggletag,         {0} },
+  { ClkTabBar,            0,              Button1,        focuswin,          {0} },
+  { ClkTabBar,            0,              Button2,        killwin ,          {0} },
+  { ClkTagBar,            0,              Button4,        incview,           {.i = -1} },
+  { ClkTagBar,            0,              Button5,        incview,           {.i =  1} },
+  { ClkWinTitle,          0,              Button5,        focusstack,        {.i =  1} },
+  { ClkWinTitle,          0,              Button4,        focusstack,        {.i = -1} },
+  { ClkWinTitle,          0,              Button9,        killclient,        {0} },
+  { ClkWinTitle,          0,              Button8,        tagmon,            {.i=1} },
+  { ClkRootWin,           0,              Button3,        spawn,             SHCMD(drun) },
+};                                                                           

@@ -280,6 +280,7 @@ static void sigchld(int unused);
 static void sigdwmblocks(const Arg *arg);
 static void spawn(const Arg *arg);
 static void togglesp(const Arg *arg);
+static void togglehidevaccant(const Arg *arg);
 static Monitor *systraytomon(Monitor *m);
 static void tag(const Arg *arg);
 static void tagmon(const Arg *arg);
@@ -2849,6 +2850,15 @@ tile(Monitor *m)
       resize(c, m->wx + mw, m->wy + ty, m->ww - mw - (2*c->bw), h - (2*c->bw), 0);
       ty += HEIGHT(c);
     }
+}
+
+void
+togglehidevaccant(const Arg *arg){
+  if(hidevacant)
+    hidevacant = 0;
+  else
+    hidevacant = 2;
+  drawbars();
 }
 
   void
