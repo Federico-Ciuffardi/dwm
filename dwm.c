@@ -2804,7 +2804,12 @@ spawn(const Arg *arg)
   void
 tag(const Arg *arg)
 {
-  if (selmon->sel && arg->ui & TAGMASK) {
+  unsigned int newtag;
+  if(!selmon->sel || !(newtag = arg->ui & TAGMASK)) return;
+
+  if(newtag == selmon->sel->tags){
+    lastfreetagwrap(&((Arg){.i=+1}));
+  }else{
     if(!selmon->sel->issticky)
       selmon->sel->tags = arg->ui & TAGMASK;
     focus(NULL);

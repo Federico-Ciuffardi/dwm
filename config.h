@@ -211,13 +211,13 @@ static Key keys[] = {
   { MODKEY,                       XK_a,      togglefloating,           {.i = 1} },
   { MODKEY,                       XK_s,      togglesticky,             {0} },
                                                                        
-  { MODKEY,                       XK_semicolon,  zoom,                 {.i = 0} },
+  { MODKEY,                       XK_semicolon,  togglefocustype,      {.i = 0} },
   { MODKEY,                       XK_apostrophe, togglefocustype,      {0} },
-  { MODKEY,                       XK_f,          togglefocustype,      {0} },
+  { MODKEY,                       XK_f,          togglefullscreen,     {0} },
 
   { MODKEY,                       XK_comma,      rotate,               {.i = -1 } },
   { MODKEY,                       XK_period,     rotate,               {.i = +1 } },
-  { MODKEY|ShiftMask,             XK_semicolon,  hardresizehorizontal, {.i = 0 } },
+  { MODKEY|ShiftMask,             XK_semicolon,  zoom,                 {.i = 0 } },
 
   { MODKEY,                       XK_h,      horizontalfocus,          {.i = -1 } },
   { MODKEY,                       XK_l,      horizontalfocus,          {.i = +1 } },
@@ -327,7 +327,7 @@ static Button buttons[] = {
 
   { ClkTagBar,            0,              Button1,        view,              {0} },
   { ClkTagBar,            0,              Button2,        togglehidevaccant, {0} },
-  { ClkTagBar,            0,              Button3,        lastfreeviewwrap,  {0} },
+  { ClkTagBar,            0,              Button3,        togglehidevaccant, {0} },
   { ClkTagBar,            0,              Button8,        tag,               {0} },
   { ClkTagBar,            MODKEY,         Button3,        toggletag,         {0} },
   { ClkTabBar,            0,              Button1,        focuswin,          {0} },
