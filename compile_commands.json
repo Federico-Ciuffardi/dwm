@@ -1,68 +1,65 @@
 [
-  {
-    "arguments": [
-      "/usr/bin/gcc",
-      "-c",
-      "-std=c99",
-      "-pedantic",
-      "-Wall",
-      "-Wno-deprecated-declarations",
-      "-Os",
-      "-I/usr/X11R6/include",
-      "-I/usr/include/freetype2",
-      "-D_DEFAULT_SOURCE",
-      "-D_BSD_SOURCE",
-      "-D_POSIX_C_SOURCE=2",
-      "-DVERSION=\"6.2\"",
-      "-DXINERAMA",
-      "drw.c"
-    ],
-    "directory": "/home/fede/.build/dwm",
-    "file": "/home/fede/.build/dwm/drw.c",
-    "output": "/home/fede/.build/dwm/drw.o"
-  },
-  {
-    "arguments": [
-      "/usr/bin/gcc",
-      "-c",
-      "-std=c99",
-      "-pedantic",
-      "-Wall",
-      "-Wno-deprecated-declarations",
-      "-Os",
-      "-I/usr/X11R6/include",
-      "-I/usr/include/freetype2",
-      "-D_DEFAULT_SOURCE",
-      "-D_BSD_SOURCE",
-      "-D_POSIX_C_SOURCE=2",
-      "-DVERSION=\"6.2\"",
-      "-DXINERAMA",
-      "dwm.c"
-    ],
-    "directory": "/home/fede/.build/dwm",
-    "file": "/home/fede/.build/dwm/dwm.c",
-    "output": "/home/fede/.build/dwm/dwm.o"
-  },
-  {
-    "arguments": [
-      "/usr/bin/gcc",
-      "-c",
-      "-std=c99",
-      "-pedantic",
-      "-Wall",
-      "-Wno-deprecated-declarations",
-      "-Os",
-      "-I/usr/X11R6/include",
-      "-I/usr/include/freetype2",
-      "-D_DEFAULT_SOURCE",
-      "-D_BSD_SOURCE",
-      "-D_POSIX_C_SOURCE=2",
-      "-DVERSION=\"6.2\"",
-      "-DXINERAMA",
-      "util.c"
-    ],
-    "directory": "/home/fede/.build/dwm",
-    "file": "/home/fede/.build/dwm/util.c",
-    "output": "/home/fede/.build/dwm/util.o"
-  }
+    {
+        "arguments": [
+            "cc",
+            "-c",
+            "-std=c99",
+            "-pedantic",
+            "-Wall",
+            "-Wno-deprecated-declarations",
+            "-Os",
+            "-I/usr/X11R6/include",
+            "-I/usr/include/freetype2",
+            "-D_DEFAULT_SOURCE",
+            "-D_BSD_SOURCE",
+            "-D_POSIX_C_SOURCE=2",
+            "-DVERSION=\"6.2\"",
+            "-DXINERAMA",
+            "dwm.c"
+        ],
+        "directory": "/home/fede/.local/share/uur/dwm/dwm",
+        "file": "dwm.c"
+    },
+    {
+        "arguments": [
+            "cc",
+            "-c",
+            "-std=c99",
+            "-pedantic",
+            "-Wall",
+            "-Wno-deprecated-declarations",
+            "-Os",
+            "-I/usr/X11R6/include",
+            "-I/usr/include/freetype2",
+            "-D_DEFAULT_SOURCE",
+            "-D_BSD_SOURCE",
+            "-D_POSIX_C_SOURCE=2",
+            "-DVERSION=\"6.2\"",
+            "-DXINERAMA",
+            "drw.c"
+        ],
+        "directory": "/home/fede/.local/share/uur/dwm/dwm",
+        "file": "drw.c"
+    },
+    {
+        "arguments": [
+            "cc",
+            "-c",
+            "-std=c99",
+            "-pedantic",
+            "-Wall",
+            "-Wno-deprecated-declarations",
+            "-Os",
+            "-I/usr/X11R6/include",
+            "-I/usr/include/freetype2",
+            "-D_DEFAULT_SOURCE",
+            "-D_BSD_SOURCE",
+            "-D_POSIX_C_SOURCE=2",
+            "-DVERSION=\"6.2\"",
+            "-DXINERAMA",
+            "util.c"
+        ],
+        "directory": "/home/fede/.local/share/uur/dwm/dwm",
+        "file": "util.c"
+    }
 ]
