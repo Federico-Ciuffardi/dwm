@@ -29,9 +29,9 @@
 // AUTOSTART //
 ///////////////
 static const char *const autostart[] = {
-  "/bin/sh", "-c", "pgrep -x WhatsApp || (sleep 30 && whatsapp-nativefier) &", NULL,
-  /* "/bin/sh", "-c", "(sleep 30 && thunderbird) &", NULL, */
-  "/bin/sh", "-c", "pgrep -x dwmblocks || while true ; do dwmblocks ; done", NULL,
+  "/bin/sh", "-c", "pgrep -x WhatsApp        || (sleep 30 && whatsapp-nativefier) &", NULL,
+  "/bin/sh", "-c", "pkill -x mattermost-desk || (sleep 30 && mattermost-desktop) &", NULL,
+  "/bin/sh", "-c", "pgrep -x dwmblocks       || while true ; do dwmblocks ; done", NULL,
   NULL /* terminate */
 };
 
@@ -149,6 +149,7 @@ static const Rule rules[] = {
 
   { "whatsapp-nativefier-d40211" , NULL     , NULL               , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     3 , -1      },
   { "YouTube Music"              , NULL     , NULL               , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     6 , -1      },
+  { "Mattermost"                 , NULL     , NULL               , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     7 , -1      },
 };
 
 
@@ -159,6 +160,7 @@ static const char* scratchpads_cmd[] = {
   "$TERMINAL -c st-256color-mail -T neomutt -e $SHELL -c \"neomutt ; pkill -RTMIN+17 dwmblocks \"",
   "$TERMINAL -c st-256color-calendar -T calcurse -e $SHELL -c calcurse",
   "youtube-music",
+  "mattermost-desktop",
 };
 
 typedef int dims[4];
@@ -201,7 +203,7 @@ static Key keys[] = {
   { MODKEY,                       XK_u,      spawn,          SHCMD("$DMENU_BIN/dmenu_unicode") },
   { MODKEY|ShiftMask,             XK_q,      spawn,          SHCMD("$DMENU_BIN/dmenu_leave") },
   { MODKEY,                       XK_r,      spawn,          SHCMD(drun) },
-  { MODKEY|ShiftMask,             XK_m,      spawn,          SHCMD("$DMENU_BIN/monitor_layout") },
+  { MODKEY|ShiftMask,             XK_o,      spawn,          SHCMD("$DMENU_BIN/monitor_layout") },
   { MODKEY,                       XK_Tab,    view,           {.ui = ~0 } },
   { MODKEY|ShiftMask,             XK_Tab,    spawn,          SHCMD("rofi -show window") },
   { 0,                            XK_Print,  spawn,          SHCMD("flameshot gui") },
@@ -259,6 +261,7 @@ static Key keys[] = {
   { MODKEY,                       XK_m,      togglesp,                 {.i = 4} },
   { MODKEY,                       XK_c,      togglesp,                 {.i = 5} },
   { MODKEY,                       XK_y,      togglesp,                 {.i = 6} },
+  { MODKEY|ShiftMask,             XK_m,      togglesp,                 {.i = 7} },
 
   { MODKEY,                       XK_Return, spawn,                    SHCMD("$TERMINAL -e tmux") },
   { MODKEY|ShiftMask,             XK_Return, spawn,                    SHCMD("$TERMINAL -c st-256color-c -e tmux") },
