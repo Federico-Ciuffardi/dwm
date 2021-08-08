@@ -143,6 +143,7 @@ static const Rule rules[] = {
   { "st-256color-notes"         , NULL     , NULL                , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     2 , -1      },
   { "st-256color-mail"          , NULL     , NULL                , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     4 , -1      },
   { "st-256color-calendar"      , NULL     , NULL                , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     5 , -1      },
+  { "st-256color-music"         , NULL     , NULL                , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     8 , -1      },
   { "gazebo"                    , NULL     , NULL                , 1<<8 , 0          , HINTS           , NN         , 0          , 0         ,     0 ,  0      },
   { "rviz"                      , NULL     , NULL                , 1<<8 , 0          , HINTS           , NN         , 0          , 0         ,     0 ,  0      },
   { "rqt_console"               , NULL     , NULL                , 1<<8 , 0          , HINTS           , NN         , 0          , 0         ,     0 ,  0      },
@@ -161,6 +162,7 @@ static const char* scratchpads_cmd[] = {
   "$TERMINAL -c st-256color-calendar -T calcurse -e $SHELL -c calcurse",
   "youtube-music",
   "mattermost-desktop",
+  "$TERMINAL -c st-256color-music -T ncmpcpp -e ncmpcpp",
 };
 
 typedef int dims[4];
@@ -262,6 +264,7 @@ static Key keys[] = {
   { MODKEY,                       XK_c,      togglesp,                 {.i = 5} },
   { MODKEY,                       XK_y,      togglesp,                 {.i = 6} },
   { MODKEY|ShiftMask,             XK_m,      togglesp,                 {.i = 7} },
+  { MODKEY|ShiftMask,             XK_n,      togglesp,                 {.i = 8} },
 
   { MODKEY,                       XK_Return, spawn,                    SHCMD("$TERMINAL -e tmux") },
   { MODKEY|ShiftMask,             XK_Return, spawn,                    SHCMD("$TERMINAL -c st-256color-c -e tmux") },
@@ -288,6 +291,10 @@ static Key keys[] = {
   { MODKEY|ShiftMask, XK_bracketright,       spawn,                    SHCMD("playerctl next") },
   { MODKEY|ShiftMask, XK_bracketleft,        spawn,                    SHCMD("playerctl previous") },
   { MODKEY|ShiftMask, XK_backslash,          spawn,                    SHCMD("playerctl play-pause") },
+
+  { MODKEY|ShiftMask|ControlMask, XK_bracketright,       spawn,        SHCMD("mpc next") },
+  { MODKEY|ShiftMask|ControlMask, XK_bracketleft,        spawn,        SHCMD("mpc prev") },
+  { MODKEY|ShiftMask|ControlMask, XK_backslash,          spawn,        SHCMD("mpc toggle") },
 
 
   { MODKEY,                         XK_b,      togglebar,         {0} },
@@ -328,9 +335,9 @@ static Button buttons[] = {
   { ClkClientWin,         0,              Button8,        movemouse,         {.i=1} },
   { ClkClientWin,         0,              Button9,        killclient,        {0} },
 
+  { ClkTagBar,            0,              Button3,        togglehidevaccant, {0} },
   { ClkTagBar,            0,              Button1,        view,              {0} },
   { ClkTagBar,            0,              Button2,        togglehidevaccant, {0} },
-  { ClkTagBar,            0,              Button3,        togglehidevaccant, {0} },
   { ClkTagBar,            0,              Button8,        tag,               {0} },
   { ClkTagBar,            MODKEY,         Button3,        toggletag,         {0} },
   { ClkTabBar,            0,              Button1,        focuswin,          {0} },
