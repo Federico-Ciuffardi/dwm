@@ -194,7 +194,6 @@ static char drun[] = "rofi -show drun";
 
 static Key keys[] = {
   /* modifier                     key        function        argument */
-  // Mine
   { MODKEY,                       XK_F5,     spawn,          SHCMD("lxsudo /bin/sh -c \"cd $HOME/.local/share/uur/dwm/dwm && make all && make install\" && pkill dwm") },
   { MODKEY|ShiftMask,             XK_r,      spawn,          SHCMD("lxsudo /bin/sh -c \"cd $HOME/.local/share/uur/dwm/dwm && make all && make install\" && pkill dwm") },
   { MODKEY,                       XK_p,      spawn,          SHCMD("dmenu-pass") },
@@ -210,6 +209,7 @@ static Key keys[] = {
   { MODKEY|ShiftMask,             XK_Tab,    spawn,          SHCMD("rofi -show window") },
   { 0,                            XK_Print,  spawn,          SHCMD("flameshot gui") },
   { MODKEY|ShiftMask|ControlMask, XK_x,      spawn,          SHCMD("xkill") },
+  { MODKEY                      , XK_v,      spawn,          SHCMD("xournal") },
 
   { MODKEY,                       XK_q,      killclient,               {0} },
   { MODKEY,                       XK_a,      togglefloating,           {.i = 1} },
@@ -269,8 +269,8 @@ static Key keys[] = {
   { MODKEY,                       XK_Return, spawn,                    SHCMD("$TERMINAL -e tmux") },
   { MODKEY|ShiftMask,             XK_Return, spawn,                    SHCMD("$TERMINAL -c st-256color-c -e tmux") },
   { MODKEY|ControlMask,           XK_Return, spawn,                    SHCMD("$TERMINAL -e tmux new \"$TMUX_BIN/open_and_kill_session\"") },
-  { MODKEY,                       XK_e,      spawn,                    SHCMD("$TERMINAL -e tmux new ranger-standalone") },
-  { MODKEY|ShiftMask,             XK_e,      spawn,                    SHCMD("$TERMINAL -c st-256color-c -e tmux new ranger-standalone") },
+  { MODKEY,                       XK_e,      spawn,                    SHCMD("$TERMINAL -e tmux new \"zsh -is ranger\"") },
+  { MODKEY|ShiftMask,             XK_e,      spawn,                    SHCMD("$TERMINAL -c st-256color-c -e tmux new \"zsh -is ranger\"") },
   { MODKEY,                       XK_w,      spawn,                    SHCMD("$BROWSER") },
                                                                   
   { MODKEY|ShiftMask,             XK_t,      spawn,                    SHCMD("pkill picom || picom --experimental-backend") },
