@@ -144,6 +144,7 @@ static const Rule rules[] = {
   { "st-256color-mail"          , NULL     , NULL                , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     4 , -1      },
   { "st-256color-calendar"      , NULL     , NULL                , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     5 , -1      },
   { "st-256color-music"         , NULL     , NULL                , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     8 , -1      },
+  { "st-256color-tmp-notes"     , NULL     , NULL                , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     9 , -1      },
   { "gazebo"                    , NULL     , NULL                , 1<<8 , 0          , HINTS           , NN         , 0          , 0         ,     0 ,  0      },
   { "rviz"                      , NULL     , NULL                , 1<<8 , 0          , HINTS           , NN         , 0          , 0         ,     0 ,  0      },
   { "rqt_console"               , NULL     , NULL                , 1<<8 , 0          , HINTS           , NN         , 0          , 0         ,     0 ,  0      },
@@ -163,6 +164,7 @@ static const char* scratchpads_cmd[] = {
   "youtube-music",
   "mattermost-desktop",
   "$TERMINAL -c st-256color-music -T ncmpcpp -e ncmpcpp",
+  "$TERMINAL -c st-256color-tmp-notes -T tmp-notes -e $EDITOR $(mktemp) -c \"set spell\"",
 };
 
 typedef int dims[4];
@@ -265,6 +267,7 @@ static Key keys[] = {
   { MODKEY,                       XK_y,      togglesp,                 {.i = 6} },
   { MODKEY|ShiftMask,             XK_m,      togglesp,                 {.i = 7} },
   { MODKEY|ShiftMask,             XK_n,      togglesp,                 {.i = 8} },
+  { MODKEY|ShiftMask,             XK_s,      togglesp,                 {.i = 9} },
 
   { MODKEY,                       XK_Return, spawn,                    SHCMD("$TERMINAL -e tmux") },
   { MODKEY|ShiftMask,             XK_Return, spawn,                    SHCMD("$TERMINAL -c st-256color-c -e tmux") },
