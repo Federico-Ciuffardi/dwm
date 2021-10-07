@@ -152,6 +152,7 @@ static const Rule rules[] = {
   { "whatsapp-nativefier-d40211" , NULL     , NULL               , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     3 , -1      },
   { "YouTube Music"              , NULL     , NULL               , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     6 , -1      },
   { "Mattermost"                 , NULL     , NULL               , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     7 , -1      },
+  { "Session"                    , NULL     , NULL               , ~0   , 1          , CENTER          , NN         , 0          , 0         ,    10 , -1      },
 };
 
 
@@ -165,6 +166,7 @@ static const char* scratchpads_cmd[] = {
   "mattermost-desktop",
   "$TERMINAL -c st-256color-music -T ncmpcpp -e ncmpcpp",
   "$TERMINAL -c st-256color-tmp-notes -T tmp-notes -e $EDITOR $(mktemp) -c \"set spell\"",
+  "session-desktop",
 };
 
 typedef int dims[4];
@@ -267,7 +269,8 @@ static Key keys[] = {
   { MODKEY,                       XK_y,      togglesp,                 {.i = 6} },
   { MODKEY|ShiftMask,             XK_m,      togglesp,                 {.i = 7} },
   { MODKEY|ShiftMask,             XK_n,      togglesp,                 {.i = 8} },
-  { MODKEY|ShiftMask,             XK_s,      togglesp,                 {.i = 9} },
+  { MODKEY|ShiftMask|ControlMask, XK_space,  togglesp,                 {.i = 9} },
+  { MODKEY|ShiftMask,             XK_s,      togglesp,                 {.i = 10} },
 
   { MODKEY,                       XK_Return, spawn,                    SHCMD("$TERMINAL -e tmux") },
   { MODKEY|ShiftMask,             XK_Return, spawn,                    SHCMD("$TERMINAL -c st-256color-c -e tmux") },
