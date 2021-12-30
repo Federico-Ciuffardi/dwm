@@ -1512,10 +1512,14 @@ focusstackcore(int dir){
   void
 focusstack(const Arg *arg)
 {
-  Client *c = focusstackcore(arg->i);
-  if (c) {
-    focus(c);
-    restack(selmon);
+  int tmux_focus = tmux_motion_integration && ( (arg->i == -1 && !system("$MY_BIN/tmux/focus up"))  || (arg->i ==  1 && !system("$MY_BIN/tmux/focus down")) ); 
+
+  if(!tmux_focus){
+    Client *c = focusstackcore(arg->i);
+    if (c) {
+      focus(c);
+      restack(selmon);
+    }
   }
 }
 
@@ -3888,28 +3892,32 @@ zoom(const Arg *arg)
   void
 horizontalfocus(const Arg *arg)
 {
-  Client *c = nexttiled(selmon->clients) ;
+  int tmux_focus = tmux_motion_integration && ( (arg->i == -1 && !system("$MY_BIN/tmux/focus left"))  || (arg->i ==  1 && !system("$MY_BIN/tmux/focus right")) ); 
 
-  if (c && nexttiled(c->next)	&& !selmon->sel->isfloating && !selmon->sel->isfullscreen){
-    if ( selmon->lt[selmon->sellt] == &layouts[TALL] || selmon->lt[selmon->sellt] == &layouts[DECK] ){
-      if ( (c == selmon->sel) == (arg->i > 0) ){
-        if (arg->i > 0)
-          c = nexttiled(c->next);
-        focus(c);
-        warp(c);
-        return;
-      }
-    }else if ( selmon->lt[selmon->sellt] == &layouts[GRID] ){
-      c = focustiled(selmon->sel,arg->i*rows);
-      if (c){
-        focus(c);
-        warp(c);
-        return;
+  if(!tmux_focus){
+    Client *c = nexttiled(selmon->clients) ;
+
+    if (c && nexttiled(c->next)	&& !selmon->sel->isfloating && !selmon->sel->isfullscreen){
+      if ( selmon->lt[selmon->sellt] == &layouts[TALL] || selmon->lt[selmon->sellt] == &layouts[DECK] ){
+        if ( (c == selmon->sel) == (arg->i > 0) ){
+          if (arg->i > 0)
+            c = nexttiled(c->next);
+          focus(c);
+          warp(c);
+          return;
+        }
+      }else if ( selmon->lt[selmon->sellt] == &layouts[GRID] ){
+        c = focustiled(selmon->sel,arg->i*rows);
+        if (c){
+          focus(c);
+          warp(c);
+          return;
+        }
       }
     }
+    const Arg a = {.i = arg->i, .ui = arg->i};
+    focusmon(&a);
   }
-  const Arg a = {.i = arg->i, .ui = arg->i};
-  focusmon(&a);
 }
 
 /*layouts*/
@@ -3987,13 +3995,17 @@ resizevertical(const Arg* arg){
 }
 void
 movehorizontal(const Arg* arg){
-  if(selmon->sel)
+  int tmux_move = tmux_motion_integration && ( (arg->i == -1 && !system("$MY_BIN/tmux/move left"))  || (arg->i ==  1 && !system("$MY_BIN/tmux/move right")) ); 
+
+  if(!tmux_move && selmon->sel)
     zoom(arg);
 }
 
 void
 movevertical(const Arg* arg){
-  if(selmon->sel){
+  int tmux_move = tmux_motion_integration && ( (arg->i == -1 && !system("$MY_BIN/tmux/move up"))  || (arg->i ==  1 && !system("$MY_BIN/tmux/move down")) ); 
+
+  if(!tmux_move &&selmon->sel){
     if(!selmon->sel->isfloating){
       if(arg->i<0)
         pushup(NULL);
