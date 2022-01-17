@@ -201,8 +201,8 @@ static char drun[] = "rofi -show drun";
 
 static Key keys[] = {
   /* modifier                     key        function        argument */
-  { MODKEY,                       XK_F5,     spawn,          SHCMD("lxsudo /bin/sh -c \"cd $HOME/.local/share/uur/dwm/dwm && make all && make install\" && pkill dwm") },
-  { MODKEY|ShiftMask,             XK_r,      spawn,          SHCMD("lxsudo /bin/sh -c \"cd $HOME/.local/share/uur/dwm/dwm && make all && make install\" && pkill dwm") },
+  { MODKEY,                       XK_F5,     spawn,          SHCMD("lxsudo /bin/sh -c \"cd $HOME/.local/share/uur/builds/main/dwm/git_src && make all && make install\" && pkill dwm") },
+  { MODKEY|ShiftMask,             XK_r,      spawn,          SHCMD("lxsudo /bin/sh -c \"cd $HOME/.local/share/uur/builds/main/dwm/git_src && make all && make install\" && pkill dwm") },
   { MODKEY,                       XK_p,      spawn,          SHCMD("dmenu-pass") },
   { MODKEY|ShiftMask,             XK_p,      spawn,          SHCMD("dmenu-passotp") },
   { MODKEY|ShiftMask|ControlMask, XK_p,      spawn,          SHCMD("passmenu --type") },
@@ -298,14 +298,13 @@ static Key keys[] = {
   { MODKEY, XK_equal,                        spawn,                    SHCMD("pactl set-sink-volume @DEFAULT_SINK@ +5% && pkill -RTMIN+2 dwmblocks") },
   { MODKEY, XK_minus,                        spawn,                    SHCMD("pactl set-sink-volume @DEFAULT_SINK@ -5% && pkill -RTMIN+2 dwmblocks") },
   { MODKEY, XK_BackSpace,                    spawn,                    SHCMD("amixer -q -D pulse sset Master toggle && pkill -RTMIN+2 dwmblocks") },
-  { MODKEY|ShiftMask, XK_equal,              spawn,                    SHCMD("mpc next") },  
-  { MODKEY|ShiftMask, XK_minus,              spawn,                    SHCMD("mpc prev") },  
-  { MODKEY|ShiftMask, XK_BackSpace,          spawn,                    SHCMD("mpc toggle") },
 
-  { MODKEY|ShiftMask|ControlMask, XK_equal,              spawn,        SHCMD("playerctl next") },
-  { MODKEY|ShiftMask|ControlMask, XK_minus,              spawn,        SHCMD("playerctl previous") },
-  { MODKEY|ShiftMask|ControlMask, XK_BackSpace,          spawn,        SHCMD("playerctl play-pause") },
-
+  { MODKEY|ShiftMask, XK_equal,                 spawn, SHCMD("playerctl next") },
+  { MODKEY|ShiftMask, XK_minus,                 spawn, SHCMD("playerctl previous") },
+  { MODKEY|ShiftMask, XK_BackSpace,             spawn, SHCMD("playerctl play-pause") },
+  { MODKEY|ShiftMask|ControlMask, XK_minus,     spawn, SHCMD("mpc next") },  
+  { MODKEY|ShiftMask|ControlMask, XK_equal,     spawn, SHCMD("mpc prev") },  
+  { MODKEY|ShiftMask|ControlMask, XK_BackSpace, spawn, SHCMD("mpc toggle") },
 
   { MODKEY,                         XK_b,      togglebar,         {0} },
   { MODKEY| ShiftMask,              XK_b,      togglehidevaccant, {0} },
