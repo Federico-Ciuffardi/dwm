@@ -29,8 +29,6 @@
 // AUTOSTART //
 ///////////////
 static const char *const autostart[] = {
-  "/bin/sh", "-c", "pgrep -x WhatsApp        || (sleep 30 && whatsapp-nativefier) &", NULL,
-  "/bin/sh", "-c", "pkill -x mattermost-desk || (sleep 30 && mattermost-desktop) &", NULL,
   "/bin/sh", "-c", "pgrep -x dwmblocks       || while true ; do dwmblocks ; done", NULL,
   NULL /* terminate */
 };
@@ -208,10 +206,12 @@ static Key keys[] = {
   { MODKEY|ShiftMask|ControlMask, XK_p,      spawn,          SHCMD("passmenu --type") },
   { MODKEY,                       XK_i,      spawn,          SHCMD("$DMENU_BIN/pulse_conf source ; pkill -RTMIN+2 dwmblocks") },
   { MODKEY,                       XK_o,      spawn,          SHCMD("$DMENU_BIN/pulse_conf sink ; pkill -RTMIN+2 dwmblocks") },
+  { MODKEY|ShiftMask,             XK_o,      spawn,          SHCMD("$DMENU_BIN/pulse_prof ; pkill -RTMIN+2 dwmblocks") },
+  { MODKEY|ShiftMask,             XK_i,      spawn,          SHCMD("$DMENU_BIN/pulse_prof ; pkill -RTMIN+2 dwmblocks") },
   { MODKEY,                       XK_u,      spawn,          SHCMD("$DMENU_BIN/dmenu_unicode") },
   { MODKEY|ShiftMask,             XK_q,      spawn,          SHCMD("$DMENU_BIN/dmenu_leave") },
   { MODKEY,                       XK_r,      spawn,          SHCMD(drun) },
-  { MODKEY|ShiftMask,             XK_o,      spawn,          SHCMD("$DMENU_BIN/monitor_layout") },
+  { MODKEY|ShiftMask|ControlMask, XK_m,      spawn,          SHCMD("$DMENU_BIN/monitor_layout") },
   { MODKEY,                       XK_Tab,    view,           {.ui = ~0 } },
   { MODKEY|ShiftMask,             XK_Tab,    spawn,          SHCMD("rofi -show window") },
   { 0,                            XK_Print,  spawn,          SHCMD("flameshot gui") },
@@ -293,8 +293,8 @@ static Key keys[] = {
                                                                   
   { 0, XF86XK_Calculator,                    spawn,                    SHCMD("pkill -TERM speedcrunch || speedcrunch") },
                                                                   
-  { 0, XF86XK_MonBrightnessUp,               spawn,                    SHCMD("light -A 15") },
-  { 0, XF86XK_MonBrightnessDown,             spawn,                    SHCMD("light -U 15") },
+  { 0, XF86XK_MonBrightnessUp,               spawn,                    SHCMD("brightctl +10%") },
+  { 0, XF86XK_MonBrightnessDown,             spawn,                    SHCMD("brightctl -10%") },
   { 0, XF86XK_AudioMute,                     spawn,                    SHCMD("volumectl toggle-mute") },
   { 0, XF86XK_AudioRaiseVolume,              spawn,                    SHCMD("volumectl +5%") },
   { 0, XF86XK_AudioLowerVolume,              spawn,                    SHCMD("volumectl -5%") },
