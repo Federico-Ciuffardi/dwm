@@ -308,8 +308,8 @@ static Key keys[] = {
   { MODKEY|ShiftMask, XK_equal,                 spawn, SHCMD("playerctl next") },
   { MODKEY|ShiftMask, XK_minus,                 spawn, SHCMD("playerctl previous") },
   { MODKEY|ShiftMask, XK_BackSpace,             spawn, SHCMD("playerctl play-pause") },
-  { MODKEY|ShiftMask|ControlMask, XK_minus,     spawn, SHCMD("mpc next") },  
-  { MODKEY|ShiftMask|ControlMask, XK_equal,     spawn, SHCMD("mpc prev") },  
+  { MODKEY|ShiftMask|ControlMask, XK_minus,     spawn, SHCMD("mpc prev") },  
+  { MODKEY|ShiftMask|ControlMask, XK_equal,     spawn, SHCMD("mpc next") },  
   { MODKEY|ShiftMask|ControlMask, XK_BackSpace, spawn, SHCMD("mpc toggle") },
 
   { MODKEY,                         XK_b,      togglebar,         {0} },
