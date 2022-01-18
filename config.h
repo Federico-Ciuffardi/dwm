@@ -215,7 +215,6 @@ static Key keys[] = {
   { MODKEY,                       XK_Tab,    view,           {.ui = ~0 } },
   { MODKEY|ShiftMask,             XK_Tab,    spawn,          SHCMD("rofi -show window") },
   { 0,                            XK_Print,  spawn,          SHCMD("flameshot gui") },
-  { MODKEY|ShiftMask|ControlMask, XK_x,      spawn,          SHCMD("xkill") },
   { MODKEY                      , XK_v,      spawn,          SHCMD("xournal") },
 
   { MODKEY,                       XK_q,      killclient,               {0} },
@@ -264,6 +263,13 @@ static Key keys[] = {
   { MODKEY|ShiftMask,             XK_f,      togglefullscreen,         {0} },
   { MODKEY|ShiftMask|ControlMask, XK_f,      togglefullfullscreen,     {0} },
   { 0,                            XK_F11,    togglefullscreen,         {0} },
+
+
+  { MODKEY,                       XK_x,      spawn,                    SHCMD("dunstctl close") },
+  { MODKEY|ShiftMask,             XK_x,      spawn,                    SHCMD("dunstctl history-pop") },
+  { MODKEY|ShiftMask|ControlMask, XK_x,      spawn,                    SHCMD("xkill") },
+
+
 
   { MODKEY,                       XK_space,  togglesp,                 {.i = 1} },
   { MODKEY,                       XK_n,      togglesp,                 {.i = 2} },
