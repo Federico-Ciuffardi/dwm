@@ -4011,6 +4011,8 @@ movevertical(const Arg* arg){
         pushup(NULL);
       else
         pushdown(NULL);
+    }else{
+      rotate(arg);
     }
   }
 }
