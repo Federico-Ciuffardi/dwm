@@ -107,11 +107,13 @@ static const int   resizehints  = 0;          /* 1 means respect size hints in t
 
 static const Layout layouts[] = {
   /* symbol     arrange function */
-  { "| Tall |",     tile },    /* first entry is default */
-	{ "| Deck |",     deck },
-  { "| Tabs |",     monocle },
-  { "| Grid |",     grid },
-  { "| Floating |", NULL },    /* no layout function means floating behavior */
+  { "| Tall |",     tile                   }, /* first entry is default */
+	{ "| Deck |",     deck                   },
+  { "| Tabs |",     monocle                },
+  { "| Grid |",     grid                   },
+  { "| Floating |", NULL                   }, /* no layout function means floating behavior */
+  { "| CMaster |", centeredmaster         },
+
  	{ NULL,           NULL },
 };
 
