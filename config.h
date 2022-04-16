@@ -42,7 +42,14 @@ static const int tmux_motion_integration = 1;  /* 0 means no integration */
 
 
 // LOOK
-static const unsigned int borderpx       = 1;  /* border pixel of windows */
+static const unsigned int borderpx       = 2;  /* border pixel of windows */
+
+static const unsigned int gappih    = 10;       /* horiz inner gap between windows */
+static const unsigned int gappiv    = 10;       /* vert inner gap between windows */
+static const unsigned int gappoh    = 10;       /* horiz outer gap between windows and screen edge */
+static const unsigned int gappov    = 10;       /* vert outer gap between windows and screen edge */
+static int smartgaps                = 0;        /* 1 means no outer gap when there is only one window */
+
 
 /////////////
 // SYSTRAY //
@@ -78,13 +85,13 @@ static const char *colors[][4]      = {
   /*                  fg         bg         border   */
   [SchemeNorm]   = { "#ffffff", "#1d2021", "#222222"},
   // No color 
-  [SchemeSel]    = { "#ffffff", "#1d2021", "#D3D3D3"},
-  [SchemeSelAlt] = { "#ffffff", "#1d2021", "#D3D3D3"},
+  [SchemeSel]    = { "#ffffff", "#1d2021", "#E7E7E7"},
+  [SchemeSelAlt] = { "#ffffff", "#1d2021", "#E7E7E7"},
   // colorfull
   /* [SchemeSel]     = { "#ffffff", "#0058a0", "#D3D3D3"}, */
   /* [SchemeSelAlt]  = { "#ffffff", "#3d4041", "#D3D3D3"}, */
   [SchemeNormTab] = { "#ffffff", "#2d3031", "#222222"},
-  [SchemeSelTab]  = { "#ffffff", "#1068b0", "#D3D3D3"},
+  [SchemeSelTab]  = { "#ffffff", "#1068b0", "#E7E7E7"},
 };
 
 /////////////
@@ -105,6 +112,9 @@ static const int   resizehints  = 0;          /* 1 means respect size hints in t
 #define GRID     3
 #define FLOATING 4
 
+#define FORCE_VSPLIT 1  /* nrowgrid layout: force two clients to always split vertically */
+#include "vanitygaps.c"
+
 static const Layout layouts[] = {
   /* symbol     arrange function */
   { "| Tall |",     tile                   }, /* first entry is default */
@@ -112,7 +122,15 @@ static const Layout layouts[] = {
   { "| Tabs |",     monocle                },
   { "| Grid |",     grid                   },
   { "| Floating |", NULL                   }, /* no layout function means floating behavior */
-  { "| CMaster |", centeredmaster         },
+  { "|M|",          centeredmaster },
+  { "[@]",          spiral },
+  { "[\\]",         dwindle },
+  { "TTT",          bstack },
+  { "===",          bstackhoriz },
+  { "###",          nrowgrid },
+  { "---",          horizgrid },
+  { ":::",          gaplessgrid },
+  { NULL,           NULL },
 
  	{ NULL,           NULL },
 };
@@ -250,6 +268,8 @@ static Key keys[] = {
   { MODKEY|ShiftMask,             XK_grave, tagmon,                    {.i =  1 } },
   { MODKEY|ControlMask,           XK_j,      incview,                  {.i =  1 } },
   { MODKEY|ControlMask,           XK_k,      incview,                  {.i = -1 } },
+  { MODKEY|ControlMask,           XK_h,      incrgaps,                  {.i =  1 } },
+  { MODKEY|ControlMask,           XK_l,      incrgaps,                  {.i = -1 } },
 
   { MODKEY,                       XK_0,      lastfreeviewwrap,         {.i =  1 } },
   { MODKEY|ShiftMask,             XK_0,      lastfreetagwrap,          {.i =  1 } },
@@ -314,8 +334,9 @@ static Key keys[] = {
   { MODKEY|ShiftMask|ControlMask, XK_equal,     spawn, SHCMD("mpc next") },  
   { MODKEY|ShiftMask|ControlMask, XK_BackSpace, spawn, SHCMD("mpc toggle") },
 
-  { MODKEY,                         XK_b,      togglebar,         {0} },
-  { MODKEY| ShiftMask,              XK_b,      togglehidevaccant, {0} },
+  { MODKEY,                           XK_b,      togglebar,         {0} },
+ 	{ MODKEY |ShiftMask,                XK_b,      togglegaps,        {0} },
+  { MODKEY | ControlMask | ShiftMask, XK_b,      togglehidevaccant, {0} },
 
     TAGKEYS(                        XK_1,                          0)
     TAGKEYS(                        XK_2,                          1)
