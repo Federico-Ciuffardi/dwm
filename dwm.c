@@ -151,10 +151,6 @@ struct Monitor {
   int ty;               /* tab bar geometry */
   int mx, my, mw, mh;   /* screen size */
   int wx, wy, ww, wh;   /* window area  */
-	int gappih;           /* horizontal gap between windows */
-  int gappiv;           /* vertical gap between windows */
-  int gappoh;           /* horizontal outer gaps */
-  int gappov;           /* vertical outer gaps */
   unsigned int seltags;
   unsigned int sellt;
   unsigned int tagset[2];
@@ -357,6 +353,13 @@ static char rawstext[256];
 static int dwmblockssig;
 pid_t dwmblockspid = 0;
 static int screen;
+static int gpih;           /* horizontal gap between windows */
+static int gppiv;           /* vertical gap between windows */
+static int gppoh;           /* horizontal outer gaps */
+static int gppov;           /* vertical outer gaps */
+static int vp;               /* vertical padding for bar */
+static int tp;               /* vertical padding for tabbar */
+static int sp;               /* side padding for bar */
 static int sw, sh;           /* X display screen geometry width, height */
 static int bh, blw = 0;      /* bar geometry */
 static int th = 0;           /* tab bar geometry */
@@ -603,7 +606,9 @@ arrange(Monitor *m)
 void
 arrangemon(Monitor *m) {
   updatebarpos(m);
-  XMoveResizeWindow(dpy, m->tabwin, m->wx, m->ty, m->ww, th);
+
+  XMoveResizeWindow(dpy, m->tabwin, m->wx + sp, m->ty + tp, m->ww - 2*sp, th);
+
   strncpy(m->ltsymbol, m->lt[m->sellt]->symbol, sizeof m->ltsymbol);
   if (m->lt[m->sellt]->arrange)
     m->lt[m->sellt]->arrange(m);
@@ -1022,10 +1027,6 @@ createmon(void)
   m->topbar = topbar;
   m->toptab = toptab;
   m->ntabs = 0;
-	m->gappih = gappih;
-	m->gappiv = gappiv;
-	m->gappoh = gappoh;
-	m->gappov = gappov; 
   m->lt[0] = &layouts[0];
   m->lt[1] = &layouts[1 % LENGTH(layouts)];
   strncpy(m->ltsymbol, layouts[0].symbol, sizeof m->ltsymbol);
@@ -1140,7 +1141,8 @@ drawbar(Monitor *m)
       (statusmon == 2)) {
     drw_setscheme(drw, scheme[SchemeNorm]);
  		sw = TEXTW(stext) - lrpad / 2;
- 		drw_text(drw, m->ww - sw - stw, 0, sw, bh, lrpad / 2, stext, 0);
+
+ 		drw_text(drw, m->ww - sw - stw - 2*sp, 0, sw, bh, lrpad / 2, stext, 0);
   }
 
   resizebarwin(m);
@@ -1175,9 +1177,9 @@ drawbar(Monitor *m)
       drw_setscheme(drw, scheme[SchemeNorm]);
       if(centertitle){
         tlpad = MAX((w - (int)TEXTW(m->sel->name))/2 , lrpad / 2);
-        drw_text(drw, x, 0, w, bh, tlpad, m->sel->name, 0);
+        drw_text(drw, x, 0, w - 2*sp, bh, tlpad, m->sel->name, 0);
       }else{
-        drw_text(drw, x, 0, w, bh, lrpad / 2, m->sel->name, 0);
+        drw_text(drw, x, 0, w - 2*sp, bh, lrpad / 2, m->sel->name, 0);
       }
       if (m->sel->issticky){
         if(centertitle){
@@ -1642,6 +1644,7 @@ getsystraywidth()
   Client *i;
   if(showsystray)
     for(i = systray->icons; i; w += i->w + systrayspacing, i = i->next) ;
+  w += sp;
   return w ? w + systrayspacing : 1;
 }
 
@@ -1895,7 +1898,7 @@ monocle(Monitor *m)
   Client *c;
 
   for (c = nexttiled(m->clients); c; c = nexttiled(c->next))
-    resize(c, m->wx, m->wy, m->ww - 2 * c->bw, m->wh - 2 * c->bw, 0);
+    resize(c, gppoh*enablegaps + m->wx, m->wy + gppov*enablegaps, m->ww - 2 * c->bw - 2*sp - gppoh*enablegaps, m->wh - 2*c->bw - gppov*enablegaps*2, 0);
 }
 
   void
@@ -2224,10 +2227,15 @@ resize(Client *c, int x, int y, int w, int h, int interact)
 
 void
 resizebarwin(Monitor *m) {
-  unsigned int w = m->ww;
+  unsigned int x = m->wx + sp;
+  unsigned int y = m->by + vp;
+  unsigned int w = m->ww - 2 * sp;
+  unsigned int h = bh;
+
   if (showsystray && m == systraytomon(m))
     w -= getsystraywidth();
-  XMoveResizeWindow(dpy, m->barwin, m->wx, m->by, w, bh);
+
+  XMoveResizeWindow(dpy, m->barwin, x, y, w, h);
 }
 
   void
@@ -2640,6 +2648,13 @@ setup(void)
  	bh = drw->fonts->h + vertpadbar;
   th = bh;
   updategeom();
+  sp = sidepad;
+  tp = tabpad;
+  vp = (topbar == 1) ? vertpad : - vertpad;
+  gpih  = gappih; 
+  gppiv = gappiv;
+  gppoh = gappoh;
+  gppov = gappov;  
   /* init atoms */
   utf8string = XInternAtom(dpy, "UTF8_STRING", False);
   wmatom[WMProtocols] = XInternAtom(dpy, "WM_PROTOCOLS", False);
@@ -2675,6 +2690,7 @@ setup(void)
   /* init bars */
   updatebars();
   updatestatus();
+  updatebarpos(selmon);
   /* supporting window for NetWMCheck */
   wmcheckwin = XCreateSimpleWindow(dpy, root, 0, 0, 1, 1, 0, 0, 0);
   XChangeProperty(dpy, wmcheckwin, netatom[NetWMCheck], XA_WINDOW, 32,
@@ -3187,19 +3203,20 @@ updatebars(void)
     w = m->ww;
     if (showsystray && m == systraytomon(m))
       w -= getsystraywidth();
-    m->barwin = XCreateWindow(dpy, root, m->wx, m->by, w, bh, 0, DefaultDepth(dpy, screen),
+    m->barwin = XCreateWindow(dpy, root, m->wx + sp, m->by + vp, w - 2*sp, bh, 0, DefaultDepth(dpy, screen),
         CopyFromParent, DefaultVisual(dpy, screen),
         CWOverrideRedirect|CWBackPixmap|CWEventMask, &wa);
     XDefineCursor(dpy, m->barwin, cursor[CurNormal]->cursor);
     if (showsystray && m == systraytomon(m))
       XMapRaised(dpy, systray->win);
     XMapRaised(dpy, m->barwin);
-    m->tabwin = XCreateWindow(dpy, root, m->wx, m->ty, m->ww, th, 0, DefaultDepth(dpy, screen),
+    m->tabwin = XCreateWindow(dpy, root, m->wx + sp, m->ty + tp, m->ww - 2*sp, th, 0, DefaultDepth(dpy, screen),
         CopyFromParent, DefaultVisual(dpy, screen),
         CWOverrideRedirect|CWBackPixmap|CWEventMask, &wa);
     XDefineCursor(dpy, m->tabwin, cursor[CurNormal]->cursor);
     XMapRaised(dpy, m->tabwin);
     XSetClassHint(dpy, m->barwin, &ch);
+    XSetClassHint(dpy, m->tabwin, &ch);
   }
 }
 
@@ -3212,12 +3229,11 @@ updatebarpos(Monitor *m)
   m->wy = m->my;
   m->wh = m->mh;
   if (m->showbar) {
-    m->wh -= bh;
-    m->by = m->topbar ? m->wy : m->wy + m->wh;
-    if ( m->topbar )
-      m->wy += bh;
+    m->wh = m->wh - vp - bh;
+    m->by = m->topbar ? m->wy : m->wy + m->wh + vp;
+    m->wy = m->topbar ? m->wy + bh + vp : m->wy;
   } else {
-    m->by = -bh;
+    m->by = -bh - vp;
   }
 
   for(c = m->clients; c; c = c->next) {
@@ -3231,7 +3247,7 @@ updatebarpos(Monitor *m)
     if ( m->toptab )
       m->wy += th;
   } else {
-    m->ty = -th;
+    m->ty = -th - tp*2;
   }
 }
 
@@ -3458,7 +3474,8 @@ updatesystray(void)
   XWindowChanges wc;
   Client *i;
   Monitor *m = systraytomon(NULL);
-  unsigned int x = m->mx + m->mw;
+  unsigned int x = m->mx + m->mw - 2*sp;
+  unsigned int y = m->by + vp;
   unsigned int w = 1;
 
   if (!showsystray)
@@ -3467,7 +3484,10 @@ updatesystray(void)
     /* init systray */
     if (!(systray = (Systray *)calloc(1, sizeof(Systray))))
       die("fatal: could not malloc() %u bytes\n", sizeof(Systray));
-    systray->win = XCreateSimpleWindow(dpy, root, x, m->by, w, bh, 0, 0, scheme[SchemeSel][ColBg].pixel);
+    systray->win = XCreateSimpleWindow(dpy, root, x, y, w, bh, 0, 0, scheme[SchemeSel][ColBg].pixel);
+    XClassHint ch = {"dwm", "dwm"};
+    XSetClassHint(dpy, systray->win, &ch);
+
     wa.event_mask        = ButtonPressMask | ExposureMask;
     wa.override_redirect = True;
     wa.background_pixel  = scheme[SchemeNorm][ColBg].pixel;
@@ -3501,9 +3521,9 @@ updatesystray(void)
       i->mon = m;
   }
   w = w ? w + systrayspacing : 1;
-  x -= w;
-  XMoveResizeWindow(dpy, systray->win, x, m->by, w, bh);
-  wc.x = x; wc.y = m->by; wc.width = w; wc.height = bh;
+  x -= w - sp;
+  XMoveResizeWindow(dpy, systray->win, x, y , w, bh);
+  wc.x = x; wc.y = y; wc.width = w; wc.height = bh;
   wc.stack_mode = Above; wc.sibling = m->barwin;
   XConfigureWindow(dpy, systray->win, CWX|CWY|CWWidth|CWHeight|CWSibling|CWStackMode, &wc);
   XMapWindow(dpy, systray->win);

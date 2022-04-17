@@ -44,11 +44,16 @@ static const int tmux_motion_integration = 1;  /* 0 means no integration */
 // LOOK
 static const unsigned int borderpx       = 2;  /* border pixel of windows */
 
+static int enablegaps = 1;
 static const unsigned int gappih    = 10;       /* horiz inner gap between windows */
 static const unsigned int gappiv    = 10;       /* vert inner gap between windows */
 static const unsigned int gappoh    = 10;       /* horiz outer gap between windows and screen edge */
-static const unsigned int gappov    = 10;       /* vert outer gap between windows and screen edge */
-static int smartgaps                = 0;        /* 1 means no outer gap when there is only one window */
+static const unsigned int gappov    = 10;       /* horiz inner gap between windows */
+static const unsigned int smartgaps = 0;
+
+static const int sidepad = gappoh;
+static const int tabpad  = gappoh;
+static const int vertpad = gappoh;
 
 
 /////////////
@@ -304,6 +309,7 @@ static Key keys[] = {
   { MODKEY|ShiftMask|ControlMask, XK_space,  togglesp,                 {.i = 9} },
   { MODKEY|ShiftMask,             XK_s,      togglesp,                 {.i = 10} },
 
+  { MODKEY|ShiftMask,             XK_g,      spawn,                    SHCMD("$TERMINAL -c st-256color-c -e gotop") },
   { MODKEY,                       XK_Return, spawn,                    SHCMD("$TERMINAL -e tmux") },
   { MODKEY|ShiftMask,             XK_Return, spawn,                    SHCMD("$TERMINAL -c st-256color-c -e tmux") },
   { MODKEY|ControlMask,           XK_Return, spawn,                    SHCMD("$TERMINAL -e tmux new \"$TMUX_BIN/open_and_kill_session\"") },

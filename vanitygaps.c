@@ -26,10 +26,6 @@ static void getfacts(Monitor *m, int msize, int ssize, float *mf, float *sf, int
 static void setgaps(int oh, int ov, int ih, int iv);
 
 /* Settings */
-#if !PERTAG_PATCH
-static int enablegaps = 1;
-#endif // PERTAG_PATCH
-
 void
 setgaps(int oh, int ov, int ih, int iv)
 {
@@ -38,21 +34,32 @@ setgaps(int oh, int ov, int ih, int iv)
 	if (ih < 0) ih = 0;
 	if (iv < 0) iv = 0;
 
-	selmon->gappoh = oh;
-	selmon->gappov = ov;
-	selmon->gappih = ih;
-	selmon->gappiv = iv;
-	arrange(selmon);
+	gppoh = oh;
+	gppov = ov;
+	gpih = ih;
+	gppiv = iv;
+  for (Monitor* m = mons; m; m = m->next)
+    arrange(m);
 }
 
 void
 togglegaps(const Arg *arg)
 {
-	#if PERTAG_PATCH
-	selmon->pertag->enablegaps[selmon->pertag->curtag] = !selmon->pertag->enablegaps[selmon->pertag->curtag];
-	#else
 	enablegaps = !enablegaps;
-	#endif // PERTAG_PATCH
+  if (enablegaps){
+    sp = sidepad;
+    vp = vertpad;
+    tp = tabpad;
+    defaultgaps(NULL);
+    Arg a = SHCMD("cp $HOME/.config/picom/picom_round.conf $HOME/.config/picom/picom.conf");
+    spawn(&a);
+  }else{
+    sp = 0;
+    vp = 0;
+    tp = 0;
+    Arg a = SHCMD("cp $HOME/.config/picom/picom_noround.conf $HOME/.config/picom/picom.conf");
+    spawn(&a);
+  }
 	arrange(NULL);
 }
 
@@ -66,10 +73,10 @@ void
 incrgaps(const Arg *arg)
 {
 	setgaps(
-		selmon->gappoh + arg->i,
-		selmon->gappov + arg->i,
-		selmon->gappih + arg->i,
-		selmon->gappiv + arg->i
+		gppoh + arg->i,
+		gppov + arg->i,
+		gpih + arg->i,
+		gppiv + arg->i
 	);
 }
 
@@ -77,10 +84,10 @@ void
 incrigaps(const Arg *arg)
 {
 	setgaps(
-		selmon->gappoh,
-		selmon->gappov,
-		selmon->gappih + arg->i,
-		selmon->gappiv + arg->i
+		gppoh,
+		gppov,
+		gpih + arg->i,
+		gppiv + arg->i
 	);
 }
 
@@ -88,10 +95,10 @@ void
 incrogaps(const Arg *arg)
 {
 	setgaps(
-		selmon->gappoh + arg->i,
-		selmon->gappov + arg->i,
-		selmon->gappih,
-		selmon->gappiv
+		gppoh + arg->i,
+		gppov + arg->i,
+		gpih,
+		gppiv
 	);
 }
 
@@ -99,10 +106,10 @@ void
 incrohgaps(const Arg *arg)
 {
 	setgaps(
-		selmon->gappoh + arg->i,
-		selmon->gappov,
-		selmon->gappih,
-		selmon->gappiv
+		gppoh + arg->i,
+		gppov,
+		gpih,
+		gppiv
 	);
 }
 
@@ -110,10 +117,10 @@ void
 incrovgaps(const Arg *arg)
 {
 	setgaps(
-		selmon->gappoh,
-		selmon->gappov + arg->i,
-		selmon->gappih,
-		selmon->gappiv
+		gppoh,
+		gppov + arg->i,
+		gpih,
+		gppiv
 	);
 }
 
@@ -121,10 +128,10 @@ void
 incrihgaps(const Arg *arg)
 {
 	setgaps(
-		selmon->gappoh,
-		selmon->gappov,
-		selmon->gappih + arg->i,
-		selmon->gappiv
+		gppoh,
+		gppov,
+		gpih + arg->i,
+		gppiv
 	);
 }
 
@@ -132,10 +139,10 @@ void
 incrivgaps(const Arg *arg)
 {
 	setgaps(
-		selmon->gappoh,
-		selmon->gappov,
-		selmon->gappih,
-		selmon->gappiv + arg->i
+		gppoh,
+		gppov,
+		gpih,
+		gppiv + arg->i
 	);
 }
 
@@ -143,11 +150,7 @@ void
 getgaps(Monitor *m, int *oh, int *ov, int *ih, int *iv, unsigned int *nc)
 {
 	unsigned int n, oe, ie;
-	#if PERTAG_PATCH
-	oe = ie = selmon->pertag->enablegaps[selmon->pertag->curtag];
-	#else
 	oe = ie = enablegaps;
-	#endif // PERTAG_PATCH
 	Client *c;
 
 	for (n = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), n++);
@@ -155,10 +158,10 @@ getgaps(Monitor *m, int *oh, int *ov, int *ih, int *iv, unsigned int *nc)
 		oe = 0; // outer gaps disabled when only one client
 	}
 
-	*oh = m->gappoh*oe; // outer horizontal gap
-	*ov = m->gappov*oe; // outer vertical gap
-	*ih = m->gappih*ie; // inner horizontal gap
-	*iv = m->gappiv*ie; // inner vertical gap
+	*oh = gppoh*oe; // outer horizontal gap
+	*ov = gppov*oe; // outer vertical gap
+	*ih = gpih*ie; // inner horizontal gap
+	*iv = gppiv*ie; // inner vertical gap
 	*nc = n;            // number of clients
 }
 
