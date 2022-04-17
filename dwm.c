@@ -343,6 +343,7 @@ static pid_t winpid(Window w);
 
 
 /* variables */
+static int tabbar_visible = 0;
 static Client *prevzoom = NULL;
 unsigned int cols,rows;
 static int warping = 0;
@@ -1898,7 +1899,7 @@ monocle(Monitor *m)
   Client *c;
 
   for (c = nexttiled(m->clients); c; c = nexttiled(c->next))
-    resize(c, gppoh*enablegaps + m->wx, m->wy + gppov*enablegaps, m->ww - 2 * c->bw - 2*sp - gppoh*enablegaps, m->wh - 2*c->bw - gppov*enablegaps*2, 0);
+    resize(c, gppoh*enablegaps + m->wx, m->wy + gppov*enablegaps + tp*tabbar_visible, m->ww - 2*(c->bw + gppoh*enablegaps), m->wh - 2*(c->bw + gppov*enablegaps) - tp*tabbar_visible, 0);
 }
 
   void
@@ -3240,14 +3241,15 @@ updatebarpos(Monitor *m)
     if(ISVISIBLE(c) && !c->isfloating) ++nvis;
   }
 
-  if(m->showtab == showtab_always
-      || ((m->showtab == showtab_auto) && (nvis > 1) && (m->lt[m->sellt]->arrange == monocle))) {
+  tabbar_visible = m->showtab == showtab_always || ((m->showtab == showtab_auto) && (nvis > 1) && (m->lt[m->sellt]->arrange == monocle));
+  if(tabbar_visible) {
     m->wh -= th;
     m->ty = m->toptab ? m->wy : m->wy + m->wh;
     if ( m->toptab )
       m->wy += th;
   } else {
     m->ty = -th - tp*2;
+
   }
 }
 
