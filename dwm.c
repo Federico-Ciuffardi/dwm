@@ -1164,7 +1164,7 @@ drawbar(Monitor *m)
 		if (uline && (ulineall || m->tagset[m->seltags] & 1 << i)) /* if there are conflicts, just move these lines directly underneath both 'drw_setscheme' and 'drw_text' :) */
 			drw_rect(drw, x + ulinepad, bh - ulinestroke - ulinevoffset, w - (ulinepad * 2), ulinestroke, 1, 0);
     if (hidevacant < 2 && occ & 1 << i)
-      drw_rect(drw, x + boxs, boxs, boxw, boxw,
+      drw_rect(drw, x + 5 + boxs, boxs, boxw, boxw,
           m == selmon && selmon->sel && selmon->sel->tags & 1 << i,
           urg & 1 << i);
     x += w;
