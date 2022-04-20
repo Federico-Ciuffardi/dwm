@@ -122,22 +122,16 @@ static const int   resizehints  = 0;          /* 1 means respect size hints in t
 
 static const Layout layouts[] = {
   /* symbol     arrange function */
-  { "| Tall |",     tile                   }, /* first entry is default */
-	{ "| Deck |",     deck                   },
-  { "| Tabs |",     monocle                },
-  { "| Grid |",     grid                   },
-  { "| Floating |", NULL                   }, /* no layout function means floating behavior */
-  { "|M|",          centeredmaster },
-  { "[@]",          spiral },
-  { "[\\]",         dwindle },
-  { "TTT",          bstack },
-  { "===",          bstackhoriz },
-  { "###",          nrowgrid },
-  { "---",          horizgrid },
-  { ":::",          gaplessgrid },
-  { NULL,           NULL },
-
- 	{ NULL,           NULL },
+  { "| Tall |", tile           }, /* first entry is default */
+	{ "| Deck |", deck           },
+  { "| Tabs |", monocle        },
+  { "| Grid |", grid           },
+  { "| Flt  |", NULL           }, /* no layout function means floating behavior */
+  { "| Cmas |", centeredmaster },
+  { "| Fibo |", spiral         },
+  { "| Wide |", bstack         },
+  { "| Stk  |", bstackhoriz    },
+ 	{ NULL,       NULL           },
 };
 
 /////////////

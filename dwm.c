@@ -707,7 +707,7 @@ buttonpress(XEvent *e)
       arg.ui = 1 << i;
     } else if (ev->x < x + blw - lrpad)
       click = ClkLtSymbol;
-    else if (ev->x > (x = selmon->ww - TEXTW(stext) - stw + lrpad)){
+    else if (ev->x > (x = selmon->ww - TEXTW(stext) - stw - 2*sp + lrpad)){
       click = ClkStatusText;
 
       char *text = rawstext;
@@ -1191,7 +1191,7 @@ drawbar(Monitor *m)
       }
     } else {
       drw_setscheme(drw, scheme[SchemeNorm]);
-      drw_rect(drw, x, 0, w, bh, 1, 1);
+      drw_rect(drw, x, 0, w-sp, bh, 1, 1);
     }
   }
   drw_map(drw, m->barwin, 0, 0, m->ww - stw, bh);
@@ -3412,7 +3412,7 @@ updatestatus(void)
     strcpy(stext, "dwm-"VERSION);
   else
     copyvalidchars(stext, rawstext);
-  drawbar(selmon);
+  /* drawbar(selmon); */
   for(m = mons; m; m = m->next)
     drawbar(m);
   updatesystray();
@@ -3738,7 +3738,7 @@ warp(const Client *c)
        y > c->y - c->bw &&
        x < c->x + c->w + c->bw*2 &&
        y < c->y + c->h + c->bw*2) ||
-      (y > c->mon->by && y < c->mon->by + bh) ||
+      (y > c->mon->by && y < c->mon->by + bh + vp) ||
       (c->mon->topbar && !y))
     return;
   warping = 1;
