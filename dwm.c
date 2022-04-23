@@ -3910,6 +3910,7 @@ zoom(const Arg *arg)
   focus(o);
   warp(o);
   XRaiseWindow(dpy, prevzoom->win);
+  restack(selmon);
 }
 
   void
