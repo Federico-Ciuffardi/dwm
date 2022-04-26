@@ -84,8 +84,11 @@ static const int ulineall              = 0;	/* 1 to show underline on all tags, 
 
 static unsigned int hidevacant  = 2;      /* 0: default | 1: hide unused tags | 2: 1 and do now draw squares */
 
-static const char *fonts[]          = { " Ubuntu Mono:style=Regular:size=12",
-                                        "Noto Color Emoji:pixelsize=14:antialias=true:autohint=true"};
+static const char *fonts[]          = { 
+  /* "Ubuntu Mono:style=Regular:size=12", */
+  "FiraCode Nerd Font Mono:style=Medium:size=10:antialias=true",
+  "Noto Color Emoji:pixelsize=14:antialias=true:autohint=true"
+};
 static const char *colors[][4]      = {
   /*                  fg         bg         border   */
   [SchemeNorm]   = { "#ffffff", "#1d2021", "#222222"},
