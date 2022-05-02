@@ -151,31 +151,32 @@ static const Rule rules[] = {
    *	WM_NAME(STRING) = title
    */
   /* tag ~0 means sticky */
-  /* class                      | instance | title               |tags  | isfloating | float x,y,w,h % | float zone | isterminal | noswallow | sp_id | monitor */
-  { "Thunderbird"               , NULL     , NULL                , 1<<8 , 0          , HINTS           , NN         , 0          , 0         ,     0 ,  0      },
-  { "tridactyl_editor"          , NULL     , NULL                , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     0 , -1      },
-  { NULL                        , NULL     , "Picture-in-Picture", ~0   , 1          , 70,70,30,30     , LR         , 0          , 0         ,     0 , -1      },
-  { "st-256color"               , NULL     , NULL                , 0    , 0          , CENTER_HINTS    , NN         , 1          , 1         ,     0 , -1      },
-  { "st-256color-c"             , NULL     , NULL                , 0    , 1          , 10,10,80,80     , NN         , 1          , 1         ,     0 , -1      },
-  { "st-256color-ur"            , NULL     , NULL                , ~0   , 1          , 60,2,40,20      , UR         , 1          , 1         ,     0 , -1      },
-  { "SpeedCrunch"               , NULL     , NULL                , ~0   , 1          , CENTER          , NN         , 1          , 1         ,     0 , -1      },
-  { NULL                        , NULL     , "Event Tester"      , 0    , 0          , HINTS           , NN         , 0          , 1         ,     0 , -1      },
-  { "Yad"                       , NULL     , NULL                , 0    , 1          , 60,2,40,20      , UR         , 0          , 0         ,     0 , -1      },
-  { "Dragon-drag-and-drop"      , NULL     , NULL                , ~0   , 1          , CENTER_HINTS    , NN         , 0          , 0         ,     0 , -1      },
-  { "st-256color-docked"        , NULL     , NULL                , ~0   , 1          , CENTER          , MM         , 1          , 1         ,     1 , -1      },
-  { "st-256color-notes"         , NULL     , NULL                , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     2 , -1      },
-  { "st-256color-mail"          , NULL     , NULL                , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     4 , -1      },
-  { "st-256color-calendar"      , NULL     , NULL                , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     5 , -1      },
-  { "st-256color-music"         , NULL     , NULL                , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     8 , -1      },
-  { "st-256color-tmp-notes"     , NULL     , NULL                , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     9 , -1      },
-  { "gazebo"                    , NULL     , NULL                , 1<<8 , 0          , HINTS           , NN         , 0          , 0         ,     0 ,  0      },
-  { "rviz"                      , NULL     , NULL                , 1<<8 , 0          , HINTS           , NN         , 0          , 0         ,     0 ,  0      },
-  { "rqt_console"               , NULL     , NULL                , 1<<8 , 0          , HINTS           , NN         , 0          , 0         ,     0 ,  0      },
+  /* class                       | instance | title                |tags  | isfloating | float x,y,w,h % | float zone | isterminal | noswallow | sp_id | monitor */
+  { "Thunderbird"                , NULL     , NULL                 , 1<<8 , 0          , HINTS           , NN         , 0          , 0         ,     0 ,  0      },
+  { "tridactyl_editor"           , NULL     , NULL                 , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     0 , -1      },
+  { NULL                         , NULL     , "Picture-in-Picture" , ~0   , 1          , 70,70,30,30     , LR         , 0          , 0         ,     0 , -1      },
+  { "st-256color"                , NULL     , NULL                 , 0    , 0          , CENTER_HINTS    , NN         , 1          , 1         ,     0 , -1      },
+  { "st-256color-c"              , NULL     , NULL                 , 0    , 1          , 10,10,80,80     , NN         , 1          , 1         ,     0 , -1      },
+  { "st-256color-ur"             , NULL     , NULL                 , ~0   , 1          , 60,2,40,20      , UR         , 1          , 1         ,     0 , -1      },
+  { "SpeedCrunch"                , NULL     , NULL                 , ~0   , 1          , CENTER          , NN         , 1          , 1         ,     0 , -1      },
+  { NULL                         , NULL     , "Event Tester"       , 0    , 0          , HINTS           , NN         , 0          , 1         ,     0 , -1      },
+  { "Yad"                        , NULL     , NULL                 , 0    , 1          , 60,2,40,20      , UR         , 0          , 0         ,     0 , -1      },
+  { "Dragon-drag-and-drop"       , NULL     , NULL                 , ~0   , 1          , CENTER_HINTS    , NN         , 0          , 0         ,     0 , -1      },
+  { "st-256color-docked"         , NULL     , NULL                 , ~0   , 1          , CENTER          , MM         , 1          , 1         ,     1 , -1      },
+  { "st-256color-notes"          , NULL     , NULL                 , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     2 , -1      },
+  { "st-256color-mail"           , NULL     , NULL                 , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     4 , -1      },
+  { "st-256color-calendar"       , NULL     , NULL                 , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     5 , -1      },
+  { "st-256color-music"          , NULL     , NULL                 , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     8 , -1      },
+  { "st-256color-tmp-notes"      , NULL     , NULL                 , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     9 , -1      },
+  { "gazebo"                     , NULL     , NULL                 , 1<<8 , 0          , HINTS           , NN         , 0          , 0         ,     0 ,  0      },
+  { "rviz"                       , NULL     , NULL                 , 1<<8 , 0          , HINTS           , NN         , 0          , 0         ,     0 ,  0      },
+  { "rqt_console"                , NULL     , NULL                 , 1<<8 , 0          , HINTS           , NN         , 0          , 0         ,     0 ,  0      },
 
-  { "whatsapp-nativefier-d40211" , NULL     , NULL               , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     3 , -1      },
-  { "YouTube Music"              , NULL     , NULL               , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     6 , -1      },
-  { "Mattermost"                 , NULL     , NULL               , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     7 , -1      },
-  { "Session"                    , NULL     , NULL               , ~0   , 1          , CENTER          , NN         , 0          , 0         ,    10 , -1      },
+  { "whatsapp-nativefier-d40211"  , NULL     , NULL                , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     3 , -1      },
+  { "YouTube Music"               , NULL     , NULL                , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     6 , -1      },
+  { "Mattermost"                  , NULL     , NULL                , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     7 , -1      },
+  { "Session"                     , NULL     , NULL                , ~0   , 1          , CENTER          , NN         , 0          , 0         ,    10 , -1      },
+  { "st-256color-taskwarrior-tui" , NULL     , NULL                , ~0   , 1          , CENTER          , NN         , 0          , 0         ,    11 , -1      },
 };
 
 
@@ -190,6 +191,7 @@ static const char* scratchpads_cmd[] = {
   "$TERMINAL -c st-256color-music -T ncmpcpp -e ncmpcpp",
   "$TERMINAL -c st-256color-tmp-notes -T tmp-notes -e $EDITOR $(mktemp) -c \"set spell\"",
   "session-desktop",
+  "$TERMINAL -c st-256color-taskwarrior-tui -T taskwarrior-tui -e taskwarrior-tui",
 };
 
 typedef int dims[4];
@@ -282,18 +284,15 @@ static Key keys[] = {
  	{ MODKEY|ControlMask,           XK_Tab,    cyclelayout,              {.i = +1 } },
   { MODKEY,                       XK_d,      setlayout,                {.v = &layouts[DECK]} },
   { MODKEY,                       XK_g,      setlayout,                {.v = &layouts[GRID]} },
-  { MODKEY,                       XK_t,      setlayout,                {.v = &layouts[TABS]} },
+  { MODKEY|ShiftMask,             XK_t,      setlayout,                {.v = &layouts[TABS]} },
   { MODKEY|ShiftMask,             XK_d,      setlayout,                {.v = &layouts[TALL]} },
   { MODKEY|ShiftMask,             XK_f,      togglefullscreen,         {0} },
   { MODKEY|ShiftMask|ControlMask, XK_f,      togglefullfullscreen,     {0} },
   { 0,                            XK_F11,    togglefullscreen,         {0} },
 
-
   { MODKEY,                       XK_x,      spawn,                    SHCMD("dunstctl close") },
   { MODKEY|ShiftMask,             XK_x,      spawn,                    SHCMD("dunstctl history-pop") },
   { MODKEY|ShiftMask|ControlMask, XK_x,      spawn,                    SHCMD("xkill") },
-
-
 
   { MODKEY,                       XK_space,  togglesp,                 {.i = 1} },
   { MODKEY,                       XK_n,      togglesp,                 {.i = 2} },
@@ -305,6 +304,7 @@ static Key keys[] = {
   { MODKEY|ShiftMask,             XK_n,      togglesp,                 {.i = 8} },
   { MODKEY|ShiftMask|ControlMask, XK_space,  togglesp,                 {.i = 9} },
   { MODKEY|ShiftMask,             XK_s,      togglesp,                 {.i = 10} },
+  { MODKEY,                       XK_t,      togglesp,                 {.i = 11} },
 
   { MODKEY|ShiftMask,             XK_g,      spawn,                    SHCMD("$TERMINAL -c st-256color-c -e gotop") },
   { MODKEY,                       XK_Return, spawn,                    SHCMD("$TERMINAL -e tmux") },
@@ -314,7 +314,7 @@ static Key keys[] = {
   { MODKEY|ShiftMask,             XK_e,      spawn,                    SHCMD("$TERMINAL -c st-256color-c -e tmux new \"zsh -is ranger\"") },
   { MODKEY,                       XK_w,      spawn,                    SHCMD("$BROWSER") },
                                                                   
-  { MODKEY|ShiftMask,             XK_t,      spawn,                    SHCMD("pkill picom || picom --experimental-backend") },
+  { MODKEY|ControlMask|ShiftMask, XK_t,      spawn,                    SHCMD("pkill picom || picom --experimental-backend") },
                                                                   
   { 0, XF86XK_Calculator,                    spawn,                    SHCMD("pkill -TERM speedcrunch || speedcrunch") },
                                                                   
