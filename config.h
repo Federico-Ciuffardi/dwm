@@ -184,7 +184,7 @@ static const char* scratchpads_cmd[] = {
   "$TERMINAL -c st-256color-docked -e tmux",
   "$TERMINAL -c st-256color-notes -T vimwiki -e $SHELL -c \"cd \"$HOME\"/.local/share/vimwiki && $EDITOR index.md\"",
   "whatsapp-nativefier",
-  "$TERMINAL -c st-256color-mail -T neomutt -e $SHELL -c \"export ESCDELAY=1 ;neomutt ; pkill -RTMIN+17 dwmblocks \"",
+  "$TERMINAL -c st-256color-mail -T neomutt -e $SHELL -c \"cd ~/downloads; export ESCDELAY=1 ;neomutt ; pkill -RTMIN+17 dwmblocks \"",
   "$TERMINAL -c st-256color-calendar -T calcurse -e $SHELL -c calcurse",
   "youtube-music",
   "mattermost-desktop",
