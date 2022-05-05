@@ -226,8 +226,7 @@ static Key keys[] = {
   { MODKEY,                       XK_F5,     spawn,          SHCMD("lxsudo /bin/sh -c \"cd $HOME/.local/share/uur/builds/main/dwm/git_src && make all && make install\" && pkill dwm") },
   { MODKEY|ShiftMask,             XK_r,      spawn,          SHCMD("lxsudo /bin/sh -c \"cd $HOME/.local/share/uur/builds/main/dwm/git_src && make all && make install\" && pkill dwm") },
   { MODKEY,                       XK_p,      spawn,          SHCMD("dmenu-pass") },
-  { MODKEY|ShiftMask,             XK_p,      spawn,          SHCMD("dmenu-passotp") },
-  { MODKEY|ShiftMask|ControlMask, XK_p,      spawn,          SHCMD("passmenu --type") },
+  { MODKEY|ShiftMask,             XK_p,      spawn,          SHCMD("passmenu --type") },
   { MODKEY,                       XK_i,      spawn,          SHCMD("$DMENU_BIN/pulse_conf source ; pkill -RTMIN+2 dwmblocks") },
   { MODKEY,                       XK_o,      spawn,          SHCMD("$DMENU_BIN/pulse_conf sink ; pkill -RTMIN+2 dwmblocks") },
   { MODKEY|ShiftMask,             XK_o,      spawn,          SHCMD("$DMENU_BIN/pulse_prof ; pkill -RTMIN+2 dwmblocks") },
@@ -239,7 +238,7 @@ static Key keys[] = {
   { MODKEY,                       XK_Tab,    view,           {.ui = ~0 } },
   { MODKEY|ShiftMask,             XK_Tab,    spawn,          SHCMD("rofi -show window") },
   { 0,                            XK_Print,  spawn,          SHCMD("flameshot gui") },
-  { MODKEY                      , XK_v,      spawn,          SHCMD("xournal") },
+  { MODKEY,                       XK_v,      spawn,          SHCMD("xournal") },
 
   { MODKEY,                       XK_q,      killclient,               {0} },
   { MODKEY,                       XK_a,      togglefloating,           {.i = 1} },
@@ -298,7 +297,7 @@ static Key keys[] = {
   { MODKEY,                       XK_n,      togglesp,                 {.i = 2} },
   { MODKEY|ShiftMask,             XK_w,      togglesp,                 {.i = 3} },
   { MODKEY,                       XK_m,      togglesp,                 {.i = 4} },
-  { MODKEY,                       XK_c,      togglesp,                 {.i = 5} },
+  { MODKEY,                       XK_c,      togglesp,                 {.i = 5} }, // calcurse 
   { MODKEY,                       XK_y,      togglesp,                 {.i = 6} },
   { MODKEY|ShiftMask|ControlMask, XK_m,      togglesp,                 {.i = 7} },
   { MODKEY|ShiftMask,             XK_n,      togglesp,                 {.i = 8} },
@@ -314,7 +313,9 @@ static Key keys[] = {
   { MODKEY|ShiftMask,             XK_e,      spawn,                    SHCMD("$TERMINAL -c st-256color-c -e tmux new \"zsh -is ranger\"") },
   { MODKEY,                       XK_w,      spawn,                    SHCMD("$BROWSER") },
                                                                   
-  { MODKEY|ControlMask|ShiftMask, XK_t,      spawn,                    SHCMD("pkill picom || picom --experimental-backend") },
+  { MODKEY|ShiftMask,             XK_c,      spawn,                    SHCMD("pkill picom || picom --experimental-backend") },
+  { MODKEY|ShiftMask,             XK_s,      spawn,                    SHCMD("dmenu_timew_start") },
+  { MODKEY|ShiftMask,             XK_a,      spawn,                    SHCMD("dmenu_task_add") },
                                                                   
   { 0, XF86XK_Calculator,                    spawn,                    SHCMD("pkill -TERM speedcrunch || speedcrunch") },
                                                                   
