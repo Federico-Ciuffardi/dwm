@@ -1855,6 +1855,8 @@ manage(Window w, XWindowAttributes *wa)
       unfocus(selmon->sel, 0);
     c->mon->sel = c;
   }
+  if(c->sp_id > 0 && !scratchpads_called[c->sp_id])
+    hide(c);
   arrange(c->mon);
   XMapWindow(dpy, c->win);
   if (term)
@@ -2955,6 +2957,7 @@ togglesp(const Arg *arg)
   }else{
     Arg a;
     a.v = (const char*[]){ "/bin/sh", "-c", scratchpads_cmd[arg->i-1], NULL };
+    scratchpads_called[arg->i-1] = 1;
     spawn(&a);
   }
 }

@@ -193,6 +193,7 @@ static const char* scratchpads_cmd[] = {
   "session-desktop",
   "$TERMINAL -c st-256color-taskwarrior-tui -T taskwarrior-tui -e taskwarrior-tui",
 };
+static int scratchpads_called[] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, }; // as many zeros as scratchpads TODO improve
 
 typedef int dims[4];
 
