@@ -3960,16 +3960,20 @@ horizontalfocus(const Arg *arg)
 /*layouts*/
 void
 resizehorizontal(const Arg* arg){
-  if(selmon->sel){
-    if(selmon->sel->isfloating)
-      changefloatzonex(arg);
-    else{
-      Arg a;
-      if(arg->i<0)
-        a.f = -0.05;
-      else
-        a.f =  0.05;
-      setmfact(&a);
+  int tmux_resize = tmux_motion_integration && ( (arg->i == -1 && !system("$MY_BIN/tmux/resize left"))  || (arg->i ==  1 && !system("$MY_BIN/tmux/resize right")) ); 
+
+  if(!tmux_resize){
+    if(selmon->sel){
+      if(selmon->sel->isfloating)
+        changefloatzonex(arg);
+      else{
+        Arg a;
+        if(arg->i<0)
+          a.f = -0.05;
+        else
+          a.f =  0.05;
+        setmfact(&a);
+      }
     }
   }
 }
@@ -3998,9 +4002,13 @@ hardresizehorizontal(const Arg* arg){
 
 void
 resizevertical(const Arg* arg){
-  if(selmon->sel)
-    if(selmon->sel->isfloating)
-      changefloatzoney(arg);
+  int tmux_resize = tmux_motion_integration && ( (arg->i == -1 && !system("$MY_BIN/tmux/resize up"))  || (arg->i ==  1 && !system("$MY_BIN/tmux/resize down")) ); 
+
+  if(!tmux_resize){
+    if(selmon->sel)
+      if(selmon->sel->isfloating)
+        changefloatzoney(arg);
+  }
 }
 void
 movehorizontal(const Arg* arg){
