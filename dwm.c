@@ -1445,7 +1445,7 @@ focusmon(const Arg *arg)
   if ((c = nexttiled(selmon->clients))){
     if ((selmon->lt[selmon->sellt] == &layouts[TALL] || selmon->lt[selmon->sellt] == &layouts[DECK]) && !selmon->sel->isfloating){
       if (arg->ui == -1){
-        if(selmon->prevhfocus && ISVISIBLE(selmon->prevhfocus)){
+        if(selmon->prevhfocus && !selmon->prevhfocus->isfloating && ISVISIBLE(selmon->prevhfocus)){
           c = selmon->prevhfocus;
         }else{
           c = nexttiled(c->next);
@@ -3928,7 +3928,7 @@ horizontalfocus(const Arg *arg)
       if ( selmon->lt[selmon->sellt] == &layouts[TALL] || selmon->lt[selmon->sellt] == &layouts[DECK] ){
         if ( (c == selmon->sel) == (arg->i > 0) ){
           if (arg->i > 0){
-            if(selmon->prevhfocus && ISVISIBLE(selmon->prevhfocus) && selmon->prevhfocus != selmon->sel)
+            if(selmon->prevhfocus && !selmon->prevhfocus->isfloating && ISVISIBLE(selmon->prevhfocus) && selmon->prevhfocus != selmon->sel)
               c = selmon->prevhfocus;
             else
               c = nexttiled(c->next);
