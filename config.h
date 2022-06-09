@@ -239,6 +239,7 @@ static Key keys[] = {
   { MODKEY,                       XK_Tab,    view,           {.ui = ~0 } },
   { MODKEY|ShiftMask,             XK_Tab,    spawn,          SHCMD("rofi -show window") },
   { 0,                            XK_Print,  spawn,          SHCMD("flameshot gui") },
+  { MODKEY,                       XK_Print,  spawn,          SHCMD("flameshot gui --region all") },
   { MODKEY,                       XK_v,      spawn,          SHCMD("xournal") },
 
   { MODKEY,                       XK_q,      killclient,               {0} },
