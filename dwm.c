@@ -81,7 +81,7 @@ enum { SchemeNorm, SchemeSel, SchemeNormTab, SchemeSelTab, SchemeSelAlt}; /* col
 enum { NetSupported, NetWMName, NetWMState, NetWMCheck,
   NetSystemTray, NetSystemTrayOP, NetSystemTrayOrientation, NetSystemTrayOrientationHorz,
   NetWMFullscreen, NetActiveWindow, NetWMWindowType,
-  NetWMWindowTypeDialog, NetClientList, NetLast }; /* EWMH atoms */
+  NetWMWindowTypeDialog, NetClientList, NetClientInfo, NetLast }; /* EWMH atoms */
 enum { Manager, Xembed, XembedInfo, XLast }; /* Xembed atoms */
 enum { WMProtocols, WMDelete, WMState, WMTakeFocus, WMLast }; /* default atoms */
 enum { ClkTagBar, ClkTabBar, ClkLtSymbol, ClkStatusText, ClkWinTitle,
@@ -270,6 +270,7 @@ static int sendevent(Window w, Atom proto, int m, long d0, long d1, long d2, lon
 static void sendtomon(Client *c, Monitor *m, int master, int preserve);
 static void sendmon(Client *c, Monitor *m);
 static void setclientstate(Client *c, long state);
+static void setclienttagprop(Client *c);
 static void setfocus(Client *c);
 static void setfullscreen(Client *c, int fullscreen);
 static void cyclelayout(const Arg *arg);
@@ -1838,6 +1839,25 @@ manage(Window w, XWindowAttributes *wa)
   else
     c->y -= 2*c->bw; /* adjustment for firefox picture in picture out of bound otherwise */
   updatewmhints(c);
+  {
+  	int format;
+  	unsigned long *data, n, extra;
+  	Monitor *m;
+  	Atom atom;
+  	if (XGetWindowProperty(dpy, c->win, netatom[NetClientInfo], 0L, 2L, False, XA_CARDINAL,
+  			&atom, &format, &n, &extra, (unsigned char **)&data) == Success && n == 2) {
+  		c->tags = *data;
+  		for (m = mons; m; m = m->next) {
+  			if (m->num == *(data+1)) {
+  				c->mon = m;
+  				break;
+  			}
+  		}
+  	}
+  	if (n > 0)
+  		XFree(data);
+  }
+  setclienttagprop(c);
   XSelectInput(dpy, w, EnterWindowMask|FocusChangeMask|PropertyChangeMask|StructureNotifyMask);
   grabbuttons(c, 0);
   if (!c->isfloating)
@@ -2183,8 +2203,11 @@ reorganizetags(const Arg *arg) {
   }
 
   for (c = selmon->clients; c; c = c->next)
-    if ( !c->issticky && (c->tags & (1 << focc)) )
+    if ( !c->issticky && (c->tags & (1 << focc)) ){
       c->tags = 1 << funocc;
+      setclienttagprop(c);
+
+    }
 
   if (selmon->tagset[selmon->seltags] & (1 << focc))
     selmon->tagset[selmon->seltags] = (1 << funocc);
@@ -2473,6 +2496,7 @@ sendtomon(Client *c, Monitor *m, int master, int preserve)
   }else
     attach(c);
   attachstack(c);
+  setclienttagprop(c);
   arrange(NULL);
 }
 
@@ -2677,6 +2701,7 @@ setup(void)
   netatom[NetWMWindowType] = XInternAtom(dpy, "_NET_WM_WINDOW_TYPE", False);
   netatom[NetWMWindowTypeDialog] = XInternAtom(dpy, "_NET_WM_WINDOW_TYPE_DIALOG", False);
   netatom[NetClientList] = XInternAtom(dpy, "_NET_CLIENT_LIST", False);
+  netatom[NetClientInfo] = XInternAtom(dpy, "_NET_CLIENT_INFO", False);
   xatom[Manager] = XInternAtom(dpy, "MANAGER", False);
   xatom[Xembed] = XInternAtom(dpy, "_XEMBED", False);
   xatom[XembedInfo] = XInternAtom(dpy, "_XEMBED_INFO", False);
@@ -2706,6 +2731,7 @@ setup(void)
   XChangeProperty(dpy, root, netatom[NetSupported], XA_ATOM, 32,
       PropModeReplace, (unsigned char *) netatom, NetLast);
   XDeleteProperty(dpy, root, netatom[NetClientList]);
+  XDeleteProperty(dpy, root, netatom[NetClientInfo]);
   /* select events */
   wa.cursor = cursor[CurNormal]->cursor;
   wa.event_mask = SubstructureRedirectMask|SubstructureNotifyMask
@@ -2805,6 +2831,15 @@ spawn(const Arg *arg)
   }
 }
 
+void
+setclienttagprop(Client *c)
+{
+	long data[] = { (long) c->tags, (long) c->mon->num };
+	XChangeProperty(dpy, c->win, netatom[NetClientInfo], XA_CARDINAL, 32,
+			PropModeReplace, (unsigned char *) data, 2);
+}
+
+
   void
 tag(const Arg *arg)
 {
@@ -2816,6 +2851,7 @@ tag(const Arg *arg)
   }else{
     if(!selmon->sel->issticky)
       selmon->sel->tags = arg->ui & TAGMASK;
+    setclienttagprop(selmon->sel);
     focus(NULL);
     arrange(selmon);
   }
@@ -2973,6 +3009,7 @@ toggletag(const Arg *arg)
   if (newtags) {
     if(!selmon->sel->issticky)
       selmon->sel->tags = newtags;
+    setclienttagprop(selmon->sel);
     focus(NULL);
     arrange(selmon);
   }
