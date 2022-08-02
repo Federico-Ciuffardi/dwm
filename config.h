@@ -175,7 +175,7 @@ static const Rule rules[] = {
   { "whatsapp-nativefier-d40211"  , NULL     , NULL                , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     3 , -1      },
   { "YouTube Music"               , NULL     , NULL                , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     6 , -1      },
   { "Mattermost"                  , NULL     , NULL                , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     7 , -1      },
-  { "Session"                     , NULL     , NULL                , ~0   , 1          , CENTER          , NN         , 0          , 0         ,    10 , -1      },
+  { "Slack"                       , NULL     , NULL                , ~0   , 1          , CENTER          , NN         , 0          , 0         ,    10 , -1      },
   { "st-256color-taskwarrior-tui" , NULL     , NULL                , ~0   , 1          , CENTER          , NN         , 0          , 0         ,    11 , -1      },
 };
 
@@ -190,8 +190,8 @@ static const char* scratchpads_cmd[] = {
   "mattermost-desktop",
   "$TERMINAL -c st-256color-music -T ncmpcpp -e ncmpcpp",
   "$TERMINAL -c st-256color-tmp-notes -T tmp-notes -e $EDITOR $(mktemp) -c \"set spell\"",
-  "session-desktop",
-  "$TERMINAL -c st-256color-taskwarrior-tui -T taskwarrior-tui -e taskwarrior-tui",
+  "slack", 
+  "$TERMINAL -c st-256color-taskwarrior-tui -T taskwarrior-tui -e taskwarrior-tui", //10
 };
 static int scratchpads_called[] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, }; // as many zeros as scratchpads TODO improve
 
@@ -267,12 +267,20 @@ static Key keys[] = {
   { MODKEY|ShiftMask,             XK_k,      movevertical,             {.i = -1 } },
   { MODKEY|ShiftMask|ControlMask, XK_j,      resizevertical,           {.i =  1 } },
   { MODKEY|ShiftMask|ControlMask, XK_k,      resizevertical,           {.i = -1 } },
+
   { MODKEY|ControlMask,           XK_h,      reorganizetags,           {.i =  1 } },
   { MODKEY|ControlMask,           XK_l,      reorganizetags,           {.i = -1 } },
+  /* { ALTMODKEY,                    XK_h,      reorganizetags,           {.i =  1 } }, */
+  /* { ALTMODKEY,                    XK_l,      reorganizetags,           {.i = -1 } }, */
+
   { MODKEY,                       XK_grave, focusmon,                  {.i =  1 } },
   { MODKEY|ShiftMask,             XK_grave, tagmon,                    {.i =  1 } },
+
   { MODKEY|ControlMask,           XK_j,      incview,                  {.i =  1 } },
   { MODKEY|ControlMask,           XK_k,      incview,                  {.i = -1 } },
+  /* {ALTMODKEY,                     XK_j,      incview,                  {.i =  1 } }, */
+  /* {ALTMODKEY,                     XK_k,      incview,                  {.i = -1 } }, */
+  
   { MODKEY|ControlMask,           XK_a,      incrgaps,                 {.i =  1 } },
   { MODKEY|ControlMask,           XK_d,      incrgaps,                 {.i = -1 } },
 
@@ -316,7 +324,6 @@ static Key keys[] = {
   { MODKEY,                       XK_w,      spawn,                    SHCMD("$BROWSER") },
                                                                   
   { MODKEY|ShiftMask,             XK_c,      spawn,                    SHCMD("pkill picom || picom --experimental-backend") },
-  { MODKEY|ShiftMask,             XK_s,      spawn,                    SHCMD("dmenu_timew_start") },
   { MODKEY|ShiftMask,             XK_a,      spawn,                    SHCMD("dmenu_task_add") },
                                                                   
   { 0, XF86XK_Calculator,                    spawn,                    SHCMD("pkill -TERM speedcrunch || speedcrunch") },
