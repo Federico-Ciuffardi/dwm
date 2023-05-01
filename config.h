@@ -168,9 +168,10 @@ static const Rule rules[] = {
   { "st-256color-calendar"       , NULL     , NULL                 , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     5 , -1      },
   { "st-256color-music"          , NULL     , NULL                 , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     8 , -1      },
   { "st-256color-tmp-notes"      , NULL     , NULL                 , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     9 , -1      },
-  { "gazebo"                     , NULL     , NULL                 , 1<<8 , 0          , HINTS           , NN         , 0          , 0         ,     0 ,  0      },
-  { "rviz"                       , NULL     , NULL                 , 1<<8 , 0          , HINTS           , NN         , 0          , 0         ,     0 ,  0      },
-  { "rqt_console"                , NULL     , NULL                 , 1<<8 , 0          , HINTS           , NN         , 0          , 0         ,     0 ,  0      },
+
+  { "RoboScope"                  , NULL     , NULL                 , 0    , 0          , HINTS           , NN         , 0          , 0         ,     0 , -1      },
+  { "Com.cisco.anyconnect.gui"   , NULL     , NULL                 , 1<<8 , 0          , CENTER          , NN         , 0          , 0         ,     0 ,  1      },
+  {NULL                          , NULL     , "Outlook"            , 1<<8 , 0          , CENTER          , NN         , 0          , 0         ,     0 ,  0      },
 
   { "whatsapp-nativefier-d40211"  , NULL     , NULL                , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     3 , -1      },
   { "YouTube Music"               , NULL     , NULL                , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     6 , -1      },
