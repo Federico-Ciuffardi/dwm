@@ -719,7 +719,7 @@ buttonpress(XEvent *e)
         if ((unsigned char)text[i] < ' ') {
           ch = text[i];
           text[i] = '\0';
-          x += TEXTW(text) - lrpad - 2;
+          x += TEXTW(text) - lrpad;
           text[i] = ch;
           text += i+1;
           i = -1;
