@@ -324,7 +324,7 @@ static Key keys[] = {
   { MODKEY|ShiftMask,             XK_e,      spawn,                    SHCMD("$TERMINAL -c st-256color-c -e tmux new \"zsh -is ranger\"") },
   { MODKEY,                       XK_w,      spawn,                    SHCMD("$BROWSER") },
                                                                   
-  { MODKEY|ShiftMask,             XK_c,      spawn,                    SHCMD("pkill picom || picom --experimental-backend") },
+  { MODKEY|ShiftMask,             XK_c,      spawn,                    SHCMD("pkill picom || picom") },
   { MODKEY|ShiftMask,             XK_a,      spawn,                    SHCMD("dmenu_task_add") },
                                                                   
   { 0, XF86XK_Calculator,                    spawn,                    SHCMD("pkill -TERM speedcrunch || speedcrunch") },
