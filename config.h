@@ -155,19 +155,19 @@ static const Rule rules[] = {
   { "Thunderbird"                , NULL     , NULL                 , 1<<8 , 0          , HINTS           , NN         , 0          , 0         ,     0 ,  0      },
   { "tridactyl_editor"           , NULL     , NULL                 , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     0 , -1      },
   { NULL                         , NULL     , "Picture-in-Picture" , ~0   , 1          , 70,70,30,30     , LR         , 0          , 0         ,     0 , -1      },
-  { "terminal-256color"                , NULL     , NULL                 , 0    , 0          , CENTER_HINTS    , NN         , 1          , 1         ,     0 , -1      },
-  { "terminal-256color-c"              , NULL     , NULL                 , 0    , 1          , 10,10,80,80     , NN         , 1          , 1         ,     0 , -1      },
-  { "terminal-256color-ur"             , NULL     , NULL                 , ~0   , 1          , 60,2,40,20      , UR         , 1          , 1         ,     0 , -1      },
+  { "st-256color"                , NULL     , NULL                 , 0    , 0          , CENTER_HINTS    , NN         , 1          , 1         ,     0 , -1      },
+  { "st-256color-c"              , NULL     , NULL                 , 0    , 1          , 10,10,80,80     , NN         , 1          , 1         ,     0 , -1      },
+  { "st-256color-ur"             , NULL     , NULL                 , ~0   , 1          , 60,2,40,20      , UR         , 1          , 1         ,     0 , -1      },
   { "SpeedCrunch"                , NULL     , NULL                 , ~0   , 1          , CENTER          , NN         , 1          , 1         ,     0 , -1      },
   { NULL                         , NULL     , "Event Tester"       , 0    , 0          , HINTS           , NN         , 0          , 1         ,     0 , -1      },
   { "Yad"                        , NULL     , NULL                 , 0    , 1          , 60,2,40,20      , UR         , 0          , 0         ,     0 , -1      },
   { "Dragon-drag-and-drop"       , NULL     , NULL                 , ~0   , 1          , CENTER_HINTS    , NN         , 0          , 0         ,     0 , -1      },
-  { "terminal-256color-docked"         , NULL     , NULL                 , ~0   , 1          , CENTER          , MM         , 1          , 1         ,     1 , -1      },
-  { "terminal-256color-notes"          , NULL     , NULL                 , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     2 , -1      },
-  { "terminal-256color-mail"           , NULL     , NULL                 , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     4 , -1      },
-  { "terminal-256color-calendar"       , NULL     , NULL                 , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     5 , -1      },
-  { "terminal-256color-music"          , NULL     , NULL                 , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     8 , -1      },
-  { "terminal-256color-tmp-notes"      , NULL     , NULL                 , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     9 , -1      },
+  { "st-256color-docked"         , NULL     , NULL                 , ~0   , 1          , CENTER          , MM         , 1          , 1         ,     1 , -1      },
+  { "st-256color-notes"          , NULL     , NULL                 , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     2 , -1      },
+  { "st-256color-mail"           , NULL     , NULL                 , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     4 , -1      },
+  { "st-256color-calendar"       , NULL     , NULL                 , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     5 , -1      },
+  { "st-256color-music"          , NULL     , NULL                 , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     8 , -1      },
+  { "st-256color-tmp-notes"      , NULL     , NULL                 , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     9 , -1      },
 
   { "RoboScope"                  , NULL     , NULL                 , 0    , 0          , HINTS           , NN         , 0          , 0         ,     0 , -1      },
   { "Com.cisco.anyconnect.gui"   , NULL     , NULL                 , 1<<8 , 0          , CENTER          , NN         , 0          , 0         ,     0 ,  1      },
@@ -177,22 +177,22 @@ static const Rule rules[] = {
   { "com.github.th_ch.youtube_music"               , NULL     , NULL                , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     6 , -1      },
   { "Mattermost"                  , NULL     , NULL                , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     7 , -1      },
   { "Slack"                       , NULL     , NULL                , ~0   , 1          , CENTER          , NN         , 0          , 0         ,    10 , -1      },
-  { "terminal-256color-taskwarrior-tui" , NULL     , NULL                , ~0   , 1          , CENTER          , NN         , 0          , 0         ,    11 , -1      },
+  { "st-256color-taskwarrior-tui" , NULL     , NULL                , ~0   , 1          , CENTER          , NN         , 0          , 0         ,    11 , -1      },
 };
 
 
 static const char* scratchpads_cmd[] = {
-  "$TERMINAL --class terminal-256color-docked -e tmux",
-  "$TERMINAL --class terminal-256color-notes -T vimwiki -e $SHELL -c \"cd \"$HOME\"/.local/share/vimwiki && $EDITOR index.md\"",
+  "$TERMINAL -c st-256color-docked -e tmux",
+  "$TERMINAL -c st-256color-notes -T vimwiki -e $SHELL -c \"cd \"$HOME\"/.local/share/vimwiki && $EDITOR index.md\"",
   "whatsapp-nativefier",
-  "$TERMINAL --class terminal-256color-mail -T neomutt -e $SHELL -c \"cd ~/downloads; export ESCDELAY=1 ;neomutt ; pkill -RTMIN+17 dwmblocks \"",
-  "$TERMINAL --class terminal-256color-calendar -T calcurse -e $SHELL -c calcurse",
+  "$TERMINAL -c st-256color-mail -T neomutt -e $SHELL -c \"cd ~/downloads; export ESCDELAY=1 ;neomutt ; pkill -RTMIN+17 dwmblocks \"",
+  "$TERMINAL -c st-256color-calendar -T calcurse -e $SHELL -c calcurse",
   "youtube-music",
-  "mattermoterminal-desktop",
-  "$TERMINAL --class terminal-256color-music -T ncmpcpp -e ncmpcpp",
-  "$TERMINAL --class terminal-256color-tmp-notes -T tmp-notes -e $EDITOR $(mktemp) -c \"set spell\"",
+  "mattermost-desktop",
+  "$TERMINAL -c st-256color-music -T ncmpcpp -e ncmpcpp",
+  "$TERMINAL -c st-256color-tmp-notes -T tmp-notes -e $EDITOR $(mktemp) -c \"set spell\"",
   "slack", 
-  "$TERMINAL --class terminal-256color-taskwarrior-tui -T taskwarrior-tui -e taskwarrior-tui", //10
+  "$TERMINAL -c st-256color-taskwarrior-tui -T taskwarrior-tui -e taskwarrior-tui", //10
 };
 static int scratchpads_called[] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, }; // as many zeros as scratchpads TODO improve
 
@@ -316,12 +316,12 @@ static Key keys[] = {
   { MODKEY|ShiftMask,             XK_s,      togglesp,                 {.i = 10} },
   { MODKEY,                       XK_t,      togglesp,                 {.i = 11} },
 
-  { MODKEY|ShiftMask,             XK_g,      spawn,                    SHCMD("$TERMINAL --class terminal-256color-c -e gotop") },
+  { MODKEY|ShiftMask,             XK_g,      spawn,                    SHCMD("$TERMINAL -c st-256color-c -e gotop") },
   { MODKEY,                       XK_Return, spawn,                    SHCMD("$TERMINAL -e tmux") },
-  { MODKEY|ShiftMask,             XK_Return, spawn,                    SHCMD("$TERMINAL --class terminal-256color-c -e tmux") },
+  { MODKEY|ShiftMask,             XK_Return, spawn,                    SHCMD("$TERMINAL -c st-256color-c -e tmux") },
   { MODKEY|ControlMask,           XK_Return, spawn,                    SHCMD("$TERMINAL -e tmux new \"$TMUX_BIN/open_and_kill_session\"") },
   { MODKEY,                       XK_e,      spawn,                    SHCMD("$TERMINAL -e tmux new \"zsh -is ranger\"") },
-  { MODKEY|ShiftMask,             XK_e,      spawn,                    SHCMD("$TERMINAL --class terminal-256color-c -e tmux new \"zsh -is ranger\"") },
+  { MODKEY|ShiftMask,             XK_e,      spawn,                    SHCMD("$TERMINAL -c st-256color-c -e tmux new \"zsh -is ranger\"") },
   { MODKEY,                       XK_w,      spawn,                    SHCMD("$BROWSER") },
                                                                   
   { MODKEY|ShiftMask,             XK_c,      spawn,                    SHCMD("pkill picom || picom") },
