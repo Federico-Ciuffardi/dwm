@@ -40,6 +40,8 @@ static const unsigned int snap           = 32; /* snap pixel */
 
 static const int tmux_motion_integration = 1;  /* 0 means no integration */
 
+static const int enable_inplace_hide = 1;
+
 
 // LOOK
 static const unsigned int borderpx       = 2;  /* border pixel of windows */
@@ -114,9 +116,9 @@ static const float mfact        = largemfact; /* factor of master area size [0.0
 static const int   nmaster      = 1;          /* number of clients in master area */
 static const int   resizehints  = 0;          /* 1 means respect size hints in tiled resizals */
 
-#define TALL     0
+#define TABS     0
 #define DECK     1
-#define TABS     2
+#define TALL     2
 #define GRID     3
 #define FLOATING 4
 
@@ -125,9 +127,9 @@ static const int   resizehints  = 0;          /* 1 means respect size hints in t
 
 static const Layout layouts[] = {
   /* symbol     arrange function */
-  { "| Tall |", tile           }, /* first entry is default */
-	{ "| Deck |", deck           },
-  { "| Tabs |", monocle        },
+  { "| Tabs |", monocle        }, /* first entry is default */
+  { "| Deck |", deck           },
+  { "| Tall |", tile           },
   { "| Grid |", grid           },
   { "| Flt  |", NULL           }, /* no layout function means floating behavior */
   { "| Cmas |", centeredmaster },
@@ -163,7 +165,7 @@ static const Rule rules[] = {
   { "Yad"                        , NULL     , NULL                 , 0    , 1          , 60,2,40,20      , UR         , 0          , 0         ,     0 , -1      },
   { "Dragon-drag-and-drop"       , NULL     , NULL                 , ~0   , 1          , CENTER_HINTS    , NN         , 0          , 0         ,     0 , -1      },
   { "st-256color-docked"         , NULL     , NULL                 , ~0   , 1          , CENTER          , MM         , 1          , 1         ,     1 , -1      },
-  { "st-256color-notes"          , NULL     , NULL                 , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     2 , -1      },
+  { "st-256color-notes"          , NULL     , NULL                 , ~0   , 1          , 20,10,60,80     , NN         , 0          , 0         ,     2 , -1      },
   { "st-256color-mail"           , NULL     , NULL                 , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     4 , -1      },
   { "st-256color-calendar"       , NULL     , NULL                 , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     5 , -1      },
   { "st-256color-music"          , NULL     , NULL                 , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     8 , -1      },
@@ -177,13 +179,13 @@ static const Rule rules[] = {
   { "com.github.th_ch.youtube_music"               , NULL     , NULL                , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     6 , -1      },
   { "Mattermost"                  , NULL     , NULL                , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     7 , -1      },
   { "Slack"                       , NULL     , NULL                , ~0   , 1          , CENTER          , NN         , 0          , 0         ,    10 , -1      },
-  { "st-256color-taskwarrior-tui" , NULL     , NULL                , ~0   , 1          , CENTER          , NN         , 0          , 0         ,    11 , -1      },
+  { "Gather"                      , NULL     , NULL                , ~0   , 1          , CENTER          , NN         , 0          , 0         ,    11 , -1      },
 };
 
 
 static const char* scratchpads_cmd[] = {
   "$TERMINAL -c st-256color-docked -e tmux",
-  "$TERMINAL -c st-256color-notes -T vimwiki -e $SHELL -c \"cd \"$HOME\"/.local/share/vimwiki && $EDITOR index.md\"",
+  "kitty --class st-256color-notes -T vimwiki --hold $SHELL -c \"cd \"$HOME\"/.local/share/vimwiki && $EDITOR index.md ; pkill kitty\"",
   "whatsapp-nativefier",
   "$TERMINAL -c st-256color-mail -T neomutt -e $SHELL -c \"cd ~/downloads; export ESCDELAY=1 ;neomutt ; pkill -RTMIN+17 dwmblocks \"",
   "$TERMINAL -c st-256color-calendar -T calcurse -e $SHELL -c calcurse",
@@ -192,7 +194,7 @@ static const char* scratchpads_cmd[] = {
   "$TERMINAL -c st-256color-music -T ncmpcpp -e ncmpcpp",
   "$TERMINAL -c st-256color-tmp-notes -T tmp-notes -e $EDITOR $(mktemp) -c \"set spell\"",
   "slack", 
-  "$TERMINAL -c st-256color-taskwarrior-tui -T taskwarrior-tui -e taskwarrior-tui", //10
+  "gather"
 };
 static int scratchpads_called[] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, }; // as many zeros as scratchpads TODO improve
 
@@ -314,9 +316,8 @@ static Key keys[] = {
   { MODKEY|ShiftMask,             XK_n,      togglesp,                 {.i = 8} },
   { MODKEY|ShiftMask|ControlMask, XK_space,  togglesp,                 {.i = 9} },
   { MODKEY|ShiftMask,             XK_s,      togglesp,                 {.i = 10} },
-  { MODKEY,                       XK_t,      togglesp,                 {.i = 11} },
+  { MODKEY|ShiftMask,             XK_g,      togglesp,                 {.i = 11} },
 
-  { MODKEY|ShiftMask,             XK_g,      spawn,                    SHCMD("$TERMINAL -c st-256color-c -e gotop") },
   { MODKEY,                       XK_Return, spawn,                    SHCMD("$TERMINAL -e tmux") },
   { MODKEY|ShiftMask,             XK_Return, spawn,                    SHCMD("$TERMINAL -c st-256color-c -e tmux") },
   { MODKEY|ControlMask,           XK_Return, spawn,                    SHCMD("$TERMINAL -e tmux new \"$TMUX_BIN/open_and_kill_session\"") },
@@ -325,7 +326,8 @@ static Key keys[] = {
   { MODKEY,                       XK_w,      spawn,                    SHCMD("$BROWSER") },
                                                                   
   { MODKEY|ShiftMask,             XK_c,      spawn,                    SHCMD("pkill picom || picom") },
-  { MODKEY|ShiftMask,             XK_a,      spawn,                    SHCMD("dmenu_task_add") },
+  { MODKEY|ShiftMask,             XK_a,      spawn,                    SHCMD("toggle_focus_mode") },
+  { MODKEY|ShiftMask|ControlMask, XK_a,      spawn,                    SHCMD("config-all") },
                                                                   
   { 0, XF86XK_Calculator,                    spawn,                    SHCMD("pkill -TERM speedcrunch || speedcrunch") },
                                                                   

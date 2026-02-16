@@ -107,6 +107,7 @@ typedef struct Client Client;
 struct Client {
   char name[256];
   int sp_id;
+  int isHidden;
   float mina, maxa;
   int x, y, w, h;
   int floatx, floaty, floatw, floath;
@@ -609,7 +610,16 @@ void
 arrangemon(Monitor *m) {
   updatebarpos(m);
 
-  XMoveResizeWindow(dpy, m->tabwin, m->wx + sp, m->ty + tp, m->ww - 2*sp, th);
+  if(enable_inplace_hide){
+    if (tabbar_visible) {
+      XMoveResizeWindow(dpy, m->tabwin, m->wx + sp, m->ty + tp, m->ww - 2*sp, th);
+      XMapWindow(dpy, m->tabwin);
+    } else {
+      XUnmapWindow(dpy, m->tabwin);
+    }
+  }else{
+    XMoveResizeWindow(dpy, m->tabwin, m->wx + sp, m->ty + tp, m->ww - 2*sp, th);
+  }
 
   strncpy(m->ltsymbol, m->lt[m->sellt]->symbol, sizeof m->ltsymbol);
   if (m->lt[m->sellt]->arrange)
@@ -2765,14 +2775,22 @@ showhide(Client *c)
   if (ISVISIBLE(c)) {
     /* show clients top down */
     XMoveWindow(dpy, c->win, c->x, c->y);
+    if(enable_inplace_hide){
+      c->isHidden = 0;
+      XMapWindow(dpy, c->win);
+    }
     if ((!c->mon->lt[c->mon->sellt]->arrange || c->isfloating) && !c->isfullscreen)
       resize(c, c->x, c->y, c->w, c->h, 0);
     showhide(c->snext);
   } else {
     /* hide clients bottom up */
     showhide(c->snext);
-    XMoveWindow(dpy, c->win, c->x,  HEIGHT(c) * -2);
-    /* XMoveWindow(dpy, c->win, WIDTH(c) * -2, c->y); */
+    if(enable_inplace_hide){
+      c->isHidden = 1;
+      XUnmapWindow(dpy, c->win);
+    }else{
+      XMoveWindow(dpy, c->win, WIDTH(c) * 2, c->y); 
+    }
   }
 }
 
@@ -3214,6 +3232,8 @@ unmapnotify(XEvent *e)
   XUnmapEvent *ev = &e->xunmap;
 
   if ((c = wintoclient(ev->window))) {
+    if (c->isHidden)
+        return;  // ignore WM-initiated unmap
     if (ev->send_event)
       setclientstate(c, WithdrawnState);
     else
