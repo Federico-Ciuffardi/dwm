@@ -2309,9 +2309,9 @@ changefloatzone(int cx,int cy){
   c->floatzonex = mod(c->floatzonex + cx, 3);
   c->floatzoney = mod(c->floatzoney + cy, 3);
   int x = selmon->wx + gppoh*enablegaps + floatzones[c->floatzoney][c->floatzonex][0] * (selmon->ww - 2*gppoh*enablegaps) / 100;
-  int y = selmon->wy + gppov*enablegaps + floatzones[c->floatzoney][c->floatzonex][1] * (selmon->wh - 2*gppov*enablegaps) / 100;
+  int y = selmon->wy + gppov*enablegaps + tp*tabbar_visible + floatzones[c->floatzoney][c->floatzonex][1] * (selmon->wh - 2*gppov*enablegaps - tp*tabbar_visible) / 100;
   int w = (floatzones[c->floatzoney][c->floatzonex][2] * (selmon->ww - 2*gppoh*enablegaps) / 100) - 2*c->bw;
-  int h = (floatzones[c->floatzoney][c->floatzonex][3] * (selmon->wh - 2*gppov*enablegaps) / 100) - 2*c->bw;
+  int h = (floatzones[c->floatzoney][c->floatzonex][3] * (selmon->wh - 2*gppov*enablegaps - tp*tabbar_visible) / 100) - 2*c->bw;
   resize(c, x, y, w, h,0);
   warp(c);
 }
@@ -2938,9 +2938,9 @@ togglefloatingcore(int setzone){ // setzone acts as bool
     if ( setzone ){
       if( fzx >= 0 && fzy >= 0 ) {
         selmon->sel->x = selmon->wx + gppoh*enablegaps + floatzones[fzy][fzx][0] * (selmon->ww - 2*gppoh*enablegaps) / 100;
-        selmon->sel->y = selmon->wy + gppov*enablegaps + floatzones[fzy][fzx][1] * (selmon->wh - 2*gppov*enablegaps) / 100;
+        selmon->sel->y = selmon->wy + gppov*enablegaps + tp*tabbar_visible + floatzones[fzy][fzx][1] * (selmon->wh - 2*gppov*enablegaps - tp*tabbar_visible) / 100;
         selmon->sel->w = (floatzones[fzy][fzx][2] * (selmon->ww - 2*gppoh*enablegaps) / 100) - 2*selmon->sel->bw;
-        selmon->sel->h = (floatzones[fzy][fzx][3] * (selmon->wh - 2*gppov*enablegaps) / 100) - 2*selmon->sel->bw;
+        selmon->sel->h = (floatzones[fzy][fzx][3] * (selmon->wh - 2*gppov*enablegaps - tp*tabbar_visible) / 100) - 2*selmon->sel->bw;
       }else{
         selmon->sel->x = selmon->mx + (floatingdims[0]*selmon->mw)/100.0;
         selmon->sel->y = selmon->my + (floatingdims[1]*selmon->mh)/100.0;
