@@ -40,7 +40,7 @@ static const unsigned int snap           = 32; /* snap pixel */
 
 static const int tmux_motion_integration = 0;  /* 0 means no integration */
 
-static const int enable_inplace_hide = 1;
+static const int enable_inplace_hide = 0;
 
 
 // LOOK
@@ -194,7 +194,8 @@ static const char* scratchpads_cmd[] = {
   "$TERMINAL -c st-256color-music -T ncmpcpp -e ncmpcpp",
   "$TERMINAL -c st-256color-tmp-notes -T tmp-notes -e $EDITOR $(mktemp) -c \"set spell\"",
   "slack", 
-  "gather"
+  "gather",
+  "ticktick"
 };
 static int scratchpads_called[] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, }; // as many zeros as scratchpads TODO improve
 
@@ -227,6 +228,21 @@ static char drun[] = "rofi -show drun";
 
 static Key keys[] = {
   /* modifier                     key        function        argument */
+  { MODKEY,                       XK_space,  togglesp,                 {.i = 1} },
+  { MODKEY,                       XK_n,      togglesp,                 {.i = 2} },
+  { MODKEY|ShiftMask,             XK_w,      togglesp,                 {.i = 3} },
+  { MODKEY,                       XK_m,      togglesp,                 {.i = 4} },
+  { MODKEY,                       XK_c,      togglesp,                 {.i = 5} }, // calcurse 
+  { MODKEY,                       XK_y,      togglesp,                 {.i = 6} },
+  { MODKEY|ShiftMask|ControlMask, XK_m,      togglesp,                 {.i = 7} },
+  { MODKEY|ShiftMask,             XK_n,      togglesp,                 {.i = 8} },
+  { MODKEY|ShiftMask|ControlMask, XK_space,  togglesp,                 {.i = 9} },
+  { MODKEY|ShiftMask,             XK_s,      togglesp,                 {.i = 10} },
+  { MODKEY|ShiftMask,             XK_g,      togglesp,                 {.i = 11} },
+  { MODKEY,                       XK_t,      togglesp,                 {.i = 12} },
+
+  { MODKEY|ShiftMask|ControlMask, XK_t,      spawn,          SHCMD("paplay /usr/share/sounds/freedesktop/stereo/dialog-warning.oga") },
+
   { MODKEY,                       XK_F5,     spawn,          SHCMD("lxsudo /bin/sh -c \"cd $HOME/.local/share/uur/builds/main/dwm/git_src && make all && make install\" && pkill dwm") },
   { MODKEY|ShiftMask,             XK_r,      spawn,          SHCMD("lxsudo /bin/sh -c \"cd $HOME/.local/share/uur/builds/main/dwm/git_src && make all && make install\" && pkill dwm") },
   { MODKEY,                       XK_p,      spawn,          SHCMD("dmenu-pass") },
@@ -305,18 +321,6 @@ static Key keys[] = {
   { MODKEY,                       XK_x,      spawn,                    SHCMD("dunstctl close") },
   { MODKEY|ShiftMask,             XK_x,      spawn,                    SHCMD("dunstctl history-pop") },
   { MODKEY|ShiftMask|ControlMask, XK_x,      spawn,                    SHCMD("xkill") },
-
-  { MODKEY,                       XK_space,  togglesp,                 {.i = 1} },
-  { MODKEY,                       XK_n,      togglesp,                 {.i = 2} },
-  { MODKEY|ShiftMask,             XK_w,      togglesp,                 {.i = 3} },
-  { MODKEY,                       XK_m,      togglesp,                 {.i = 4} },
-  { MODKEY,                       XK_c,      togglesp,                 {.i = 5} }, // calcurse 
-  { MODKEY,                       XK_y,      togglesp,                 {.i = 6} },
-  { MODKEY|ShiftMask|ControlMask, XK_m,      togglesp,                 {.i = 7} },
-  { MODKEY|ShiftMask,             XK_n,      togglesp,                 {.i = 8} },
-  { MODKEY|ShiftMask|ControlMask, XK_space,  togglesp,                 {.i = 9} },
-  { MODKEY|ShiftMask,             XK_s,      togglesp,                 {.i = 10} },
-  { MODKEY|ShiftMask,             XK_g,      togglesp,                 {.i = 11} },
 
   { MODKEY,                       XK_Return, spawn,                    SHCMD("$TERMINAL -e tmux") },
   { MODKEY|ShiftMask,             XK_Return, spawn,                    SHCMD("$TERMINAL -e ssh -Y fede@10.100.1.4 -t 'zsh -l -c tmux'") },
