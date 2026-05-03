@@ -2490,31 +2490,15 @@ sendtomon(Client *c, Monitor *m, int master, int preserve)
   if (c->mon == m)
     return;
   if (preserve && c->isfloating){
-    if (c->floatzonex >= 0 || c->floatzoney >= 0) {
-      int fzx = c->floatzonex;
-      int fzy = c->floatzoney;
-      if (fzx < 0) fzx = 1;
-      if (fzy < 0) fzy = 1;
-      int x = m->wx + floatzones[fzy][fzx][0] * m->ww / 100;
-      int y = m->wy + floatzones[fzy][fzx][1] * m->wh / 100;
-      int w = (floatzones[fzy][fzx][2] * m->ww / 100) - 2*c->bw;
-      int h = (floatzones[fzy][fzx][3] * m->wh / 100) - 2*c->bw;
-      c->x = x;
-      c->y = y;
-      c->w = w;
-      c->h = h;
-      resizeclient(c, c->x, c->y, c->w, c->h);
-    } else {
-      float ox = (c->x - c->mon->mx) * 100.0 / c->mon->mw;
-      float oy = (c->y - c->mon->my) * 100.0 / c->mon->mh;
-      float ow = (c->w + 2*c->bw) * 100.0 / c->mon->mw;
-      float oh = (c->h + 2*c->bw) * 100.0 / c->mon->mh;
-      c->x = m->mx + (int)(ox * m->mw / 100);
-      c->y = m->my + (int)(oy * m->mh / 100);
-      c->w = (int)(ow * m->mw / 100) - 2*c->bw;
-      c->h = (int)(oh * m->mh / 100) - 2*c->bw;
-      resizeclient(c, c->x, c->y, c->w, c->h);
-    }
+    float ox = (c->x - c->mon->mx) * 100.0 / c->mon->mw;
+    float oy = (c->y - c->mon->my) * 100.0 / c->mon->mh;
+    float ow = (c->w + 2*c->bw) * 100.0 / c->mon->mw;
+    float oh = (c->h + 2*c->bw) * 100.0 / c->mon->mh;
+    c->x = m->mx + (int)(ox * m->mw / 100);
+    c->y = m->my + (int)(oy * m->mh / 100);
+    c->w = (int)(ow * m->mw / 100) - 2*c->bw;
+    c->h = (int)(oh * m->mh / 100) - 2*c->bw;
+    resizeclient(c, c->x, c->y, c->w, c->h);
   }
   unfocus(c, 1);
   detach(c);
