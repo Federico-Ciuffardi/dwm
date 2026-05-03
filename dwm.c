@@ -2789,7 +2789,7 @@ showhide(Client *c)
       c->isHidden = 1;
       XUnmapWindow(dpy, c->win);
     }else{
-      XMoveWindow(dpy, c->win, WIDTH(c) * 2, c->y); 
+      XMoveWindow(dpy, c->win, c->x,  HEIGHT(c) * -2);
     }
   }
 }
