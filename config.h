@@ -178,7 +178,7 @@ static const Rule rules[] = {
   { "whatsapp-nativefier-d40211"  , NULL     , NULL                , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     3 , -1      },
   { "com.github.th_ch.youtube_music"               , NULL     , NULL                , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     6 , -1      },
   { "Mattermost"                  , NULL     , NULL                , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     7 , -1      },
-  { "Slack"                       , NULL     , NULL                , ~0   , 1          , CENTER          , NN         , 0          , 0         ,    10 , -1      },
+  { "slack"                       , NULL     , NULL                , ~0   , 1          , CENTER          , NN         , 0          , 0         ,    10 , -1      },
   { "Gather"                      , NULL     , NULL                , ~0   , 1          , CENTER          , NN         , 0          , 0         ,    11 , -1      },
 };
 
