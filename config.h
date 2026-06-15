@@ -325,7 +325,7 @@ static Key keys[] = {
   { MODKEY|ShiftMask,             XK_e,      spawn,                    SHCMD("$TERMINAL -c st-256color-c -e tmux new \"zsh -is ranger\"") },
   { MODKEY,                       XK_w,      spawn,                    SHCMD("$BROWSER") },
                                                                   
-  { MODKEY|ShiftMask,             XK_c,      spawn,                    SHCMD("pkill picom || picom") },
+  { MODKEY|ShiftMask,             XK_c,      spawn,                    SHCMD("pkill picom || picom_distro_conf") },
   { MODKEY|ShiftMask,             XK_a,      spawn,                    SHCMD("toggle_focus_mode") },
   { MODKEY|ShiftMask|ControlMask, XK_a,      spawn,                    SHCMD("config-all") },
                                                                   
