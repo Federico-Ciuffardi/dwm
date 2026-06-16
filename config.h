@@ -38,7 +38,7 @@ static const char *const autostart[] = {
 ////////////
 static const unsigned int snap           = 32; /* snap pixel */
 
-static const int tmux_motion_integration = 1;  /* 0 means no integration */
+static const int tmux_motion_integration = 0;  /* 0 means no integration */
 
 static const int enable_inplace_hide = 1;
 
@@ -319,10 +319,10 @@ static Key keys[] = {
   { MODKEY|ShiftMask,             XK_g,      togglesp,                 {.i = 11} },
 
   { MODKEY,                       XK_Return, spawn,                    SHCMD("$TERMINAL -e tmux") },
-  { MODKEY|ShiftMask,             XK_Return, spawn,                    SHCMD("$TERMINAL -c st-256color-c -e tmux") },
+  { MODKEY|ShiftMask,             XK_Return, spawn,                    SHCMD("$TERMINAL -e ssh -Y fede@10.100.1.4 -t 'zsh -l -c tmux'") },
   { MODKEY|ControlMask,           XK_Return, spawn,                    SHCMD("$TERMINAL -e tmux new \"$TMUX_BIN/open_and_kill_session\"") },
   { MODKEY,                       XK_e,      spawn,                    SHCMD("$TERMINAL -e tmux new \"zsh -is ranger\"") },
-  { MODKEY|ShiftMask,             XK_e,      spawn,                    SHCMD("$TERMINAL -c st-256color-c -e tmux new \"zsh -is ranger\"") },
+  { MODKEY|ShiftMask,             XK_e,      spawn,                    SHCMD("$TERMINAL -e ssh -Y fede@10.100.1.4 -t tmux new \"zsh -is ranger\"") },
   { MODKEY,                       XK_w,      spawn,                    SHCMD("$BROWSER") },
                                                                   
   { MODKEY|ShiftMask,             XK_c,      spawn,                    SHCMD("pkill picom || picom_distro_conf") },
