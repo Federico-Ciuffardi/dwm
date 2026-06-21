@@ -152,41 +152,41 @@ static const Rule rules[] = {
    *	WM_CLASS(STRING) = instance, class
    *	WM_NAME(STRING) = title
    */
-  /* tag ~0 means sticky */
-  /* class                       | instance | title                |tags  | isfloating | float x,y,w,h % | float zone | isterminal | noswallow | sp_id | monitor */
-  { "Thunderbird"                , NULL     , NULL                 , 1<<8 , 0          , HINTS           , NN         , 0          , 0         ,     0 ,  0      },
-  { "tridactyl_editor"           , NULL     , NULL                 , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     0 , -1      },
-  { NULL                         , NULL     , "Picture-in-Picture" , ~0   , 1          , 70,70,30,30     , LR         , 0          , 0         ,     0 , -1      },
-  { "st-256color"                , NULL     , NULL                 , 0    , 0          , CENTER_HINTS    , NN         , 1          , 1         ,     0 , -1      },
-  { "st-256color-c"              , NULL     , NULL                 , 0    , 1          , 10,10,80,80     , NN         , 1          , 1         ,     0 , -1      },
-  { "st-256color-ur"             , NULL     , NULL                 , ~0   , 1          , 60,2,40,20      , UR         , 1          , 1         ,     0 , -1      },
-  { "SpeedCrunch"                , NULL     , NULL                 , ~0   , 1          , CENTER          , NN         , 1          , 1         ,     0 , -1      },
-  { NULL                         , NULL     , "Event Tester"       , 0    , 0          , HINTS           , NN         , 0          , 1         ,     0 , -1      },
-  { "Yad"                        , NULL     , NULL                 , 0    , 1          , 60,2,40,20      , UR         , 0          , 0         ,     0 , -1      },
-  { "Dragon-drag-and-drop"       , NULL     , NULL                 , ~0   , 1          , CENTER_HINTS    , NN         , 0          , 0         ,     0 , -1      },
-  { "st-256color-docked"         , NULL     , NULL                 , ~0   , 1          , CENTER          , MM         , 1          , 1         ,     1 , -1      },
-  { "st-256color-notes"          , NULL     , NULL                 , ~0   , 1          , 20,10,60,80     , NN         , 0          , 0         ,     2 , -1      },
-  { "st-256color-mail"           , NULL     , NULL                 , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     4 , -1      },
-  { "st-256color-calendar"       , NULL     , NULL                 , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     5 , -1      },
-  { "st-256color-music"          , NULL     , NULL                 , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     8 , -1      },
-  { "st-256color-tmp-notes"      , NULL     , NULL                 , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     9 , -1      },
-
-  { "RoboScope"                  , NULL     , NULL                 , 0    , 0          , HINTS           , NN         , 0          , 0         ,     0 , -1      },
-  { "Com.cisco.anyconnect.gui"   , NULL     , NULL                 , 1<<8 , 0          , CENTER          , NN         , 0          , 0         ,     0 ,  1      },
-  {NULL                          , NULL     , "Outlook"            , 1<<8 , 0          , CENTER          , NN         , 0          , 0         ,     0 ,  0      },
-
-  { "whatsapp-nativefier-d40211"  , NULL     , NULL                , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     3 , -1      },
-  { "com.github.th_ch.youtube_music"               , NULL     , NULL                , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     6 , -1      },
-  { "Mattermost"                  , NULL     , NULL                , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     7 , -1      },
-  { "slack"                       , NULL     , NULL                , ~0   , 1          , CENTER          , NN         , 0          , 0         ,    10 , -1      },
-  { "Gather"                      , NULL     , NULL                , ~0   , 1          , CENTER          , NN         , 0          , 0         ,    11 , -1      },
+  /* tag ~0 means sticky */       
+  /* class                         | instance | title                |tags  | isfloating | float x,y,w,h % | float zone | isterminal | noswallow | sp_id | monitor */
+  { "Thunderbird"                   , NULL     , NULL                , 1<<8 , 0          , HINTS           , NN         , 0          , 0         ,     0 ,  0      },
+  { "tridactyl_editor"              , NULL     , NULL                , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     0 , -1      },
+  { NULL                            , NULL     , "Picture-in-Picture", ~0   , 1          , 70,70,30,30     , LR         , 0          , 0         ,     0 , -1      },
+  { "st-256color"                   , NULL     , NULL                , 0    , 0          , CENTER_HINTS    , NN         , 1          , 1         ,     0 , -1      },
+  { "st-256color-c"                 , NULL     , NULL                , 0    , 1          , 10,10,80,80     , NN         , 1          , 1         ,     0 , -1      },
+  { "st-256color-ur"                , NULL     , NULL                , ~0   , 1          , 60,2,40,20      , UR         , 1          , 1         ,     0 , -1      },
+  { "SpeedCrunch"                   , NULL     , NULL                , ~0   , 1          , CENTER          , NN         , 1          , 1         ,     0 , -1      },
+  { NULL                            , NULL     , "Event Tester"      , 0    , 0          , HINTS           , NN         , 0          , 1         ,     0 , -1      },
+  { "Yad"                           , NULL     , NULL                , 0    , 1          , 60,2,40,20      , UR         , 0          , 0         ,     0 , -1      },
+  { "Dragon-drag-and-drop"          , NULL     , NULL                , ~0   , 1          , CENTER_HINTS    , NN         , 0          , 0         ,     0 , -1      },
+  { "RoboScope"                     , NULL     , NULL                , 0    , 0          , HINTS           , NN         , 0          , 0         ,     0 , -1      },
+  { "Com.cisco.anyconnect.gui"      , NULL     , NULL                , 1<<8 , 0          , CENTER          , NN         , 0          , 0         ,     0 ,  1      },
+  { NULL                            , NULL     , "Outlook"           , 1<<8 , 0          , CENTER          , NN         , 0          , 0         ,     0 ,  0      },
+  { "st-256color-docked"            , NULL     , NULL                , ~0   , 1          , CENTER          , MM         , 1          , 1         ,     1 , -1      },
+  { "st-256color-notes"             , NULL     , NULL                , ~0   , 1          , 20,10,60,80     , NN         , 0          , 0         ,     2 , -1      },
+  { "elecwhat"                      , NULL     , NULL                , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     3 , -1      },
+  { "st-256color-mail"              , NULL     , NULL                , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     4 , -1      },
+  { "st-256color-calendar"          , NULL     , NULL                , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     5 , -1      },
+  { "com.github.th_ch.youtube_music", NULL     , NULL                , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     6 , -1      },
+  { "Mattermost"                    , NULL     , NULL                , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     7 , -1      },
+  { "st-256color-music"             , NULL     , NULL                , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     8 , -1      },
+  { "st-256color-tmp-notes"         , NULL     , NULL                , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     9 , -1      },
+  { "Slack"                         , NULL     , NULL                , ~0   , 1          , CENTER          , NN         , 0          , 0         ,    10 , -1      },
+  { "Gather"                        , NULL     , NULL                , ~0   , 1          , CENTER          , NN         , 0          , 0         ,    11 , -1      },
+  { "ticktick"                      , NULL     , NULL                , ~0   , 1          , CENTER          , NN         , 0          , 0         ,    12 , -1      },
 };
 
 
 static const char* scratchpads_cmd[] = {
   "$TERMINAL -c st-256color-docked -e tmux",
-  "$TERMINAL -c st-256color-notes -T vimwiki -e $SHELL -c \"cd \"$HOME\"/.local/share/vimwiki && $EDITOR index.md\"",
-  "whatsapp-nativefier",
+  // "$TERMINAL -c st-256color-notes -T vimwiki -e $SHELL -c \"cd \"$HOME\"/.local/share/vimwiki && $EDITOR index.md\"",
+  "kitty --class st-256color-notes -T vimwiki --hold $SHELL -c \"cd \"$HOME\"/.local/share/vimwiki && $EDITOR index.md ; pkill kitty\"",
+  "elecwhat",
   "$TERMINAL -c st-256color-mail -T neomutt -e $SHELL -c \"cd ~/downloads; export ESCDELAY=1 ;neomutt ; pkill -RTMIN+17 dwmblocks \"",
   "$TERMINAL -c st-256color-calendar -T calcurse -e $SHELL -c calcurse",
   "youtube-music",
