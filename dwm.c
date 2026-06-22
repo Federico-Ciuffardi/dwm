@@ -2469,7 +2469,9 @@ scan(void)
       if (!XGetWindowAttributes(dpy, wins[i], &wa)
           || wa.override_redirect || XGetTransientForHint(dpy, wins[i], &d1))
         continue;
-      if (wa.map_state == IsViewable || getstate(wins[i]) == IconicState)
+      long gs = getstate(wins[i]);
+      if (wa.map_state == IsViewable || gs == IconicState
+          || (enable_inplace_hide && gs == NormalState))
         manage(wins[i], &wa);
     }
     for (i = 0; i < num; i++) { /* now the transients */
@@ -3213,7 +3215,7 @@ unmanage(Client *c, int destroyed)
     XSetErrorHandler(xerrordummy);
     XConfigureWindow(dpy, c->win, CWBorderWidth, &wc); /* restore border */
     XUngrabButton(dpy, AnyButton, AnyModifier, c->win);
-    setclientstate(c, WithdrawnState);
+    setclientstate(c, enable_inplace_hide && c->isHidden ? IconicState : WithdrawnState);
     XSync(dpy, False);
     XSetErrorHandler(xerror);
     XUngrabServer(dpy);
