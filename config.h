@@ -179,6 +179,7 @@ static const Rule rules[] = {
   { "Slack"                         , NULL     , NULL                , ~0   , 1          , CENTER          , NN         , 0          , 0         ,    10 , -1      },
   { "Gather"                        , NULL     , NULL                , ~0   , 1          , CENTER          , NN         , 0          , 0         ,    11 , -1      },
   { "ticktick"                      , NULL     , NULL                , ~0   , 1          , CENTER          , NN         , 0          , 0         ,    12 , -1      },
+  { "st-256color-docked-ssh"        , NULL     , NULL                , ~0   , 1          , CENTER          , MM         , 1          , 1         ,    13 , -1      },
 };
 
 
@@ -195,9 +196,10 @@ static const char* scratchpads_cmd[] = {
   "$TERMINAL -c st-256color-tmp-notes -T tmp-notes -e $EDITOR $(mktemp) -c \"set spell\"",
   "slack", 
   "gather",
-  "ticktick"
+  "ticktick",
+  "$TERMINAL -c st-256color-docked-ssh -e ssh -Y fede@10.100.1.4 -t 'zsh -l -c tmux'"
 };
-static int scratchpads_called[] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, }; // as many zeros as scratchpads TODO improve
+static int scratchpads_called[] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, }; // as many zeros as scratchpads TODO improve
 
 typedef int dims[4];
 
@@ -240,6 +242,7 @@ static Key keys[] = {
   { MODKEY|ShiftMask,             XK_s,      togglesp,                 {.i = 10} },
   { MODKEY|ShiftMask,             XK_g,      togglesp,                 {.i = 11} },
   { MODKEY,                       XK_t,      togglesp,                 {.i = 12} },
+  { MODKEY|ShiftMask,             XK_space,  togglesp,                 {.i = 13} }, // docked, over ssh
 
   { MODKEY|ShiftMask|ControlMask, XK_t,      spawn,          SHCMD("paplay /usr/share/sounds/freedesktop/stereo/dialog-warning.oga") },
 
