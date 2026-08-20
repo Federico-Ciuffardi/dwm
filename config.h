@@ -197,7 +197,7 @@ static const char* scratchpads_cmd[] = {
   "gather",
   "ticktick"
 };
-static int scratchpads_called[] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, }; // as many zeros as scratchpads TODO improve
+static int scratchpads_called[] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, }; // as many zeros as scratchpads TODO improve
 
 typedef int dims[4];
 
