@@ -216,6 +216,8 @@ static Monitor *dirtomon(int dir);
 static void drawbar(Monitor *m);
 static void drawbars(void);
 static void drawtab(Monitor *m);
+static int tiledpos(Monitor *m, Client *c);
+static int firsttab(Monitor *m);
 static void drawtabs(void);
 static void enqueue(Client *c);
 static void enqueuestack(Client *c);
@@ -743,19 +745,10 @@ buttonpress(XEvent *e)
       click = ClkWinTitle;
   }
   if(ev->window == selmon->tabwin) {
-    i = 0; x = 0;
-    for(c = selmon->clients; c; c = c->next){
-      if(!ISVISIBLE(c)) continue;
-      x += selmon->tab_width;
-      if (ev->x > x)
-        ++i;
-      else
-        break;
-      if(i >= m->ntabs) break;
-    }
-    if(c) {
+    i = selmon->tab_width ? ev->x / selmon->tab_width : 0;
+    if(i < selmon->ntabs) {
       click = ClkTabBar;
-      arg.ui = i;
+      arg.ui = firsttab(selmon) + i;
     }
   }
   else if((c = wintoclient(ev->window))) {
@@ -1236,13 +1229,31 @@ cmpint(const void *p1, const void *p2) {
 }
 
 
-void
-drawtab(Monitor *m) {
-  Client *c;
+/* Position of c among m's tiled clients, -1 when c is not one of them. */
+int
+tiledpos(Monitor *m, Client *c) {
+  Client *t;
   int i;
 
+  for(i = 0, t = nexttiled(m->clients); t; t = nexttiled(t->next), i++)
+    if(t == c) return i;
+  return -1;
+}
+
+/* First client the tab bar shows: the deck bar only lists the decked windows. */
+int
+firsttab(Monitor *m) {
+  return m->lt[m->sellt]->arrange == deck ? m->nmaster : 0;
+}
+
+void
+drawtab(Monitor *m) {
+  Client *c, *sel;
+  int i, first = firsttab(m);
+
   /* Calculates number of labels and their width */
-  for(m->ntabs = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next)){
+  for(m->ntabs = 0, i = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), i++){
+    if(i < first) continue;
     m->ntabs++;
     if(m->ntabs >= MAXTABS) break;
   }
@@ -1250,9 +1261,16 @@ drawtab(Monitor *m) {
   if(!m->ntabs) return;
   m->tab_width = m->tw/m->ntabs;
 
+  /* the decked window on top is the last focused one, not necessarily m->sel */
+  sel = m->sel;
+  if(first)
+    for(sel = NULL, c = m->stack; c && !sel; c = c->snext)
+      if(tiledpos(m, c) >= first) sel = c;
+
   int x = 0;
-  for(i=0, c = nexttiled(m->clients); c && i < m->ntabs; c = nexttiled(c->next), i++){
-    drw_setscheme(drw, scheme[(c == m->sel) ? SchemeSelTab : SchemeNormTab]);
+  for(i=0, c = nexttiled(m->clients); c && i - first < m->ntabs; c = nexttiled(c->next), i++){
+    if(i < first) continue;
+    drw_setscheme(drw, scheme[(c == sel) ? SchemeSelTab : SchemeNormTab]);
     char tab_name[sizeof(c->name) + 1];
     sprintf(tab_name, " %s", c->name);
     drw_text(drw, x, 0, m->tab_width, th, 0, tab_name, 0);
@@ -3312,17 +3330,26 @@ updatebarpos(Monitor *m)
     if(ISVISIBLE(c) && !c->isfloating) ++nvis;
   }
 
-  tabbar_visible = m->showtab == showtab_always || ((m->showtab == showtab_auto) && (nvis > 1) && (m->lt[m->sellt]->arrange == monocle));
-  tabbar_reserved = tabbar_visible;
-  m->tx = m->wx + sp;
-  m->tw = m->ww - 2*sp;
-  if(tabbar_visible) {
-    m->wh -= th;
-    m->ty = (m->toptab ? m->wy : m->wy + m->wh) + tp;
-    if ( m->toptab )
-      m->wy += th;
+  if (m->lt[m->sellt]->arrange == deck) {
+    /* the deck tab bar is part of the stack area, deck() places it */
+    tabbar_visible = m->showtab != showtab_never && m->nmaster > 0
+      && nvis - m->nmaster > 1;
+    tabbar_reserved = 0;
+    if (!tabbar_visible)
+      m->ty = -th - tp;
   } else {
-    m->ty = -th - tp;
+    tabbar_visible = m->showtab == showtab_always || ((m->showtab == showtab_auto) && (nvis > 1) && (m->lt[m->sellt]->arrange == monocle));
+    tabbar_reserved = tabbar_visible;
+    m->tx = m->wx + sp;
+    m->tw = m->ww - 2*sp;
+    if(tabbar_visible) {
+      m->wh -= th;
+      m->ty = (m->toptab ? m->wy : m->wy + m->wh) + tp;
+      if ( m->toptab )
+        m->wy += th;
+    } else {
+      m->ty = -th - tp;
+    }
   }
 }
 

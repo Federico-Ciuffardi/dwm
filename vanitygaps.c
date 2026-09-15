@@ -487,6 +487,16 @@ deck(Monitor *m)
 		mw = mw - iv - sw;
 		sx = mx + mw + iv;
 		sh = m->wh - 2*oh;
+
+		/* the tab bar of the deck sits inside the stack area */
+		if (tabbar_visible) {
+			m->tx = sx;
+			m->tw = sw;
+			m->ty = m->toptab ? sy : sy + sh - th;
+			if (m->toptab)
+				sy += th + ih;
+			sh -= th + ih;
+		}
 	}
 
 	getfacts(m, mh, sh, &mfacts, &sfacts, &mrest, &srest);
