@@ -501,21 +501,6 @@ deck(Monitor *m)
 
 	getfacts(m, mh, sh, &mfacts, &sfacts, &mrest, &srest);
 
-	if(n > m->nmaster) {
-    int stackcli = n - 1;
-    if( stackcli > 1 ){
-      int selected = -1;
-      for(n = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), n++){
-        if(c == selmon->sel) selected = n;
-      }
-      if(selected >= 0)
-        snprintf(m->ltsymbol, sizeof m->ltsymbol, "| Deck (%d/%d) |", selected, stackcli);
-      else
-        snprintf(m->ltsymbol, sizeof m->ltsymbol, "| Deck (-/%d) |", stackcli);
-    }else
-      snprintf(m->ltsymbol, sizeof m->ltsymbol, "| Deck |");
-	}
-
 	for (i = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), i++)
 		if (i < m->nmaster) {
 			resize(c, mx, my, mw - (2*c->bw), (mh / mfacts) + (i < mrest ? 1 : 0) - (2*c->bw), 0);

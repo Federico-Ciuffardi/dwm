@@ -1420,11 +1420,6 @@ focus(Client *c)
 
   selmon->sel = c;
 
-  // update deck indicator on statubar
-  if(selmon->lt[selmon->sellt] == &layouts[DECK]){
-    deck(selmon);
-  }
-
   drawbars();
   drawtabs();
 }
