@@ -149,7 +149,7 @@ struct Monitor {
   int nmaster;
   int num;
   int by;               /* bar geometry */
-  int ty;               /* tab bar geometry */
+  int tx, ty, tw;       /* tab bar geometry */
   int mx, my, mw, mh;   /* screen size */
   int wx, wy, ww, wh;   /* window area  */
   unsigned int seltags;
@@ -346,6 +346,7 @@ static pid_t winpid(Window w);
 
 /* variables */
 static int tabbar_visible = 0;
+static int tabbar_reserved = 0; /* tab bar takes space out of the window area */
 static Client *prevzoom = NULL;
 unsigned int cols,rows;
 static int warping = 0;
@@ -610,20 +611,21 @@ void
 arrangemon(Monitor *m) {
   updatebarpos(m);
 
+  strncpy(m->ltsymbol, m->lt[m->sellt]->symbol, sizeof m->ltsymbol);
+  if (m->lt[m->sellt]->arrange)
+    m->lt[m->sellt]->arrange(m);
+
+  /* placed after the layout ran: layouts may reserve the tab bar themselves */
   if(enable_inplace_hide){
     if (tabbar_visible) {
-      XMoveResizeWindow(dpy, m->tabwin, m->wx + sp, m->ty + tp, m->ww - 2*sp, th);
+      XMoveResizeWindow(dpy, m->tabwin, m->tx, m->ty, m->tw, th);
       XMapWindow(dpy, m->tabwin);
     } else {
       XUnmapWindow(dpy, m->tabwin);
     }
   }else{
-    XMoveResizeWindow(dpy, m->tabwin, m->wx + sp, m->ty + tp, m->ww - 2*sp, th);
+    XMoveResizeWindow(dpy, m->tabwin, m->tx, m->ty, m->tw, th);
   }
-
-  strncpy(m->ltsymbol, m->lt[m->sellt]->symbol, sizeof m->ltsymbol);
-  if (m->lt[m->sellt]->arrange)
-    m->lt[m->sellt]->arrange(m);
 }
 
   void
@@ -1246,7 +1248,7 @@ drawtab(Monitor *m) {
   }
 
   if(!m->ntabs) return;
-  m->tab_width = m->ww/m->ntabs;
+  m->tab_width = m->tw/m->ntabs;
 
   int x = 0;
   for(i=0, c = nexttiled(m->clients); c && i < m->ntabs; c = nexttiled(c->next), i++){
@@ -1259,9 +1261,9 @@ drawtab(Monitor *m) {
 
   /* cleans interspace between window names and current viewed tag label */
   drw_setscheme(drw, scheme[SchemeNormTab]);
-  drw_text(drw, x, 0, m->ww - x, th, 0, "", 0);
+  drw_text(drw, x, 0, m->tw - x, th, 0, "", 0);
 
-  drw_map(drw, m->tabwin, 0, 0, m->ww, th);
+  drw_map(drw, m->tabwin, 0, 0, m->tw, th);
 }
 
 void
@@ -1931,7 +1933,7 @@ monocle(Monitor *m)
   Client *c;
 
   for (c = nexttiled(m->clients); c; c = nexttiled(c->next))
-    resize(c, gppoh*enablegaps + m->wx, m->wy + gppov*enablegaps + tp*tabbar_visible, m->ww - 2*(c->bw + gppoh*enablegaps), m->wh - 2*(c->bw + gppov*enablegaps) - tp*tabbar_visible, 0);
+    resize(c, gppoh*enablegaps + m->wx, m->wy + gppov*enablegaps + tp*tabbar_reserved, m->ww - 2*(c->bw + gppoh*enablegaps), m->wh - 2*(c->bw + gppov*enablegaps) - tp*tabbar_reserved, 0);
 }
 
   void
@@ -2309,9 +2311,9 @@ changefloatzone(int cx,int cy){
   c->floatzonex = mod(c->floatzonex + cx, 3);
   c->floatzoney = mod(c->floatzoney + cy, 3);
   int x = selmon->wx + gppoh*enablegaps + floatzones[c->floatzoney][c->floatzonex][0] * (selmon->ww - 2*gppoh*enablegaps) / 100;
-  int y = selmon->wy + gppov*enablegaps + tp*tabbar_visible + floatzones[c->floatzoney][c->floatzonex][1] * (selmon->wh - 2*gppov*enablegaps - tp*tabbar_visible) / 100;
+  int y = selmon->wy + gppov*enablegaps + tp*tabbar_reserved + floatzones[c->floatzoney][c->floatzonex][1] * (selmon->wh - 2*gppov*enablegaps - tp*tabbar_reserved) / 100;
   int w = (floatzones[c->floatzoney][c->floatzonex][2] * (selmon->ww - 2*gppoh*enablegaps) / 100) - 2*c->bw;
-  int h = (floatzones[c->floatzoney][c->floatzonex][3] * (selmon->wh - 2*gppov*enablegaps - tp*tabbar_visible) / 100) - 2*c->bw;
+  int h = (floatzones[c->floatzoney][c->floatzonex][3] * (selmon->wh - 2*gppov*enablegaps - tp*tabbar_reserved) / 100) - 2*c->bw;
   resize(c, x, y, w, h,0);
   warp(c);
 }
@@ -2940,9 +2942,9 @@ togglefloatingcore(int setzone){ // setzone acts as bool
     if ( setzone ){
       if( fzx >= 0 && fzy >= 0 ) {
         selmon->sel->x = selmon->wx + gppoh*enablegaps + floatzones[fzy][fzx][0] * (selmon->ww - 2*gppoh*enablegaps) / 100;
-        selmon->sel->y = selmon->wy + gppov*enablegaps + tp*tabbar_visible + floatzones[fzy][fzx][1] * (selmon->wh - 2*gppov*enablegaps - tp*tabbar_visible) / 100;
+        selmon->sel->y = selmon->wy + gppov*enablegaps + tp*tabbar_reserved + floatzones[fzy][fzx][1] * (selmon->wh - 2*gppov*enablegaps - tp*tabbar_reserved) / 100;
         selmon->sel->w = (floatzones[fzy][fzx][2] * (selmon->ww - 2*gppoh*enablegaps) / 100) - 2*selmon->sel->bw;
-        selmon->sel->h = (floatzones[fzy][fzx][3] * (selmon->wh - 2*gppov*enablegaps - tp*tabbar_visible) / 100) - 2*selmon->sel->bw;
+        selmon->sel->h = (floatzones[fzy][fzx][3] * (selmon->wh - 2*gppov*enablegaps - tp*tabbar_reserved) / 100) - 2*selmon->sel->bw;
       }else{
         selmon->sel->x = selmon->mx + (floatingdims[0]*selmon->mw)/100.0;
         selmon->sel->y = selmon->my + (floatingdims[1]*selmon->mh)/100.0;
@@ -3280,7 +3282,7 @@ updatebars(void)
     if (showsystray && m == systraytomon(m))
       XMapRaised(dpy, systray->win);
     XMapRaised(dpy, m->barwin);
-    m->tabwin = XCreateWindow(dpy, root, m->wx + sp, m->ty + tp, m->ww - 2*sp, th, 0, DefaultDepth(dpy, screen),
+    m->tabwin = XCreateWindow(dpy, root, m->wx + sp, m->ty, m->ww - 2*sp, th, 0, DefaultDepth(dpy, screen),
         CopyFromParent, DefaultVisual(dpy, screen),
         CWOverrideRedirect|CWBackPixmap|CWEventMask, &wa);
     XDefineCursor(dpy, m->tabwin, cursor[CurNormal]->cursor);
@@ -3311,14 +3313,16 @@ updatebarpos(Monitor *m)
   }
 
   tabbar_visible = m->showtab == showtab_always || ((m->showtab == showtab_auto) && (nvis > 1) && (m->lt[m->sellt]->arrange == monocle));
+  tabbar_reserved = tabbar_visible;
+  m->tx = m->wx + sp;
+  m->tw = m->ww - 2*sp;
   if(tabbar_visible) {
     m->wh -= th;
-    m->ty = m->toptab ? m->wy : m->wy + m->wh;
+    m->ty = (m->toptab ? m->wy : m->wy + m->wh) + tp;
     if ( m->toptab )
       m->wy += th;
   } else {
-    m->ty = -th - tp*2;
-
+    m->ty = -th - tp;
   }
 }
 
