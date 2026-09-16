@@ -176,7 +176,7 @@ static const Rule rules[] = {
   { "Mattermost"                    , NULL     , NULL                , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     7 , -1      },
   { "st-256color-music"             , NULL     , NULL                , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     8 , -1      },
   { "st-256color-tmp-notes"         , NULL     , NULL                , ~0   , 1          , CENTER          , NN         , 0          , 0         ,     9 , -1      },
-  { "Slack"                         , NULL     , NULL                , ~0   , 1          , CENTER          , NN         , 0          , 0         ,    10 , -1      },
+  { "slack"                         , NULL     , NULL                , ~0   , 1          , CENTER          , NN         , 0          , 0         ,    10 , -1      },
   { "Gather"                        , NULL     , NULL                , ~0   , 1          , CENTER          , NN         , 0          , 0         ,    11 , -1      },
   { "ticktick"                      , NULL     , NULL                , ~0   , 1          , CENTER          , NN         , 0          , 0         ,    12 , -1      },
   { "st-256color-docked-ssh"        , NULL     , NULL                , ~0   , 1          , CENTER          , MM         , 1          , 1         ,    13 , -1      },
