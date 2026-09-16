@@ -25,6 +25,11 @@
 
 #define SHCMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
 
+/* Host for the ssh binds; override by exporting SSH_HOST. Expanded by the
+   shell at spawn time, so every command below must run through SHCMD or
+   /bin/sh -c. */
+#define SSH_HOST "${SSH_HOST:-10.100.1.4}"
+
 ///////////////
 // AUTOSTART //
 ///////////////
@@ -197,7 +202,7 @@ static const char* scratchpads_cmd[] = {
   "slack", 
   "gather",
   "ticktick",
-  "$TERMINAL -c st-256color-docked-ssh -e ssh -Y fede@10.100.1.4 -t 'zsh -l -c tmux'"
+  "$TERMINAL -c st-256color-docked-ssh -e ssh -Y fede@" SSH_HOST " -t 'zsh -l -c tmux'"
 };
 static int scratchpads_called[] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, }; // as many zeros as scratchpads TODO improve
 
@@ -326,10 +331,10 @@ static Key keys[] = {
   { MODKEY|ShiftMask|ControlMask, XK_x,      spawn,                    SHCMD("xkill") },
 
   { MODKEY,                       XK_Return, spawn,                    SHCMD("$TERMINAL -e tmux") },
-  { MODKEY|ShiftMask,             XK_Return, spawn,                    SHCMD("$TERMINAL -e ssh -Y fede@10.100.1.4 -t 'zsh -l -c tmux'") },
+  { MODKEY|ShiftMask,             XK_Return, spawn,                    SHCMD("$TERMINAL -e ssh -Y fede@" SSH_HOST " -t 'zsh -l -c tmux'") },
   { MODKEY|ControlMask,           XK_Return, spawn,                    SHCMD("$TERMINAL -e tmux new \"$TMUX_BIN/open_and_kill_session\"") },
   { MODKEY,                       XK_e,      spawn,                    SHCMD("$TERMINAL -e tmux new \"zsh -is ranger\"") },
-  { MODKEY|ShiftMask,             XK_e,      spawn,                    SHCMD("$TERMINAL -e ssh -Y fede@10.100.1.4 -t tmux new \"zsh -is ranger\"") },
+  { MODKEY|ShiftMask,             XK_e,      spawn,                    SHCMD("$TERMINAL -e ssh -Y fede@" SSH_HOST " -t tmux new \"zsh -is ranger\"") },
   { MODKEY,                       XK_w,      spawn,                    SHCMD("$BROWSER") },
                                                                   
   { MODKEY|ShiftMask,             XK_c,      spawn,                    SHCMD("pkill picom || picom_distro_conf") },
