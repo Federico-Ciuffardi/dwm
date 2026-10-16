@@ -888,6 +888,12 @@ clientmessage(XEvent *e)
             || (cme->data.l[0] == 2 /* _NET_WM_STATE_TOGGLE */ && !c->isfullscreen)));
   } else if (cme->message_type == netatom[NetActiveWindow]) {
     uint i = 0;
+    /* a hidden scratchpad is on no tag: reveal it as its key binding would */
+    if (c->sp_id > 0 && !c->issticky && !c->tags) {
+      const Arg a = {.i = c->sp_id};
+      togglesp(&a);
+      return;
+    }
     if(!c->issticky){
       for (i = 0; i < LENGTH(tags) && !((1 << i) & c->tags); i++);
       if (i >= LENGTH(tags)) return;
