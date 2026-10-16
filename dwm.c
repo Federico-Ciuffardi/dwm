@@ -324,6 +324,7 @@ static void updatewindowtype(Client *c);
 static void updatewmhints(Client *c);
 static void view(const Arg *arg);
 static void viewall(const Arg *arg);
+static void viewallcur(const Arg *arg);
 static void warp(const Client *c);
 static Client *wintoclient(Window w);
 static Monitor *wintomon(Window w);
@@ -3218,6 +3219,12 @@ void viewall(const Arg *arg){
   selmon = orig;
   view(arg);
   focus(NULL);
+}
+
+/* make every monitor show what the current one shows */
+void viewallcur(const Arg *arg){
+  const Arg a = {.ui = selmon->tagset[selmon->seltags]};
+  viewall(&a);
 }
 
   void

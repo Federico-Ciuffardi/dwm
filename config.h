@@ -244,6 +244,7 @@ static Key keys[] = {
   { MODKEY|ShiftMask|ControlMask, XK_m,      togglesp,                 {.i = 7} },
   { MODKEY|ShiftMask,             XK_n,      togglesp,                 {.i = 8} },
   { MODKEY|ShiftMask|ControlMask, XK_space,  togglesp,                 {.i = 9} },
+  { MODKEY|ControlMask,           XK_space,  viewallcur,               {0} },
   { MODKEY|ShiftMask,             XK_s,      togglesp,                 {.i = 10} },
   { MODKEY|ShiftMask,             XK_g,      togglesp,                 {.i = 11} },
   { MODKEY,                       XK_t,      togglesp,                 {.i = 12} },
