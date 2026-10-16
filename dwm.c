@@ -323,6 +323,7 @@ static void updatetitle(Client *c);
 static void updatewindowtype(Client *c);
 static void updatewmhints(Client *c);
 static void view(const Arg *arg);
+static void viewall(const Arg *arg);
 static void warp(const Client *c);
 static Client *wintoclient(Window w);
 static Monitor *wintomon(Window w);
@@ -3200,6 +3201,23 @@ void lastfreeview(const Arg *arg){
 void lastview(){
   const Arg a = {.ui =  selmon->tagset[selmon->seltags^1]};
   view(&a);
+}
+
+/* switch every monitor to the given tags, keeping focus on the current one */
+void viewall(const Arg *arg){
+  Monitor *m, *orig = selmon;
+
+  for (m = mons; m; m = m->next) {
+    if (m == orig)
+      continue;
+    unfocus(selmon->sel, 0);
+    selmon = m;
+    view(arg);
+  }
+  unfocus(selmon->sel, 0);
+  selmon = orig;
+  view(arg);
+  focus(NULL);
 }
 
   void
