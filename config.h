@@ -239,7 +239,7 @@ static Key keys[] = {
   { MODKEY,                       XK_n,      togglesp,                 {.i = 2} },
   { MODKEY|ShiftMask,             XK_w,      togglesp,                 {.i = 3} },
   { MODKEY,                       XK_m,      togglesp,                 {.i = 4} },
-  { MODKEY,                       XK_c,      togglesp,                 {.i = 5} }, // calcurse 
+  { MODKEY,                       XK_c,      focusmon,                 {.i =  1 } },
   { MODKEY,                       XK_y,      togglesp,                 {.i = 6} },
   { MODKEY|ShiftMask|ControlMask, XK_m,      togglesp,                 {.i = 7} },
   { MODKEY|ShiftMask,             XK_n,      togglesp,                 {.i = 8} },
@@ -300,7 +300,7 @@ static Key keys[] = {
   /* { ALTMODKEY,                    XK_h,      reorganizetags,           {.i =  1 } }, */
   /* { ALTMODKEY,                    XK_l,      reorganizetags,           {.i = -1 } }, */
 
-  { MODKEY,                       XK_grave, focusmon,                  {.i =  1 } },
+  { MODKEY,                       XK_grave, spawn,                     SHCMD("claude-pending") }, // pick a waiting claude session
   { MODKEY|ShiftMask,             XK_grave, tagmon,                    {.i =  1 } },
 
   { MODKEY|ControlMask,           XK_j,      incview,                  {.i =  1 } },
