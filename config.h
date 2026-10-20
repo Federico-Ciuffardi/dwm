@@ -206,6 +206,11 @@ static const char* scratchpads_cmd[] = {
 };
 static int scratchpads_called[] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, }; // as many zeros as scratchpads TODO improve
 
+/* togglesp() uses one sp_id to index both arrays; a mismatch is an out of
+   bounds write. This fails the build instead of corrupting memory. */
+typedef char scratchpads_cmd_and_called_must_match[
+  LENGTH(scratchpads_cmd) == LENGTH(scratchpads_called) ? 1 : -1];
+
 typedef int dims[4];
 
 static dims floatzones[][3] = {

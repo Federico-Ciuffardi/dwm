@@ -21,6 +21,7 @@
  * To understand everything else, start reading main().
  */
 #include <errno.h>
+#include <limits.h>
 #include <locale.h>
 #include <signal.h>
 #include <stdarg.h>
@@ -615,7 +616,7 @@ void
 arrangemon(Monitor *m) {
   updatebarpos(m);
 
-  strncpy(m->ltsymbol, m->lt[m->sellt]->symbol, sizeof m->ltsymbol);
+  snprintf(m->ltsymbol, sizeof m->ltsymbol, "%s", m->lt[m->sellt]->symbol);
   if (m->lt[m->sellt]->arrange)
     m->lt[m->sellt]->arrange(m);
 
@@ -1044,7 +1045,7 @@ createmon(void)
   m->ntabs = 0;
   m->lt[0] = &layouts[0];
   m->lt[1] = &layouts[1 % LENGTH(layouts)];
-  strncpy(m->ltsymbol, layouts[0].symbol, sizeof m->ltsymbol);
+  snprintf(m->ltsymbol, sizeof m->ltsymbol, "%s", layouts[0].symbol);
   m->pertag = ecalloc(1, sizeof(Pertag));
   m->pertag->curtag = m->pertag->prevtag = 1;
 
@@ -1280,7 +1281,7 @@ drawtab(Monitor *m) {
     if(i < first) continue;
     drw_setscheme(drw, scheme[(c == sel) ? SchemeSelTab : SchemeNormTab]);
     char tab_name[sizeof(c->name) + 1];
-    sprintf(tab_name, " %s", c->name);
+    snprintf(tab_name, sizeof tab_name, " %s", c->name);
     drw_text(drw, x, 0, m->tab_width, th, 0, tab_name, 0);
     x += m->tab_width;
   }
@@ -1613,7 +1614,7 @@ swappos(const Arg *a)
 getatomprop(Client *c, Atom prop)
 {
   int di;
-  unsigned long dl;
+  unsigned long nitems, dl;
   unsigned char *p = NULL;
   Atom da, atom = None;
   /* FIXME getatomprop should return the number of items and a pointer to
@@ -1623,10 +1624,12 @@ getatomprop(Client *c, Atom prop)
     req = xatom[XembedInfo];
 
   if (XGetWindowProperty(dpy, c->win, prop, 0L, sizeof atom, False, req,
-        &da, &di, &dl, &dl, &p) == Success && p) {
-    atom = *(Atom *)p;
-    if (da == xatom[XembedInfo] && dl == 2)
-      atom = ((Atom *)p)[1];
+        &da, &di, &nitems, &dl, &p) == Success && p) {
+    if (di == 32 && nitems > 0) {
+      atom = *(Atom *)p;
+      if (da == xatom[XembedInfo] && dl == 2)
+        atom = ((Atom *)p)[1];
+    }
     XFree(p);
   }
   return atom;
@@ -1636,12 +1639,25 @@ getatomprop(Client *c, Atom prop)
 getdwmblockspid()
 {
   char buf[16];
+  unsigned long pid;
   FILE *fp = popen("pidof -s dwmblocks", "r");
-  fgets(buf, sizeof(buf), fp);
-  pid_t pid = strtoul(buf, NULL, 10);
+
+  if (!fp)
+    return -1;
+
+  buf[0] = '\0';
+  if (!fgets(buf, sizeof(buf), fp)) {
+    pclose(fp);
+    return -1;
+  }
   pclose(fp);
-  dwmblockspid = pid;
-  return pid != 0 ? 0 : -1;
+
+  pid = strtoul(buf, NULL, 10);
+  if (!pid || pid > INT_MAX)
+    return -1;
+
+  dwmblockspid = (pid_t)pid;
+  return 0;
 }
 
   int
@@ -1882,12 +1898,12 @@ manage(Window w, XWindowAttributes *wa)
     c->y -= 2*c->bw; /* adjustment for firefox picture in picture out of bound otherwise */
   updatewmhints(c);
   {
-  	int format;
-  	unsigned long *data, n, extra;
+  	int format = 0;
+  	unsigned long *data = NULL, n = 0, extra;
   	Monitor *m;
   	Atom atom;
   	if (XGetWindowProperty(dpy, c->win, netatom[NetClientInfo], 0L, 2L, False, XA_CARDINAL,
-  			&atom, &format, &n, &extra, (unsigned char **)&data) == Success && n == 2) {
+  			&atom, &format, &n, &extra, (unsigned char **)&data) == Success && n == 2 && format == 32) {
   		c->tags = *data;
   		for (m = mons; m; m = m->next) {
   			if (m->num == *(data+1)) {
@@ -1896,7 +1912,7 @@ manage(Window w, XWindowAttributes *wa)
   			}
   		}
   	}
-  	if (n > 0)
+  	if (data)
   		XFree(data);
   }
   setclienttagprop(c);
@@ -1917,7 +1933,8 @@ manage(Window w, XWindowAttributes *wa)
       unfocus(selmon->sel, 0);
     c->mon->sel = c;
   }
-  if(c->sp_id > 0 && !scratchpads_called[c->sp_id-1])
+  if(c->sp_id > 0 && (size_t)c->sp_id <= LENGTH(scratchpads_called)
+      && !scratchpads_called[c->sp_id-1])
     hide(c);
   arrange(c->mon);
   XMapWindow(dpy, c->win);
@@ -2676,7 +2693,7 @@ setlayout(const Arg *arg)
   selmon->sellt = selmon->pertag->sellts[selmon->pertag->curtag] ^= 1;
   if (arg && arg->v && arg->v != selmon->lt[selmon->sellt ^1])
     selmon->lt[selmon->sellt] = selmon->pertag->ltidxs[selmon->pertag->curtag][selmon->sellt] = (Layout *)arg->v;
-  strncpy(selmon->ltsymbol, selmon->lt[selmon->sellt]->symbol, sizeof selmon->ltsymbol);
+  snprintf(selmon->ltsymbol, sizeof selmon->ltsymbol, "%s", selmon->lt[selmon->sellt]->symbol);
   if (selmon->sel)
     arrange(selmon);
   else
@@ -3023,6 +3040,11 @@ togglesticky(const Arg *arg)
   void
 togglesp(const Arg *arg)
 {
+  if (arg->i < 1 || (size_t)arg->i > LENGTH(scratchpads_cmd) ||
+      (size_t)arg->i > LENGTH(scratchpads_called)) {
+    fprintf(stderr, "dwm: togglesp: scratchpad %d out of range\n", arg->i);
+    return;
+  }
   scratchpads_called[arg->i-1] = 1;
   Client *c = NULL;
   Monitor* m =NULL;
